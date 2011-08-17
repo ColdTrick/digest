@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin_manifest>
+	<field key="author" value="ColdTrick IT Solutions" />
+	<field key="version" value="1.2.1" />
+	<field key="description" value="Sends out a digest mail for site and group activity" />
+	<field key="website" value="http://www.coldtrick.com/" />
+	<field key="copyright" value="(C) ColdTrick 2010" />
+	<field key="licence" value="GNU Public License version 2" />
+	<field key="elgg_version" value="2010071002" />
+</plugin_manifest>
+<!--
+
+=====================
+Features
+=====================
+Sends mails with update information to your site or group members based on default or personal intervals (monthly, fortnightly, weekly or daily)
+
+- site wide digest
+- group digest
+
+- html mail (or fallback to online link if not supported)
+- sent digest can also be viewed online (not only in mail)
+- extend/replace layout or content of digests with own views
+- exclude groups from delivery with a hook
+
+=====================
+ToDo
+=====================
+
+=====================
+Version history
+=====================
+1.2.1 (2011-05-03):
+	- fixed: elgg depricated notice in cron handler
+
+1.2 (2011-04-18):
+	- added: admin option to enable/disable group digest
+	- changed: test page to be more like real digest
+	- changed: location of group digest setting
+	- fixed: test page could not sent mail
+
+1.1 (2011-04-04):
+	- added: plugin setting to control wether or not to send out mails
+	- added: dependency on html_email_handler plugin
+	- removed: Emogrifier
+	- fixed: Elgg 1.7.7 compatibility
+
+1.0.1 (2010-12-20):
+	- fixed: group activities access
+	- fixed: show text errors
+
+1.0:
+	- initial version
+
+-->
