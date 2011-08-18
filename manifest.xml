@@ -30,6 +30,9 @@ ToDo
 =====================
 Version history
 =====================
+x.x:
+	- fixed: activity layout in site body
+
 1.2.1 (2011-05-03):
 	- fixed: elgg depricated notice in cron handler
 

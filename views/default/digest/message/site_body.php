@@ -13,9 +13,23 @@
 	
 	// Friends activity section
 	// retrieve recent friends activity
-	if($activity = elgg_view_river_items($user->getGUID(), 0, 'friend', '', '', '', 5, $ts_lower, $ts_upper, false)){
-		echo "<h1>" . elgg_echo("content:latest") . "</h1>";
-		echo $activity;
+	if($river_items = get_river_items($user->getGUID(), 0, 'friend', '', '', '', 5, 0, $ts_lower, $ts_upper)){
+		echo "<h2>" . elgg_echo("content:latest") . "</h2>";
+		
+		echo "<div id='digest_river_item_list' class='river_item_list'>";
+		foreach($river_items as $item){
+			if(!empty($item->view)){
+				if(get_entity($item->object_guid) && get_entity($item->subject_guid)){
+					if(elgg_view_exists($item->view)){
+						$body = elgg_view($item->view, array("item" => $item));
+						
+						echo elgg_view("digest/river/item/wrapper", array("item" => $item, "body" => $body));
+					}
+				}
+			}
+		}
+		echo "</div>";
+		
 		echo "<hr />";
 	}
 	// end Friends activity section
@@ -31,7 +45,7 @@
 		);
 		
 		if($latest_blogs = elgg_get_entities($blog_options)){
-			echo "<h2><a href=''>" . elgg_echo("blogs") . "</a></h2>";
+			echo "<h2><a href='" . $vars["url"] . "pg/blog/all/'>" . elgg_echo("blogs") . "</a></h2>";
 			
 			foreach($latest_blogs as $blog){
 				echo "<div>";
