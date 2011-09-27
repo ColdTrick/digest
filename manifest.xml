@@ -31,6 +31,7 @@ ToDo
 Version history
 =====================
 x.x:
+	- added: direct unsubscribe link
 	- added: extended register form with site subscribe check
 	- fixed: activity layout in site body
 	- changed: users need to be a member of the site (for site digest)

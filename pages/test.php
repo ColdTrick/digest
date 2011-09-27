@@ -25,9 +25,11 @@
 	$digest_url = $CONFIG->wwwroot . "pg/digest/show?ts_upper=" . $ts_upper . "&ts_lower=" . $ts_lower . "&interval=monthly";
 	$digest_online = "<a href='" . $digest_url . "'>" . elgg_echo("digest:message:online") . "</a><br />";
 	
+	$digest_unsubscribe = digest_create_unsubscribe_link($CONFIG->site_guid, $user);
+	
 	$content = elgg_view("digest/message/site_body", array("ts_lower" => $ts_lower, "ts_upper" => $ts_upper));
 	
-	$msgbody = elgg_view_layout("digest", $subject, $content, $digest_online);
+	$msgbody = elgg_view_layout("digest", $subject, $content, $digest_online, $digest_unsubscribe);
 
 	echo $msgbody;
 	

@@ -7,9 +7,9 @@
 	/**
 	 * Function to retrieve all user guid that need to receive a digest
 	 * 
-	 * @param $guid of the site or group
-	 * @param $interval
-	 * @param $including_default if true will also retrieve users with no personal configuration
+	 * @param int $guid of the site or group
+	 * @param string $interval
+	 * @param bool $including_default if true will also retrieve users with no personal configuration
 	 * @return false (no results) or array of objects with user guids
 	 */
 	function digest_get_users($guid, $interval, $including_default = false){
@@ -56,12 +56,18 @@
 		return get_data($query);
 	}
 	
-	function digest_site($user, $interval){
+	/**
+	 * Make the site digest
+	 * 
+	 * @param ElggUser $user
+	 * @param string $interval
+	 * @return boolean
+	 */
+	function digest_site(ElggUser $user, $interval){
 		global $SESSION;
 		global $CONFIG;
 		global $interval_ts_upper;
 		global $interval_ts_lower;
-		global $is_admin;
 		
 		$result = false;
 		
@@ -78,22 +84,16 @@
 		$SESSION["guid"] = $user->getGUID();
 		$SESSION["id"] = $user->getGUID();
 		
-		// this is needed for 1.5 and 1.6
-		$current_is_admin = $is_admin;
-		if($user->admin || $user->siteadmin){
-			$is_admin = true;
-		} else {
-			$is_admin = false;
-		}
-		
 		// get data for user
 		$userdata = elgg_view("digest/message/site_body", array("ts_lower" => $interval_ts_lower, "ts_upper" => $interval_ts_upper));
 		
 		if($userdata){
-			
+			// link to online view
 			$digest_url = $CONFIG->wwwroot . "pg/digest/show?ts_upper=" . $interval_ts_upper . "&ts_lower=" . $interval_ts_lower . "&interval=" . $interval;
-			
 			$digest_online = "<a href='" . $digest_url . "'>" . elgg_echo("digest:message:online") . "</a><br />";
+			
+			// unsubscribe link
+			$digest_unsubscribe = digest_create_unsubscribe_link($CONFIG->site_guid, $user);
 			
 			// message_subject
 			$message_subject = sprintf( elgg_echo("digest:message:title:site"), $CONFIG->site->name, elgg_echo("digest:interval:" . $interval));
@@ -102,7 +102,7 @@
 			
 			// send message
 			// if succesfull mail return true
-			$result = digest_send_mail($user, $message_subject, $message_body, $digest_url);
+			$result = digest_send_mail($user, $message_subject, $message_body, $digest_url, $digest_unsubscribe);
 		} else {
 			// no data is still succesful
 			$result = true;
@@ -118,12 +118,18 @@
 			$SESSION["id"] = $current_user->getGUID();
 		}
 		
-		$is_admin = $current_is_admin;
-		
 		return $result;
 	}
 
-	function digest_group($group, $user, $interval){
+	/**
+	 * make group digest
+	 * 
+	 * @param ElggGroup $group
+	 * @param ElggUser $user
+	 * @param string $interval
+	 * @return boolean
+	 */
+	function digest_group(ElggGroup $group, ElggUser $user, $interval){
 		global $SESSION;
 		global $CONFIG;
 		global $interval_ts_upper;
@@ -160,15 +166,17 @@
 			$userdata = elgg_view("digest/message/group_body", array("ts_lower" => $interval_ts_lower, "ts_upper" => $interval_ts_upper, "group" => $group));
 			
 			if($userdata){
-				
+				// link to online view
 				$digest_url = $CONFIG->wwwroot . "pg/digest/show?ts_upper=" . $interval_ts_upper . "&ts_lower=" . $interval_ts_lower . "&interval=" . $interval . "&group_guid=" . $group->guid;
-				
 				$digest_online = "<a href='" . $digest_url . "'>" . elgg_echo("digest:message:online") . "</a><br />";
+				
+				// unsubscribe link
+				$digest_unsubscribe = digest_create_unsubscribe_link($group->getGUID(), $user);
 				
 				// message_subject
 				$message_subject = sprintf( elgg_echo("digest:message:title:group"), $CONFIG->site->name, $group->name, elgg_echo("digest:interval:" . $interval));
 				// message body
-				$message_body = elgg_view_layout("digest", $message_subject, $userdata, $digest_online);
+				$message_body = elgg_view_layout("digest", $message_subject, $userdata, $digest_online, $digest_unsubscribe);
 	
 				// send message
 				// if succesfull mail return true
@@ -202,7 +210,7 @@
 	/**
 	 * Sets the right upper and lower ts for digest queries
 	 * 
-	 * @param $interval String
+	 * @param string $interval
 	 */
 	function digest_set_interval_timestamps($interval){
 		global $running_interval;
@@ -233,6 +241,16 @@
 		}
 	}
 	
+	/**
+	 * Send out the generated digest
+	 * 
+	 * @param ElggUser $user
+	 * @param string $subject
+	 * @param string $html_body
+	 * @param string $plain_link
+	 * @param bool $bypass
+	 * @return boolean
+	 */
 	function digest_send_mail(ElggUser $user, $subject, $html_body, $plain_link = "", $bypass = false){
 		global $CONFIG;
 		global $digest_mail_send;
@@ -287,6 +305,12 @@
 		return $result;
 	}
 	
+	/**
+	 * convert a byte value into something more readable
+	 * 
+	 * @param int $value
+	 * @return bool|string  false | human readable byte value
+	 */
 	function digest_readable_bytes($value){
 		$result = false;
 		
@@ -315,6 +339,12 @@
 		return $result;
 	}
 	
+	/**
+	 * Convert a time in seconds to something readable
+	 * 
+	 * @param int $value
+	 * @return bool|string false | human readable time value
+	 */
 	function digest_readable_time($value){
 		$result = false;
 		
@@ -337,6 +367,11 @@
 		return $result;
 	}
 	
+	/**
+	 * Check if group digest is enabled
+	 * 
+	 * @return boolean true|false
+	 */
 	function digest_group_enabled(){
 		static $result;
 		
@@ -351,4 +386,50 @@
 		return $result;
 	}
 	
-?>
+	/**
+	 * create an unsubscribe link for a digest
+	 * 
+	 * @param int $guid
+	 * @param ElggUser $user
+	 * @return bool|string false | unsubscribe link
+	 */
+	function digest_create_unsubscribe_link($guid, ElggUser $user){
+		global $CONFIG;
+		
+		$result = false;
+		
+		if(!empty($guid) && !empty($user) && ($user instanceof ElggUser)){
+			$site_secret = get_site_secret();
+			
+			$code = md5($guid . $site_secret . $user->getGUID() . $user->time_created);
+			
+			$result = $CONFIG->wwwroot . "pg/digest/unsubscribe?guid=" . $guid . "&user_guid=" . $user->getGUID() . "&code=" . $code;
+		}
+		
+		return $result;
+	}
+	
+	/**
+	 * Validate an unsubscribe code
+	 * 
+	 * @param int $guid
+	 * @param ElggUser $user
+	 * @param string $code
+	 * @return bool false|true
+	 */
+	function digest_validate_unsubscribe_code($guid, ElggUser $user, $code){
+		$result = false;
+		
+		if(!empty($guid) && !empty($user) && ($user instanceof ElggUser) && !empty($code)){
+			$site_secret = get_site_secret();
+			
+			$valid_code = md5($guid . $site_secret . $user->getGUID() . $user->time_created);
+			
+			if($code === $valid_code){
+				$result = true;
+			}
+		}
+		
+		return $result;
+	}
+	

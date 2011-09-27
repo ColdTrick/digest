@@ -1,5 +1,22 @@
 <?php
 
+	function digest_group_leave_event($event, $object_type, $object){
+	
+		if(is_array($object)){
+			if(array_key_exists("group", $object)){
+				$group = $object["group"];
+			}
+				
+			if(array_key_exists("user", $object)){
+				$user = $object["user"];
+			}
+				
+			if(!empty($user) && !empty($group)){
+				$user->removePrivateSetting("digest_" . $group->getGUID());
+			}
+		}
+	}
+
 	function digest_create_user_event_handler($event, $type, $object){
 		global $CONFIG;
 		

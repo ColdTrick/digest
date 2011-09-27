@@ -65,6 +65,7 @@
 		// layout
 		'digest:layout:footer:info' => "This mail is brought to you by %s because you are signed up for these digests.",
 		'digest:layout:footer:update' => "Change your delivery settings",	
+		'digest:layout:footer:unsubscribe' => "To directly unsubscribe from this digest, click here",	
 	
 		// show a digest online
 		'digest:show:error:input' => "Incorrect input to view the digest",
@@ -106,6 +107,12 @@
 		// register 
 		'digest:register:enable' => "I wish to receive a site digest",
 		
+		// unsubscribe
+		'digest:unsubscribe:error:input' => "Incorrect input to unsubscribe from digest",
+		'digest:unsubscribe:error:code' => "The provided validation code is invalid",
+		'digest:unsubscribe:error:save' => "An unknown error occured while unsubscribing you from the digest",
+		'digest:unsubscribe:success' => "You've successfully been unsubscribed from the digest",
+		
 		// actions
 		// update usersettings
 		'digest:action:update:usersettings:error:input' => "Invalid input provided to save your digest settings",
@@ -124,11 +131,7 @@
 		'digest:mail:plaintext:description' => "Your e-mail client needs to support HTML mails to view the digest. 
 
 You can also view the digest online using the following link: %s.",
-		'' => "",
-		'' => "",
-		'' => "",
-	
-	
+		
 	);
 	
 	add_translation("en", $english);

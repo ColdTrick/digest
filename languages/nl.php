@@ -60,6 +60,7 @@
 		// layout
 		'digest:layout:footer:info' => "Deze mail komt van %s omdat je op de hoogte wilt worden gehouden van activiteiten op deze site.",
 		'digest:layout:footer:update' => "Pas je aflever instellingen aan",	
+		'digest:layout:footer:unsubscribe' => "Klik hier om je direct af te melden van deze update",
 	
 		// show a digest online
 		'digest:show:error:input' => "Incorrecte invoer om de update te bekijken",
@@ -100,6 +101,12 @@
 	
 		// register
 		'digest:register:enable' => "Ik wil een site update ontvangen",
+	
+		// unsubscribe
+		'digest:unsubscribe:error:input' => "Onjuiste invoer om je af te kunnen melden van updates",
+		'digest:unsubscribe:error:code' => "De opgegeven validatie code is onjuist",
+		'digest:unsubscribe:error:save' => "Er is een onbekende fout opgetreden tijdens het uitschrijven van de udpate",
+		'digest:unsubscribe:success' => "Je heb je succesvol afgemeld van de update",
 	
 		// actions
 		// update usersettings

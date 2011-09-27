@@ -1,5 +1,10 @@
 <?php 
-	
+	/**
+	 * $vars['area1'] => subject
+	 * $vars['area2'] => digest content
+	 * $vars['area3'] => link to online view
+	 * $vars['area4'] => unsubscribe link
+	 */
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
@@ -246,11 +251,15 @@
 			<div id="digest_footer">
 				<?php 
 					echo $vars["area3"];
-	
+					
 					$site_url = elgg_view("output/url", array("href" => $vars["config"]->site->url, "text" => $vars["config"]->site->name));
 					$digest_url = elgg_view("output/url", array("href" => $vars["url"] . "pg/digest", "text" => elgg_echo("digest:layout:footer:update")));
 					
-					echo sprintf(elgg_echo("digest:layout:footer:info"), $site_url) . " " . $digest_url;
+					$unsubscribe_link = $vars["area4"];
+					
+					echo sprintf(elgg_echo("digest:layout:footer:info"), $site_url);
+					echo "&nbsp;" . $digest_url . "<br />";
+					echo elgg_view("output/url", array("href" => $unsubscribe_link, "text" => elgg_echo("digest:layout:footer:unsubscribe")));
 				?>
 			</div>
 		</div>
