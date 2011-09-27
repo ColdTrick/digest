@@ -32,6 +32,7 @@ Version history
 =====================
 x.x:
 	- fixed: activity layout in site body
+	- changed: users need to be a member of the site (for site digest)
 
 1.2.1 (2011-05-03):
 	- fixed: elgg depricated notice in cron handler

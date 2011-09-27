@@ -22,19 +22,19 @@
 		
 		$user_setting_name = "digest_" . $guid;
 
-		$query = "SELECT u.guid FROM {$CONFIG->dbprefix}users_entity u JOIN {$CONFIG->dbprefix}entities e ON e.guid = u.guid";
-		
-		if($guid != $CONFIG->site_guid){
-			// there should also be a relation with a group
-			$query .= " JOIN {$CONFIG->dbprefix}entity_relationships r ON u.guid = r.guid_one";
-		}
-		
+		$query = "SELECT u.guid FROM {$CONFIG->dbprefix}users_entity u";
+		$query .= " JOIN {$CONFIG->dbprefix}entities e ON e.guid = u.guid";
+		$query .= " JOIN {$CONFIG->dbprefix}entity_relationships r ON u.guid = r.guid_one";
 		$query .= " WHERE u.banned = 'no' AND u.email <> '' AND e.enabled = 'yes'";
 
 		if($guid != $CONFIG->site_guid){
 			// there should also be a relation with a group
-			$query .= " AND r.guid_two = " . $guid . " AND r.relationship = 'member'";
+			$relationship = "member";
+		} else {
+			// there should be a relationship between user and site
+			$relationship = "member_of_site";
 		}
+		$query .= " AND r.guid_two = " . $guid . " AND r.relationship = '" . $relationship . "'";
 		
 		// select correct interval		
 		$query .= " AND (u.guid IN (SELECT entity_guid FROM {$CONFIG->dbprefix}private_settings WHERE name = '" . $user_setting_name . "' AND value = '" . $interval . "')";
