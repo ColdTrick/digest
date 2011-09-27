@@ -103,6 +103,9 @@
 		'digest:analysis:group:run_time' => "Total run time",
 		'digest:analysis:group:send' => "Sent digests",
 	
+		// register 
+		'digest:register:enable' => "I wish to receive a site digest",
+		
 		// actions
 		// update usersettings
 		'digest:action:update:usersettings:error:input' => "Invalid input provided to save your digest settings",

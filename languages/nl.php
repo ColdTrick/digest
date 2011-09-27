@@ -98,6 +98,9 @@
 		'digest:analysis:group:run_time' => "Total run time",
 		'digest:analysis:group:send' => "Verzonden updates",
 	
+		// register
+		'digest:register:enable' => "Ik wil een site update ontvangen",
+	
 		// actions
 		// update usersettings
 		'digest:action:update:usersettings:error:input' => "Ongeldige invoer voor het opslaan van de updates instellingen",

@@ -10,6 +10,7 @@
 	define("DIGEST_INTERVAL_MONTHLY", "monthly");
 	
 	require_once(dirname(__FILE__) . "/lib/functions.php");
+	require_once(dirname(__FILE__) . "/lib/events.php");
 	
 	function digest_init(){
 		// this plugin require the plugin 'html_email_handler'
@@ -25,14 +26,22 @@
 		// register page handler for nice url's
 		register_page_handler("digest", "digest_page_handler");
 		
+		// extend register with subscribe option
+		$setting = get_plugin_setting("site_default", "digest");
+		
+		if(!empty($setting) && ($setting != DIGEST_INTERVAL_NONE)){
+			elgg_extend_view("register/extend", "digest/register");
+			
+			register_elgg_event_handler("create", "user", "digest_create_user_event_handler");
+		}
 	}
 	
 	function digest_pagesetup(){
 		global $CONFIG;
 		
+		$context = get_context();
+		
 		if(isloggedin()){
-			$context = get_context();
-			
 			// extend groups edit screen
 			if(($context == "groups") && digest_group_enabled()){
 				elgg_extend_view("forms/groups/edit", "digest/groupsettings/form", 400);
