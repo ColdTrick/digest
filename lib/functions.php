@@ -98,11 +98,11 @@
 			// message_subject
 			$message_subject = sprintf( elgg_echo("digest:message:title:site"), $CONFIG->site->name, elgg_echo("digest:interval:" . $interval));
 			// message body
-			$message_body = elgg_view_layout("digest", $message_subject, $userdata, $digest_online);
+			$message_body = elgg_view_layout("digest", $message_subject, $userdata, $digest_online, $digest_unsubscribe);
 			
 			// send message
 			// if succesfull mail return true
-			$result = digest_send_mail($user, $message_subject, $message_body, $digest_url, $digest_unsubscribe);
+			$result = digest_send_mail($user, $message_subject, $message_body, $digest_url);
 		} else {
 			// no data is still succesful
 			$result = true;

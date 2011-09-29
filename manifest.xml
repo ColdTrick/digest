@@ -30,6 +30,9 @@ ToDo
 =====================
 Version history
 =====================
+x.x:
+	- fixed: unsubscribe link not showing in site digest
+	
 1.3 (2011-09-27):
 	- added: direct unsubscribe link
 	- added: extended register form with site subscribe check
