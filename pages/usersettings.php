@@ -23,7 +23,9 @@
 				"type" => "group",
 				"relationship" => "member",
 				"relationship_guid" => $user->getGUID(),
-				"limit" => false
+				"limit" => false,
+				"joins" => array("JOIN " . $CONFIG->dbprefix . "groups_entity ge ON e.guid = ge.guid"),
+				"order_by" => "ge.name ASC"
 			);
 			
 			$groups = elgg_get_entities_from_relationship($options);
