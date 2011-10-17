@@ -445,6 +445,7 @@
 	 * @param bool $refresh
 	 */
 	function digest_revert_views($refresh = false){
+		global $CONFIG;
 		
 		static $run_once;
 		
@@ -454,6 +455,20 @@
 			
 			// undo river_comments extensions
 			unregister_elgg_event_handler("pagesetup", "system", "river_comments_setup");
+			
+			// undo more extensions
+			// trigger pagesetup
+			elgg_view_title("dummy");
+			
+			// check for more extensions
+			if(isset($CONFIG->views->extensions)){
+				foreach($CONFIG->views->extensions as $view => $extensions){
+					
+					if(stristr($view, "river/")){
+						unset($CONFIG->views->extensions[$view]);
+					}
+				}
+			}
 			
 			// only let this happen once
 			$run_once = true;
