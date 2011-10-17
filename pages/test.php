@@ -2,6 +2,10 @@
 	global $CONFIG;
 	admin_gatekeeper();
 
+	// remove some view extensions
+	digest_revert_views();
+	
+	// set some interval settings
 	$ts_upper = time();
 	$ts_lower = time() - (60*60*24*31);
 	$interval = "monthly";
@@ -33,10 +37,10 @@
 
 	echo $msgbody;
 	
-	
+	// mail the result?
 	if(get_input("mail")){
 		if(digest_send_mail($user, $subject, $msgbody, $digest_url, true)){
 			echo "mail";
 		}
 	}
-?>
+	

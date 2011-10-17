@@ -71,6 +71,9 @@
 		
 		$result = false;
 		
+		// remove some view extensions
+		digest_revert_views();
+		
 		// set timestamps for interval
 		digest_set_interval_timestamps($interval);
 		
@@ -140,6 +143,9 @@
 		
 		// check if group digest is enabled
 		if(digest_group_enabled()){
+			
+			// remove some view extensions
+			digest_revert_views();
 			
 			// set timestamps for interval
 			digest_set_interval_timestamps($interval);
@@ -433,3 +439,23 @@
 		return $result;
 	}
 	
+	/**
+	 * Undo some extension to view by other plugins
+	 * 
+	 * @param bool $refresh
+	 */
+	function digest_revert_views($refresh = false){
+		
+		static $run_once;
+		
+		if(!isset($run_once) || ($refresh === true)){
+			// undo likes extension
+			unregister_elgg_event_handler("pagesetup", "system", "likes_setup");
+			
+			// undo river_comments extensions
+			unregister_elgg_event_handler("pagesetup", "system", "river_comments_setup");
+			
+			// only let this happen once
+			$run_once = true;
+		}
+	}

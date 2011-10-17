@@ -9,8 +9,13 @@
 	$interval = get_input("interval");
 	
 	if(!empty($ts_lower) && !empty($ts_upper) && !empty($interval)){
-		$group_guid = get_input("group_guid");
+		// remove some view extensions
+		digest_revert_views();
 		
+		// get group guid
+		$group_guid = (int) get_input("group_guid");
+		
+		// check if we need to display a group
 		if(!empty($group_guid)){
 			if($group = get_entity($group_guid)){
 				if($group instanceof ElggGroup){
@@ -38,4 +43,4 @@
 		register_error(elgg_echo("digest:show:error:input"));
 		forward();
 	}
-?>
+	
