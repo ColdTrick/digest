@@ -14,7 +14,7 @@
 				}
 			}
 			
-			$form_body .= elgg_view("input/hidden", array("internalname" => "group_guid", "value" => $group->getGUID()));
+			$form_body = elgg_view("input/hidden", array("internalname" => "group_guid", "value" => $group->getGUID()));
 			
 			$form_body .= "<div>\n";
 			$form_body .= elgg_echo("digest:groupsettings:setting");
