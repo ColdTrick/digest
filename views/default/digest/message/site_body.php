@@ -1,5 +1,7 @@
 <?php 
 
+	global $CONFIG;
+	
 	$user = get_loggedin_user();
 
 	$ts_lower = sanitise_int($vars["ts_lower"]);
@@ -113,11 +115,13 @@
 		$member_options = array(
 			"type" => "user",
 			"limit" => 10,
-			"created_time_lower" => $ts_lower,
-			"created_time_upper" => $ts_upper
+			"relationship" => "member_of_site",
+			"relationship_guid" => $CONFIG->site_guid,
+			"inverse_relationship" => true,
+			"wheres" => array("(r.time_created BETWEEN " . $ts_lower . " AND " . $ts_upper . ")")
 		);
 		
-		if($newest_members = elgg_get_entities($member_options)){
+		if($newest_members = elgg_get_entities_from_relationship($member_options)){
 			$member_items .= "<table>";
 			foreach($newest_members as $index => $mem){
 				$mem_url = $mem->getURL();
@@ -151,4 +155,3 @@
 	}
 	// End new groups and users section
 	
-?>
