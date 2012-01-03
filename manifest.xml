@@ -8,23 +8,3 @@
 	<field key="licence" value="GNU Public License version 2" />
 	<field key="elgg_version" value="2010071002" />
 </plugin_manifest>
-<!--
-
-=====================
-Features
-=====================
-Sends mails with update information to your site or group members based on default or personal intervals (monthly, fortnightly, weekly or daily)
-
-- site wide digest
-- group digest
-
-- html mail (or fallback to online link if not supported)
-- sent digest can also be viewed online (not only in mail)
-- extend/replace layout or content of digests with own views
-- exclude groups from delivery with a hook
-
-=====================
-ToDo
-=====================
-
--->

@@ -2,6 +2,7 @@
 x.x:
 
 - changed: moved version history to CHANGES.txt (for Elgg 1.8)
+- changed: moved Features and ToDo to README.txt (for Elgg 1.8)
 
 1.3.3 (2012-01-03):
 
