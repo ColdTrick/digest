@@ -7,6 +7,7 @@
 		global $ENTITY_CACHE;
 		global $DB_PROFILE;
 		global $digest_mail_send;
+		global $interval_ts_upper;
 	
 		set_time_limit(0);
 	
@@ -41,6 +42,13 @@
 		if(!empty($intervals)){
 			$digest_site_sent = 0;
 			$digest_group_sent = 0;
+			
+			// set correct time
+			if(isset($params["time"])){
+				$interval_ts_upper = $params["time"];
+			} else {
+				$interval_ts_upper = time();
+			}
 				
 			foreach($intervals as $interval){
 				// run site digest

@@ -33,6 +33,7 @@ Version history
 x.x:
 	- fixed: small coding error in group settings form
 	- fixed: recent members in site digest not working in multisite setup
+	- fixed: issue with digest time intervals (especialy on long running digests)
 
 1.3.2 (2011-10-17):
 	- fixed: likes no longer show up in digest

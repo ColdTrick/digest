@@ -224,9 +224,8 @@
 		global $interval_ts_lower;
 		
 		if($running_interval != $interval){
-			
 			$running_interval = $interval;
-			$interval_ts_upper = time(); 
+			
 			switch($interval){
 				case DIGEST_INTERVAL_DAILY:
 					$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24); 
