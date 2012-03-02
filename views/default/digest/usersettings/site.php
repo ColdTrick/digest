@@ -2,7 +2,8 @@
 
 	$user = $vars["user"];
 
-	$site_interval = $user->getPrivateSetting("digest_" . $vars["config"]->site_guid);
+	$site_guid = $vars["config"]->site_guid;
+	$site_interval = $user->getPrivateSetting("digest_" . $site_guid);
 	
 	if(empty($site_interval)){
 		$site_interval = get_plugin_setting("site_default", "digest");
@@ -22,7 +23,7 @@
 	
 	<div>
 		<?php echo elgg_echo("digest:usersettings:site:setting"); ?>
-		<select name="digest[<?php echo $user->site_guid; ?>]">
+		<select name="digest[<?php echo $site_guid; ?>]">
 			<option value="<?php echo DIGEST_INTERVAL_NONE; ?>" class='digest_interval_disabled' <?php if($site_interval == DIGEST_INTERVAL_NONE) echo "selected='selected'"; ?>><?php echo elgg_echo("digest:interval:none"); ?></option>
 			<option value="<?php echo DIGEST_INTERVAL_DAILY; ?>" <?php if($site_interval == DIGEST_INTERVAL_DAILY) echo "selected='selected'"; ?>><?php echo elgg_echo("digest:interval:daily"); ?></option>
 			<option value="<?php echo DIGEST_INTERVAL_WEEKLY; ?>" <?php if($site_interval == DIGEST_INTERVAL_WEEKLY) echo "selected='selected'"; ?>><?php echo elgg_echo("digest:interval:weekly"); ?></option>

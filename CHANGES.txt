@@ -1,6 +1,7 @@
 = Version history =
 x.x:
 
+- fixed: site digest setting not set correctly
 - changed: moved version history to CHANGES.txt (for Elgg 1.8)
 - changed: moved Features and ToDo to README.txt (for Elgg 1.8)
 
