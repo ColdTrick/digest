@@ -1,5 +1,5 @@
 = Version history =
-x.x:
+1.3.4 (2012-03-07):
 
 - fixed: site digest setting not set correctly
 - changed: moved version history to CHANGES.txt (for Elgg 1.8)
