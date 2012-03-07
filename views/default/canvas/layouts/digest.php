@@ -257,7 +257,7 @@
 					
 					$unsubscribe_link = $vars["area4"];
 					
-					echo sprintf(elgg_echo("digest:layout:footer:info"), $site_url);
+					echo elgg_echo("digest:layout:footer:info", array($site_url));
 					echo "&nbsp;" . $digest_url . "<br />";
 					echo elgg_view("output/url", array("href" => $unsubscribe_link, "text" => elgg_echo("digest:layout:footer:unsubscribe")));
 				?>

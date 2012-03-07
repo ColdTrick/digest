@@ -18,3 +18,5 @@ Sends mails with update information to your site or group members based on defau
 - exclude groups from delivery with a hook
 
 == 2. ToDo ==
+- new digest body
+- cleanup dutch translation

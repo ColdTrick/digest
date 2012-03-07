@@ -53,7 +53,7 @@
 				echo "<div>";
 				echo "<h3>" . elgg_view("output/url", array("href" => $blog->getURL(), "text" => $blog->title)) . "</h3>";
 				echo "<div class='strapline'>";
-				echo sprintf(elgg_echo("blog:strapline"), date("F j, Y", $blog->time_created));
+				echo elgg_echo("blog:strapline", array(date("F j, Y", $blog->time_created)));
 				echo " " . elgg_echo('by') . " " . elgg_view("output/url", array("href" => $vars["url"] . "pg/blog/owner/" . $blog->getOwnerEntity()->username, "text" => $blog->getOwnerEntity()->name));
 				echo "</div>";
 				echo elgg_get_excerpt($blog->description, 200);

@@ -1,20 +1,17 @@
 <?php 
 
-	if(!empty($vars["entity"])){
-		$group = $vars["entity"];
+	$group = elgg_extract("entity", $vars);
+
+	if(!empty($group) && elgg_instanceof($group, "group", null, "ElggGroup")){
 		
-		if(trigger_plugin_hook("digest", "group", array("group" => $group), true)){
+		if(elgg_trigger_plugin_hook("digest", "group", array("group" => $group), true)){
 			$group_interval = $group->digest_interval;
 			
 			if(empty($group_interval)){
-				$group_interval = get_plugin_setting("group_default", "digest");
-				
-				if(empty($group_interval)){
-					$group_interval = DIGEST_INTERVAL_NONE;
-				}
+				$group_interval = digest_get_default_group_interval();
 			}
 			
-			$form_body = elgg_view("input/hidden", array("internalname" => "group_guid", "value" => $group->getGUID()));
+			$form_body = elgg_view("input/hidden", array("name" => "group_guid", "value" => $group->getGUID()));
 			
 			$form_body .= "<div>\n";
 			$form_body .= elgg_echo("digest:groupsettings:setting");
@@ -53,25 +50,18 @@
 			$form_body .= "</select>\n";
 			$form_body .= "</div>\n";
 			
-			$form_body .= "<br />\n";
-			
 			$form_body .= "<div>\n";
 			$form_body .= elgg_view("input/submit", array("value" => elgg_echo("save")));
 			$form_body .= "</div>\n";
 			
 			$form = elgg_view("input/form", array("body" => $form_body,
 													"action" => $vars["url"] . "action/digest/update/groupsettings"));
-?>
-	<div class="contentWrapper">
-		<h3 class="settings"><?php echo elgg_echo("digest:groupsettings:title"); ?></h3>
-		
-		<div><?php echo elgg_echo("digest:groupsettings:description"); ?></div>
-		
-		<br />
-		
-		<?php echo $form; ?>
-	
-	</div>
-<?php 
+			
+			// build content
+			$content = "<div>" . elgg_echo("digest:groupsettings:description") . "</div>";
+			$content .= "<br />";
+			$content .= $form;
+			
+			echo elgg_view_module("info", elgg_echo("digest:groupsettings:title"), $content); 
 		}
 	}

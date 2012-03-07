@@ -1,13 +1,10 @@
 <?php 
 
-	gatekeeper();
-	action_gatekeeper();
-
-	$user_guid = get_input("user_guid", get_loggedin_userid());
+	$user_guid = (int) get_input("user_guid", elgg_get_logged_in_user_guid());
 	$digests = get_input("digest");
 	
-	if(!empty($user_guid) && !empty($digests)){
-		if($user = get_user($user_guid)){
+	if(!empty($user_guid) && !empty($digests) && is_array($digests)){
+		if(($user = get_user($user_guid)) && $user->canEdit()){
 			$error_count = 0;
 			
 			foreach($digests as $guid => $interval){
@@ -26,11 +23,11 @@
 				register_error(elgg_echo("digest:action:update:usersettings:error:unknown"));
 			}
 		} else {
-			register_error(elgg_echo("digest:action:update:usersettings:error:user"));
+			register_error(elgg_echo("InvalidClassException:NotValidElggStar", array($user_guid, "ElggUser")));
 		}
 	} else {
-		register_error(elgg_echo("digest:action:update:usersettings:error:input"));
+		register_error(elgg_echo("InvalidParameterException:MissingParameter"));
 	}
 	
-	forward($_SERVER["HTTP_REFERER"]);
-?>
+	forward(REFERER);
+	

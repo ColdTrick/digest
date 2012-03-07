@@ -3,9 +3,6 @@
 	$english = array(
 		'digest' => "Digest",
 	
-		// init
-		'digest:init:plugin_required:html_email_handler' => "This plugin require an other plugin 'html_email_handler', please enable this plugin first!",
-	
 		// digest intervals
 		'digest:interval:none' => "Disabled",
 		'digest:interval:default' => "Use group interval (currently: %s)",
@@ -24,7 +21,7 @@
 		// menu items
 		'digest:submenu:usersettings' => "Digest settings",
 		'digest:submenu:groupsettings' => "Digest settings",
-		'digest:submenu:analysis' => "Digest analysis",
+		'admin:statistics:digest' => "Digest analysis",
 		
 		// admin settings
 		'digest:settings:production:title' => "Digest production settings",
@@ -115,15 +112,10 @@
 		
 		// actions
 		// update usersettings
-		'digest:action:update:usersettings:error:input' => "Invalid input provided to save your digest settings",
-		'digest:action:update:usersettings:error:user' => "The supplied GUID is not a user",
 		'digest:action:update:usersettings:error:unknown' => "A unknown error occured while saving your digest settings",
 		'digest:action:update:usersettings:success' => "Your digest settings have been saved successfully",
 		
 		// update groupsettings
-		'digest:action:update:groupsettings:error:input' => "Invalid input provided to save the group digest settings",
-		'digest:action:update:groupsettings:error:entity' => "The supplied GUID is not an entity",
-		'digest:action:update:groupsettings:error:can_edit' => "Your not allowed to edit this group",
 		'digest:action:update:groupsettings:error:save' => "An unknown error occured while saving the settings, please try again",
 		'digest:action:update:groupsettings:success' => "The group digest settings have been saved successfully",
 		
@@ -135,5 +127,3 @@ You can also view the digest online using the following link: %s.",
 	);
 	
 	add_translation("en", $english);
-
-?>

@@ -1,19 +1,15 @@
 <?php 
 
-	$user = $vars["user"];
-	$groups = $vars["groups"];
+	$user = elgg_extract("user", $vars);
+	$groups = elgg_extract("groups", $vars);
 
 	if(!empty($groups)){
-		$site_group_interval = get_plugin_setting("group_interval", "digest");
-		
-		if(empty($site_group_interval)){
-			$site_group_interval = DIGEST_INTERVAL_NONE;
-		}
+		$site_group_interval = digest_get_default_group_interval();
 		
 		$group_items = "";
 		
 		foreach($groups as $group){
-			if(trigger_plugin_hook("digest", "group", array("group" => $group), true)){
+			if(elgg_trigger_plugin_hook("digest", "group", array("group" => $group), true)){
 				$group_interval = $group->digest_interval;
 				$user_group_interval = $user->getPrivateSetting("digest_" . $group->getGUID());
 				
@@ -41,7 +37,7 @@
 				if($user_group_interval == DIGEST_INTERVAL_DEFAULT){
 					$group_items .= " selected='selected'";
 				}
-				$group_items .= ">" . sprintf(elgg_echo("digest:interval:default"), elgg_echo("digest:interval:" . $group_interval)) . "</option>\n";
+				$group_items .= ">" . elgg_echo("digest:interval:default", array(elgg_echo("digest:interval:" . $group_interval))) . "</option>\n";
 				
 				$group_items .= "<option value='" . DIGEST_INTERVAL_DAILY . "'";
 				if($user_group_interval == DIGEST_INTERVAL_DAILY){
@@ -76,7 +72,7 @@
 		}
 		
 		if(!empty($group_items)){
-			$group_list = "<table class='digest_table_layout'>\n";
+			$group_list = "<table class='elgg-table'>\n";
 			
 			$group_list .= "<tr>\n";
 			$group_list .= "<th>" . elgg_echo("digest:usersettings:groups:group_header") . "</th>\n";
@@ -87,16 +83,9 @@
 			
 			$group_list .= "</table>\n";
 			
-			?>
-			<div>
-				<h3 class="settings"><?php echo elgg_echo("digest:usersettings:groups:title"); ?></h3>
-			
-				<div><?php echo elgg_echo("digest:usersettings:groups:description"); ?></div>
-				
-				<?php echo $group_list; ?>
-			</div>
-			
-			<?php
+			echo "<div>" . elgg_echo("digest:usersettings:groups:description") . "</div>";
+			echo "<br />";
+			echo $group_list;
 		}
 	}
-?>
+	

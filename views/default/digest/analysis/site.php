@@ -13,9 +13,9 @@
 	$default_mem_usage = 1500;
 	$default_time_usage = 0.05;
 
-	$default_interval = $vars["default_interval"];
-	$intervals = $vars["intervals"];
-	$site_interval = $vars["site_interval"]; // to predict usage
+	$default_interval = elgg_extract("default_interval", $vars, DIGEST_INTERVAL_NONE);
+	$intervals = elgg_extract("intervals", $vars);
+	$site_interval = elgg_extract("site_interval", $vars); // to predict usage
 
 	$site_stats = array(
 		"members" => array(),
@@ -40,10 +40,10 @@
 	
 	foreach($intervals as $interval){
 		// get stats
-		$site_stats["members"][$interval] = get_plugin_setting("site_digest_" . $interval . "_members", "digest");
-		$site_stats["avg_memory"][$interval] = round(get_plugin_setting("site_digest_" . $interval . "_avg_memory", "digest"), 2);
-		$site_stats["run_time"][$interval] = round(get_plugin_setting("site_digest_" . $interval . "_run_time", "digest"), 2);
-		$site_stats["send"][$interval] = get_plugin_setting("site_digest_" . $interval . "_send", "digest");
+		$site_stats["members"][$interval] = elgg_get_plugin_setting("site_digest_" . $interval . "_members", "digest");
+		$site_stats["avg_memory"][$interval] = round(elgg_get_plugin_setting("site_digest_" . $interval . "_avg_memory", "digest"), 2);
+		$site_stats["run_time"][$interval] = round(elgg_get_plugin_setting("site_digest_" . $interval . "_run_time", "digest"), 2);
+		$site_stats["send"][$interval] = elgg_get_plugin_setting("site_digest_" . $interval . "_send", "digest");
 		
 		// calculate stats
 		$site_stats["total_memory"][$interval] = ($site_stats["members"][$interval] * $site_stats["avg_memory"][$interval]);
@@ -118,16 +118,18 @@
 	}
 
 ?>
-<div class="contentWrapper" id="digest_analysis_site">
-	<h3 class="settings"><?php echo elgg_echo("digest:analysis:site:title"); ?></h3>
+<div class="elgg-module elgg-module-inline">
+	<div class="elgg-head">
+		<h3><?php echo elgg_echo("digest:analysis:site:title"); ?></h3>
+	</div>
 	
-	<table>
+	<table class="elgg-table">
 		<tr>
 			<th colspan="2">&nbsp;</th>
-			<th class='digest_analysis_interval'><?php echo elgg_echo("digest:interval:daily"); ?></th>
-			<th class='digest_analysis_interval'><?php echo elgg_echo("digest:interval:weekly"); ?></th>
-			<th class='digest_analysis_interval'><?php echo elgg_echo("digest:interval:fortnightly"); ?></th>
-			<th class='digest_analysis_interval'><?php echo elgg_echo("digest:interval:monthly"); ?></th>
+			<th><?php echo elgg_view("output/url", array("text" => elgg_echo("digest:interval:daily"), "href" => elgg_get_site_url() . "admin/statistics/digest?site_interval=" . DIGEST_INTERVAL_DAILY)); ?></th>
+			<th><?php echo elgg_view("output/url", array("text" => elgg_echo("digest:interval:weekly"), "href" => elgg_get_site_url() . "admin/statistics/digest?site_interval=" . DIGEST_INTERVAL_WEEKLY)); ?></th>
+			<th><?php echo elgg_view("output/url", array("text" => elgg_echo("digest:interval:fortnightly"), "href" => elgg_get_site_url() . "admin/statistics/digest?site_interval=" . DIGEST_INTERVAL_FORTNIGHTLY)); ?></th>
+			<th><?php echo elgg_view("output/url", array("text" => elgg_echo("digest:interval:monthly"), "href" => elgg_get_site_url() . "admin/statistics/digest?site_interval=" . DIGEST_INTERVAL_MONTHLY)); ?></th>
 		</tr>
 		<?php 
 		
@@ -143,7 +145,6 @@
 					$current = true;
 					$sub_count++;
 					$current_row .= "<tr>\n";
-					$current_row .= "<td>&nbsp;</td>\n";
 					$current_row .= "<td>" . elgg_echo("digest:analysis:current") . "</td>\n";
 				}
 				
@@ -151,14 +152,13 @@
 					$predict = true;
 					$sub_count++;
 					$predict_row .= "<tr>\n";
-					$predict_row .= "<td>&nbsp;</td>\n";
 					$predict_row .= "<td>" . elgg_echo("digest_analysis:predict") . "</td>\n";
 				}
 				
 				echo "<tr>\n";
 				
 				if($sub_count > 1){
-					echo "<td>" . elgg_echo("digest:analysis:site:" . $stat_name) . "</td>\n";
+					echo "<td rowspan='" . $sub_count . "'>" . elgg_echo("digest:analysis:site:" . $stat_name) . "</td>\n";
 					echo "<td>" . elgg_echo("digest:analysis:last_run") . "</td>\n";
 				} else {
 					echo "<td colspan='2'>" . elgg_echo("digest:analysis:site:" . $stat_name) . "</td>\n";
@@ -172,9 +172,9 @@
 							$value = digest_readable_time($value);
 						}
 					
-						echo "<td class='digest_analysis_interval digest_analysis_interval_value'>" . $value . "</td>\n";
+						echo "<td>" . $value . "</td>\n";
 					} else {
-						echo "<td class='digest_analysis_interval digest_analysis_interval_value'>&nbsp;</td>\n";
+						echo "<td>&nbsp;</td>\n";
 					}
 					
 					if($current){
@@ -187,9 +187,9 @@
 								$cur_val = digest_readable_time($cur_val);
 							}
 						
-							$current_row .= "<td class='digest_analysis_interval digest_analysis_interval_value'>" . $cur_val . "</td>\n";
+							$current_row .= "<td>" . $cur_val . "</td>\n";
 						} else {
-							$current_row .= "<td class='digest_analysis_interval digest_analysis_interval_value'>&nbsp;</td>\n";
+							$current_row .= "<td>&nbsp;</td>\n";
 						}
 					}
 					
@@ -203,9 +203,9 @@
 								$pre_val = digest_readable_time($pre_val);
 							}
 
-							$predict_row .= "<td class='digest_analysis_interval digest_analysis_interval_value'>" . $pre_val . "</td>\n";
+							$predict_row .= "<td>" . $pre_val . "</td>\n";
 						} else {
-							$predict_row .= "<td class='digest_analysis_interval digest_analysis_interval_value'>&nbsp;</td>\n";
+							$predict_row .= "<td>&nbsp;</td>\n";
 						}
 					}
 				}

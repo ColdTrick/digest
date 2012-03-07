@@ -1,14 +1,9 @@
 <?php
 
-	// make sure this page can be viewed even on walled garden sites
-	define("externalpage", true);
-
 	// get inputs
 	$guid = (int) get_input("guid");
 	$user_guid = (int) get_input("user_guid");
 	$code = get_input("code");
-	
-	$forward = true;
 	
 	if(!empty($guid) && !empty($user_guid) && !empty($code)){
 		if(($user = get_user($user_guid)) && digest_validate_unsubscribe_code($guid, $user, $code)){

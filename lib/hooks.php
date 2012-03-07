@@ -1,7 +1,14 @@
 <?php
 
+	/**
+	 * Handler the cron of Elgg to send out digests
+	 * 
+	 * @param string $hook
+	 * @param string $entity_type => the interval of the current cron
+	 * @param bool $returnvalue
+	 * @param array $params
+	 */
 	function digest_cron_handler($hook, $entity_type, $returnvalue, $params){
-		global $CONFIG;
 		global $dbcalls;
 		global $DB_QUERY_CACHE;
 		global $ENTITY_CACHE;
@@ -16,9 +23,12 @@
 		$intervals = array();
 		$debug_mode = false;
 	
-		if(isset($CONFIG->debug) && ($CONFIG->debug == true)){
+		if(get_config("debug")){
 			$debug_mode = true;
 		}
+		
+		// set correct time
+		$interval_ts_upper = elgg_extract("time", $params, time());
 	
 		switch($entity_type){
 			case "daily":
@@ -27,7 +37,7 @@
 			case "weekly":
 				$intervals[] = DIGEST_INTERVAL_WEEKLY;
 	
-				if(date("W") & 1){
+				if(date("W", $interval_ts_upper) & 1){
 					// odd weeks
 					$intervals[] =  DIGEST_INTERVAL_FORTNIGHTLY;
 				} else {
@@ -43,23 +53,16 @@
 			$digest_site_sent = 0;
 			$digest_group_sent = 0;
 			
-			// set correct time
-			if(isset($params["time"])){
-				$interval_ts_upper = $params["time"];
-			} else {
-				$interval_ts_upper = time();
-			}
-				
 			foreach($intervals as $interval){
 				// run site digest
 				$include_site_default = false;
-				$site_default_interval = get_plugin_setting("site_default", "digest");
+				$site_default_interval = digest_get_default_site_interval();
 	
 				if($site_default_interval == $interval){
 					$include_site_default = true;
 				}
 	
-				$site_members = digest_get_users($CONFIG->site_guid, $interval, $include_site_default);
+				$site_members = digest_get_users(get_config("site_guid"), $interval, $include_site_default);
 	
 				if(!empty($site_members)){
 					$db_query_backup = $DB_QUERY_CACHE;
@@ -106,19 +109,19 @@
 				}
 	
 				// save site stats
-				set_plugin_setting("site_digest_" . $interval . "_members", $site_members_count, "digest");
-				set_plugin_setting("site_digest_" . $interval . "_avg_memory", $avg_site_members_memory, "digest");
-				set_plugin_setting("site_digest_" . $interval . "_run_time", $site_run_time, "digest");
-				set_plugin_setting("site_digest_" . $interval . "_send", $digest_mail_send, "digest");
+				elgg_set_plugin_setting("site_digest_" . $interval . "_members", $site_members_count, "digest");
+				elgg_set_plugin_setting("site_digest_" . $interval . "_avg_memory", $avg_site_members_memory, "digest");
+				elgg_set_plugin_setting("site_digest_" . $interval . "_run_time", $site_run_time, "digest");
+				elgg_set_plugin_setting("site_digest_" . $interval . "_send", $digest_mail_send, "digest");
 	
 				// reset mail counter
 				$digest_mail_send = 0;
 	
 				// run group digest
-				if(is_plugin_enabled("groups") && digest_group_enabled()){
+				if(elgg_is_active_plugin("groups") && digest_group_enabled()){
 					$group_options = array(
-							"type" => "group",
-							"count" => true
+						"type" => "group",
+						"count" => true
 					);
 						
 					if($group_count = elgg_get_entities($group_options)){
@@ -136,12 +139,12 @@
 						$entity_backup = $ENTITY_CACHE;
 	
 						foreach($groups as $group){
-							if(trigger_plugin_hook("digest", "group", array("group" => $group), true)){
+							if(elgg_trigger_plugin_hook("digest", "group", array("group" => $group), true)){
 								$include_group_default = false;
 								$group_default_interval = $group->digest_interval;
 	
 								if(empty($group_default_interval)){
-									$group_default_interval = get_plugin_setting("group_default", "digest");
+									$group_default_interval = digest_get_default_group_interval();
 								}
 	
 								if($group_default_interval == $interval){
@@ -213,17 +216,61 @@
 					}
 						
 					// save group stats
-					set_plugin_setting("group_digest_" . $interval . "_count", $group_count, "digest");
-					set_plugin_setting("group_digest_" . $interval . "_total_members", $total_group_members_count, "digest");
-					set_plugin_setting("group_digest_" . $interval . "_avg_members", $avg_group_members, "digest");
-					set_plugin_setting("group_digest_" . $interval . "_avg_members_memory", $avg_group_members_memory, "digest");
-					set_plugin_setting("group_digest_" . $interval . "_avg_memory", $avg_group_memory, "digest");
-					set_plugin_setting("group_digest_" . $interval . "_run_time", $group_run_time, "digest");
-					set_plugin_setting("group_digest_" . $interval . "_send", $digest_mail_send, "digest");
+					elgg_set_plugin_setting("group_digest_" . $interval . "_count", $group_count, "digest");
+					elgg_set_plugin_setting("group_digest_" . $interval . "_total_members", $total_group_members_count, "digest");
+					elgg_set_plugin_setting("group_digest_" . $interval . "_avg_members", $avg_group_members, "digest");
+					elgg_set_plugin_setting("group_digest_" . $interval . "_avg_members_memory", $avg_group_members_memory, "digest");
+					elgg_set_plugin_setting("group_digest_" . $interval . "_avg_memory", $avg_group_memory, "digest");
+					elgg_set_plugin_setting("group_digest_" . $interval . "_run_time", $group_run_time, "digest");
+					elgg_set_plugin_setting("group_digest_" . $interval . "_send", $digest_mail_send, "digest");
 						
 					// reset mail counter
 					$digest_mail_send = 0;
 				}
 			}
 		}
+	}
+	
+	/**
+	 * when a default site interval is set, the user must tell us wether he/shw wants te receive a digest
+	 * 
+	 * @param string $hook
+	 * @param string $type
+	 * @param bool $return_value
+	 * @param arrat$params
+	 */
+	function digest_register_user_hook($hook, $type, $return_value, $params){
+		
+		if(!empty($params) && is_array($params)){
+			$user = elgg_extract("user", $params);
+			
+			if(!empty($user) && elgg_instanceof($user, "user", null, "ElggUser") && ($site_interval = digest_get_default_site_interval())){
+				// show hidden users (maybe disabled by uservalidationbyemail)
+				$show_hidden = access_get_show_hidden_status();
+				access_show_hidden_entities(true);
+				
+				if(get_input("digest_site") == "yes"){
+					$user->setPrivateSetting("digest_" . get_config("site_guid"), $site_interval);
+				} else {
+					$user->setPrivateSetting("digest_" . get_config("site_guid"), DIGEST_INTERVAL_NONE);
+				}
+				
+				access_show_hidden_entities($show_hidden);
+			}
+		}
+	}
+	
+	/**
+	 * Allow users to directly unsubscribe even in walled garden
+	 * 
+	 * @param string $hook
+	 * @param string $type
+	 * @param array $return_value
+	 * @param $params
+	 * @return array
+	 */
+	function digest_walled_garden_hook($hook, $type, $return_value, $params){
+		$return_value[] = "digest/unsubscribe";
+		
+		return $return_value;
 	}

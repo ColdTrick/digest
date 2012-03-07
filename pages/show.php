@@ -19,7 +19,7 @@
 		if(!empty($group_guid)){
 			if($group = get_entity($group_guid)){
 				if($group instanceof ElggGroup){
-					$title_text = sprintf(elgg_echo("digest:message:title:group"), $CONFIG->site->name, $group->name, elgg_echo("digest:interval:" . $interval));
+					$title_text = elgg_echo("digest:message:title:group", array($CONFIG->site->name, $group->name, elgg_echo("digest:interval:" . $interval)));
 					
 					$data = elgg_view("digest/message/group_body", array("ts_lower" => $ts_lower, "ts_upper" => $ts_upper, "group" => $group));
 				}
@@ -28,7 +28,7 @@
 		
 		// no group or invalid group or no data
 		if(empty($group_guid) || empty($data)){
-			$title_text = sprintf(elgg_echo("digest:message:title:site"), $CONFIG->site->name, elgg_echo("digest:interval:" . $interval));
+			$title_text = elgg_echo("digest:message:title:site", array($CONFIG->site->name, elgg_echo("digest:interval:" . $interval)));
 			
 			$data = elgg_view("digest/message/site_body", array("ts_lower" => $ts_lower, "ts_upper" => $ts_upper));
 		}

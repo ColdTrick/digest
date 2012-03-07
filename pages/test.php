@@ -12,7 +12,7 @@
 	
 	$user = get_loggedin_user();
 	
-	$subject = sprintf( elgg_echo("digest:message:title:site"), $CONFIG->site->name, elgg_echo("digest:interval:" . $interval));;
+	$subject = elgg_echo("digest:message:title:site", array($CONFIG->site->name, elgg_echo("digest:interval:" . $interval)));
 	
 //	$group_options = array(
 //		"type" => "group",
