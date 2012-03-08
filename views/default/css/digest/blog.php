@@ -6,11 +6,13 @@
 
 .digest_blog {
 	padding: 10px 0px;
+	display: inline-block;
+	width: 100%;
 }
 
 .digest_blog img {
 	float: left;
-	padding: 5px 15px 5px 0;
+	padding: 5px 15px 0 0;
 }
 
 .digest_blog h4 {
