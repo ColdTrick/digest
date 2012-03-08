@@ -9,16 +9,13 @@
 	$ts_lower = (int) elgg_extract("ts_lower", $vars);
 	$ts_upper = (int) elgg_extract("ts_upper", $vars);
 
-
-	
-
 	$member_options = array(
-			"type" => "user",
-			"limit" => 10,
-			"relationship" => "member_of_site",
-			"relationship_guid" => get_config("site_guid"),
-			"inverse_relationship" => true,
-			"wheres" => array("(r.time_created BETWEEN " . $ts_lower . " AND " . $ts_upper . ")")
+		"type" => "user",
+		"limit" => 10,
+		"relationship" => "member_of_site",
+		"relationship_guid" => get_config("site_guid"),
+		"inverse_relationship" => true,
+		"wheres" => array("(r.time_created BETWEEN " . $ts_lower . " AND " . $ts_upper . ")")
 	);
 
 	if($newest_members = elgg_get_entities_from_relationship($member_options)){

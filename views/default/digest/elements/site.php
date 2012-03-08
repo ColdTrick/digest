@@ -1,7 +1,7 @@
 <?php
 
 	/**
-	 * This is a wrapped view to make the body of the site digest
+	 * This is a wrapper view to make the body of the site digest
 	 * 
 	 * Plugins can extend this view to make some content available
 	 * 
