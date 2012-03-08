@@ -71,20 +71,19 @@ h3 {
 	border-right: 1px solid #dbdbdb;
 }
 
+.elgg-module-digest .elgg-head {
+	padding-bottom: 5px;
+	border-bottom: 1px solid #dbdbdb;
+}
+
+.elgg-module-digest h3 {
+	font-size: 16px;
+}
+
 .elgg-module-digest h1 a,
 .elgg-module-digest h2 a,
 .elgg-module-digest h3 a {
 	text-decoration: none;
-}
-
-.elgg-module-digest a:hover,
-.elgg-module-digest a:hover,
-.elgg-module-digest a:hover {
-	text-decoration: underline;
-}
-
-.elgg-module-digest h3 {
-	font-size: 14px;
 }
 
 #digest_unsubscribe {
