@@ -12,6 +12,7 @@
 			<?php echo elgg_view("css/digest/core"); ?>
 		</style>
 		<div id="digest_online">
+			<?php echo $vars["digest_online"]; ?>
 		</div>
 		<div id="digest_container">
 			<div>

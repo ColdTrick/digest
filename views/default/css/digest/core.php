@@ -25,6 +25,12 @@ h3 {
 	margin: 0;
 }
 
+#digest_online {
+	color: #999999;
+	text-align: right;
+	padding: 10px 20px 0px;
+}
+
 #digest_header {
 	background: #4690d6;
 	
