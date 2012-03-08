@@ -14,11 +14,7 @@
 	*
 	*/
 
-	$ts_lower = (int) elgg_extract("ts_lower", $vars);
-	$ts_upper = (int) elgg_extract("ts_upper", $vars);
-	$interval = elgg_extract("interval", $vars);
-	
 	// make link
-	$digest_url = elgg_get_site_url() . "digest/show?ts_upper=" . $ts_upper . "&ts_lower=" . $ts_lower . "&interval=" . $interval;
+	$digest_url = digest_get_online_url($vars);
 	
 	echo "<a href='" . $digest_url . "'>" . elgg_echo("digest:message:online") . "</a><br />";

@@ -104,25 +104,39 @@
 			$SESSION["guid"] = $user->getGUID();
 			$SESSION["id"] = $user->getGUID();
 			
+			// prepare some vars for the different views
+			$vars = array(
+				"user" => $user,
+				"ts_lower" => $interval_ts_lower,
+				"ts_upper" => $interval_ts_upper,
+				"interval" => $interval
+			);
+			
 			// get data for user
-			$userdata = elgg_view("digest/message/site_body", array("ts_lower" => $interval_ts_lower, "ts_upper" => $interval_ts_upper));
+			$userdata = elgg_view("digest/elements/site", $vars);
 			
 			if(!empty($userdata)){
-				// link to online view
-				$digest_url = elgg_get_site_url() . "digest/show?ts_upper=" . $interval_ts_upper . "&ts_lower=" . $interval_ts_lower . "&interval=" . $interval;
-				$digest_online = "<a href='" . $digest_url . "'>" . elgg_echo("digest:message:online") . "</a><br />";
+				// there is content so send it to the user
+				$params = array(
+					"title" => elgg_get_site_entity()->name,
+					"content" => $userdata,
+					"footer" => elgg_view("digest/elements/footer", $vars),
+					"digest_header" => elgg_view("digest/elements/header", $vars),
+					"digest_online" => elgg_view("digest/elements/online", $vars),
+					"digest_unsubscribe" => elgg_view("digest/elements/unsubscribe", $vars)
+				);
 				
-				// unsubscribe link
-				$digest_unsubscribe = digest_create_unsubscribe_link(get_config("site_guid"), $user);
+				// link to online view
+				$digest_online_url = digest_get_online_url($vars);
 				
 				// message_subject
 				$message_subject = elgg_echo("digest:message:title:site", array(elgg_get_site_entity()->name, elgg_echo("digest:interval:" . $interval)));
 				// message body
-				$message_body = elgg_view_layout("digest", $message_subject, $userdata, $digest_online, $digest_unsubscribe);
+				$message_body = elgg_view_layout("digest", $params);
 				
 				// send message
 				// if succesfull mail return true
-				$result = digest_send_mail($user, $message_subject, $message_body, $digest_url);
+				$result = digest_send_mail($user, $message_subject, $message_body, $digest_online_url);
 			} else {
 				// no data is still succesful
 				$result = true;
@@ -189,25 +203,40 @@
 				$SESSION["guid"] = $user->getGUID();
 				$SESSION["id"] = $user->getGUID();
 				
+				// prepare some vars for the different views
+				$vars = array(
+					"user" => $user,
+					"group" => $group,
+					"ts_lower" => $interval_ts_lower,
+					"ts_upper" => $interval_ts_upper,
+					"interval" => $interval
+				);
+				
 				// get data for user
-				$userdata = elgg_view("digest/message/group_body", array("ts_lower" => $interval_ts_lower, "ts_upper" => $interval_ts_upper, "group" => $group));
+				$userdata = elgg_view("digest/elements/group", $vars);
 				
 				if(!empty($userdata)){
-					// link to online view
-					$digest_url = elgg_get_site_url() . "digest/show?ts_upper=" . $interval_ts_upper . "&ts_lower=" . $interval_ts_lower . "&interval=" . $interval . "&group_guid=" . $group->getGUID();
-					$digest_online = "<a href='" . $digest_url . "'>" . elgg_echo("digest:message:online") . "</a><br />";
+					// there is content so send it to the user
+					$params = array(
+						"title" => elgg_get_site_entity()->name,
+						"content" => $userdata,
+						"footer" => elgg_view("digest/elements/footer", $vars),
+						"digest_header" => elgg_view("digest/elements/header", $vars),
+						"digest_online" => elgg_view("digest/elements/online", $vars),
+						"digest_unsubscribe" => elgg_view("digest/elements/unsubscribe", $vars)
+					);
 					
-					// unsubscribe link
-					$digest_unsubscribe = digest_create_unsubscribe_link($group->getGUID(), $user);
+					// link to online view
+					$digest_online_url = digest_get_online_url($vars);
 					
 					// message_subject
 					$message_subject = elgg_echo("digest:message:title:group", array(elgg_get_site_entity()->name, $group->name, elgg_echo("digest:interval:" . $interval)));
 					// message body
-					$message_body = elgg_view_layout("digest", $message_subject, $userdata, $digest_online, $digest_unsubscribe);
+					$message_body = elgg_view_layout("digest", $params);
 		
 					// send message
 					// if succesfull mail return true
-					$result = digest_send_mail($user, $message_subject, $message_body, $digest_url);
+					$result = digest_send_mail($user, $message_subject, $message_body, $digest_online_url);
 				} else {
 					// no data is still succesful
 					$result = true;
@@ -533,6 +562,28 @@
 			if($setting = elgg_get_plugin_setting("group_default", "digest")){
 				$result = $setting;
 			}
+		}
+		
+		return $result;
+	}
+	
+	function digest_get_online_url($params = array()){
+		$result = false;
+		
+		if(!empty($params) && is_array($params)){
+			$base_url = elgg_get_site_url() . "digest/show";
+			
+			$url_params = array(
+				"ts_lower" => $params["ts_lower"],
+				"ts_upper" => $params["ts_upper"],
+				"interval" => $params["interval"]
+			);
+			
+			if(!empty($params["group"])){
+				$url_params["group_guid"] = $params["group"]->getGUID();
+			}
+			
+			$result = elgg_http_add_url_query_elements($base_url, $url_params);
 		}
 		
 		return $result;

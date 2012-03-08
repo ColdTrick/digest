@@ -13,10 +13,14 @@
 	*
 	*/
 
+	$group = elgg_extract("group", $vars);
 	$interval = elgg_extract("interval", $vars);
 	$site = elgg_get_site_entity();
 	
 	echo "<h1>";
-	echo $site->name . ": ";
-	echo elgg_echo("digest:interval:" . $interval);
+	if(!empty($group)){
+		echo elgg_echo("digest:message:title:group", array($site->name, $group->name, elgg_echo("digest:interval:" . $interval)));
+	} else {
+		echo elgg_echo("digest:message:title:site", array($site->name, elgg_echo("digest:interval:" . $interval)));
+	}
 	echo "</h1>";
