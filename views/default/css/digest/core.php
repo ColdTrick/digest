@@ -20,18 +20,39 @@ img {
 
 h1,
 h2,
-h3 {
+h3,
+h4 {
 	color: #4690d6;
 	margin: 0;
 }
 
+h1 {
+	font-size: 18px;
+}
+
+h2 {
+	font-size: 16px;
+}
+
+h3 {
+	font-size: 16px;
+}
+
+h4 {
+	font-size: 14px;
+}
+
 #digest_online {
+	font-size: 11px;
 	color: #999999;
 	text-align: right;
 	padding: 10px 20px 0px;
 }
 
 #digest_header {
+	padding: 10px 30px;
+	min-height: 20px;
+	
 	background: #4690d6;
 	
 	border-top: 1px solid #dbdbdb;
@@ -44,11 +65,8 @@ h3 {
 	border-radius: 5px 5px 0 0;
 }
 
-#digest_header {
-	color: #FFFFFF;
-	font-size: 18px;
-	padding: 10px 30px;
-	min-height: 20px;
+#digest_header h1{
+	color: #FFFFFF;	
 }
 
 #digest_container {
@@ -76,15 +94,20 @@ h3 {
 	border-bottom: 1px solid #dbdbdb;
 }
 
-.elgg-module-digest h3 {
-	font-size: 16px;
-}
-
 .elgg-module-digest h1 a,
 .elgg-module-digest h2 a,
 .elgg-module-digest h3 a {
 	text-decoration: none;
 }
+
+.elgg-avatar img{
+	display: inline-block;
+}
+
+.elgg-avatar-medium img {
+	width: 100px;
+	height: 100px;
+} 
 
 #digest_unsubscribe {
 	font-size: 11px;

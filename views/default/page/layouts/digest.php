@@ -24,7 +24,7 @@
 				</div>
 			</div>
 			<div id="digest_footer">
-				<?php echo $vars["digest_footer"]; ?>
+				<?php echo $vars["footer"]; ?>
 			</div>
 			<div id="digest_unsubscribe">
 				<?php echo $vars["digest_unsubscribe"]; ?>

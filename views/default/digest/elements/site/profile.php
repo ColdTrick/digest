@@ -11,7 +11,7 @@
 
 	$member_options = array(
 		"type" => "user",
-		"limit" => 10,
+		"limit" => 6,
 		"relationship" => "member_of_site",
 		"relationship_guid" => get_config("site_guid"),
 		"inverse_relationship" => true,
@@ -19,28 +19,34 @@
 	);
 
 	if($newest_members = elgg_get_entities_from_relationship($member_options)){
-		$member_items = "<table>";
+		$member_items = "<table class='digest_profile'>";
 		
 		foreach($newest_members as $index => $mem){
-			$mem_url = $mem->getURL();
-
-			if(($index + 1 ) % 2){
+			if(($index % 3 == 0)){
 				$member_items .= "<tr>";
 			}
 
-			$member_items .= "<td><a href='" . $mem_url . "'>" . elgg_view("profile/icon",array('entity' => $mem, 'size' => 'small', 'override' => true)) . "</a> <a href='" . $mem_url . "'>" . $mem->name . "</a></td>";
-
-			if(!(($index + 1 ) % 2)){
+			$member_items .= "<td>";
+			$member_items .= elgg_view_entity_icon($mem, 'medium', array('override' => true));
+			$member_items .= " <a href='" .  $mem->getURL() . "'>" . $mem->name . "</a><br />";
+			$member_items .= $mem->briefdescription;
+			$member_items .= "</td>";
+			
+			if(($index % 3) === 2 ){
 				$member_items .= "</tr>";
 			}
 		}
-		
-		if((($index + 1 ) % 2)){
-			$member_items .= "<td>&nbsp;</td></tr>";
+		if(($index % 3) !== 2){
+			if(($index + 2) % 3){
+				$member_items .= "<td>&nbsp;</td><td>&nbsp;</td></tr>";
+			} elseif(($index + 1) % 3){
+				$member_items .= "<td>&nbsp;</td></tr>";
+			}
 		}
 			
 		$member_items .= "</table>";
+		$title = elgg_view("output/url", array("text" => elgg_echo("members"), "href" => "members" ));
 		
-		echo elgg_view_module("digest", elgg_echo("members"), $member_items);
+		echo elgg_view_module("digest", $title , $member_items);
 	}
 	
