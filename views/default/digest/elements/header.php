@@ -16,7 +16,7 @@
 	$interval = elgg_extract("interval", $vars);
 	$site = elgg_get_site_entity();
 	
-	echo "<h2>";
+	echo "<h1>";
 	echo $site->name . ": ";
 	echo elgg_echo("digest:interval:" . $interval);
-	echo "</h2>";
+	echo "</h1>";
