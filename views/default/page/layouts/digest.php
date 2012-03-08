@@ -16,7 +16,7 @@
 	</head>
 	<body>
 		<style type="text/css">		
-			<?php echo elgg_view("page/layouts/digest/core"); ?>
+			<?php echo elgg_view("css/digest/core"); ?>
 		</style>
 		<div id="digest_container">
 			<div id="digest_wrapper">

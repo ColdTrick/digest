@@ -15,6 +15,9 @@
 		// extend css
 		elgg_extend_view("css/elgg", "digest/css/site");
 		
+		// extend the Digest message CSS
+		digest_message_css();
+		
 		// register page handler for nice url's
 		elgg_register_page_handler("digest", "digest_page_handler");
 		
@@ -80,6 +83,29 @@
 		}
 		
 		return true;
+	}
+	
+	function digest_message_css(){
+		
+		elgg_extend_view("css/digest/core", "css/digest/river");
+		
+		if(elgg_is_active_plugin("blog")){
+			elgg_extend_view("css/digest/core", "css/digest/blog");
+			
+			elgg_extend_view("digest/elements/site", "digest/elements/site/blog");
+		}
+		
+		if(elgg_is_active_plugin("groups")){
+			elgg_extend_view("page/digest/digest/core", "css/digest/groups");
+			
+			elgg_extend_view("digest/elements/site", "digest/elements/site/groups");
+		}
+		
+		if(elgg_is_active_plugin("profile")){
+			elgg_extend_view("page/digest/digest/core", "css/digest/profile");
+			
+			elgg_extend_view("digest/elements/site", "digest/elements/site/profile");
+		}
 	}
 	
 	// register elgg events
