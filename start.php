@@ -13,7 +13,7 @@
 	
 	function digest_init(){
 		// extend css
-		elgg_extend_view("css/elgg", "digest/css");
+		elgg_extend_view("css/elgg", "digest/css/site");
 		
 		// register page handler for nice url's
 		elgg_register_page_handler("digest", "digest_page_handler");
