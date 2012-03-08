@@ -73,7 +73,7 @@
 
 <div id="owner_block_digest_group" title="<?php echo elgg_echo("digest:usersettings:group:setting"); ?>">
 	<?php 
-	 	echo elgg_view("output/url", array("href" => $vars["url"] . "pg/digest/user/" . $user->username, "text" => elgg_view_icon("info") . elgg_echo("digest:usersettings:group:more")));
+	 	echo elgg_view("output/url", array("href" => $vars["url"] . "digest/user/" . $user->username, "text" => elgg_view_icon("info") . elgg_echo("digest:usersettings:group:more")));
 		echo "<br />";
 	
 		echo $form; 

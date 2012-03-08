@@ -253,7 +253,7 @@
 					echo $vars["area3"];
 					
 					$site_url = elgg_view("output/url", array("href" => $vars["config"]->site->url, "text" => $vars["config"]->site->name));
-					$digest_url = elgg_view("output/url", array("href" => $vars["url"] . "pg/digest", "text" => elgg_echo("digest:layout:footer:update")));
+					$digest_url = elgg_view("output/url", array("href" => $vars["url"] . "digest", "text" => elgg_echo("digest:layout:footer:update")));
 					
 					$unsubscribe_link = $vars["area4"];
 					

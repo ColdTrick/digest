@@ -42,9 +42,16 @@
 			
 			elgg_register_menu_item("page", array(
 				"name" => "digest",
-				"text" => elgg_echo("digest:submenu:usersettings"),
+				"text" => elgg_echo("digest:page_menu:settings"),
 				"href" => "digest/user/" . $user->username,
 				"context" => "settings"
+			));
+			
+			elgg_register_menu_item('page', array(
+				"name" => "digest",
+				"text" => elgg_echo("digest:page_menu:theme_preview"),
+				"href" => "digest/test",
+				"context" => "theme_preview"
 			));
 			
 			elgg_register_admin_menu_item("administer", "digest", "statistics");

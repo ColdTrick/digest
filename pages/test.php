@@ -1,5 +1,5 @@
 <?php 
-	global $CONFIG;
+	
 	admin_gatekeeper();
 
 	// remove some view extensions
@@ -10,9 +10,9 @@
 	$ts_lower = time() - (60*60*24*31);
 	$interval = "monthly";
 	
-	$user = get_loggedin_user();
+	$user = elgg_get_logged_in_user_entity();
 	
-	$subject = elgg_echo("digest:message:title:site", array($CONFIG->site->name, elgg_echo("digest:interval:" . $interval)));
+	$subject = elgg_echo("digest:message:title:site", array(elgg_get_site_entity()->name, elgg_echo("digest:interval:" . $interval)));
 	
 //	$group_options = array(
 //		"type" => "group",
@@ -26,10 +26,10 @@
 //		$content = elgg_view("digest/message/group_body", array("ts_lower" => time() - (60*60*24*31), "ts_upper" => time(), "group" => $group));
 //	}
 	
-	$digest_url = $CONFIG->wwwroot . "pg/digest/show?ts_upper=" . $ts_upper . "&ts_lower=" . $ts_lower . "&interval=monthly";
+	$digest_url = elgg_get_site_url() . "digest/show?ts_upper=" . $ts_upper . "&ts_lower=" . $ts_lower . "&interval=monthly";
 	$digest_online = "<a href='" . $digest_url . "'>" . elgg_echo("digest:message:online") . "</a><br />";
 	
-	$digest_unsubscribe = digest_create_unsubscribe_link($CONFIG->site_guid, $user);
+	$digest_unsubscribe = digest_create_unsubscribe_link(get_config("site_guid"), $user);
 	
 	$content = elgg_view("digest/message/site_body", array("ts_lower" => $ts_lower, "ts_upper" => $ts_upper));
 	

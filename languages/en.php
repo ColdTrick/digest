@@ -19,7 +19,8 @@
 		'digest:readable:time:hours' => "hrs",
 		
 		// menu items
-		'digest:submenu:usersettings' => "Digest settings",
+		'digest:page_menu:settings' => "Digest settings",
+		'digest:page_menu:theme_preview' => "Digest preview",
 		'digest:submenu:groupsettings' => "Digest settings",
 		'admin:statistics:digest' => "Digest analysis",
 		

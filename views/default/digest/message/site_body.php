@@ -1,11 +1,9 @@
 <?php 
 
-	global $CONFIG;
-	
-	$user = get_loggedin_user();
+	$user = elgg_get_logged_in_user_entity();
 
-	$ts_lower = sanitise_int($vars["ts_lower"]);
-	$ts_upper = sanitise_int($vars["ts_upper"]);
+	$ts_lower = sanitise_int($vars["ts_lower"], false);
+	$ts_upper = sanitise_int($vars["ts_upper"], false);
 	
 	
 	// if data returns nothing make sure to echo nothing
@@ -15,21 +13,19 @@
 	
 	// Friends activity section
 	// retrieve recent friends activity
-	if($river_items = get_river_items($user->getGUID(), 0, 'friend', '', '', '', 5, 0, $ts_lower, $ts_upper)){
+	$river_options = array(
+		"relationship" => "friend",
+		"relationship_guid" => $user->getGUID(),
+		"limit" => 5,
+		"posted_time_lower" => $ts_lower,
+		"posted_time_upper" => $ts_upper
+	);
+	
+	if($river_items = elgg_list_river($river_options)){
 		echo "<h2>" . elgg_echo("content:latest") . "</h2>";
 		
 		echo "<div id='digest_river_item_list' class='river_item_list'>";
-		foreach($river_items as $item){
-			if(!empty($item->view)){
-				if(get_entity($item->object_guid) && get_entity($item->subject_guid)){
-					if(elgg_view_exists($item->view)){
-						$body = elgg_view($item->view, array("item" => $item));
-						
-						echo elgg_view("digest/river/item/wrapper", array("item" => $item, "body" => $body));
-					}
-				}
-			}
-		}
+		echo $river_items;
 		echo "</div>";
 		
 		echo "<hr />";
@@ -37,29 +33,20 @@
 	// end Friends activity section
 	
 	// latest blogs
-	if(is_plugin_enabled("blog")){
+	if(elgg_is_active_plugin("blog")){
 		$blog_options = array(
 			"type" => "object",
 			"subtype" => "blog",
 			"limit" => 5,
 			"created_time_lower" => $ts_lower,
-			"created_time_upper" => $ts_upper
+			"created_time_upper" => $ts_upper,
+			"full_view" => false
 		);
 		
-		if($latest_blogs = elgg_get_entities($blog_options)){
-			echo "<h2><a href='" . $vars["url"] . "pg/blog/all/'>" . elgg_echo("blogs") . "</a></h2>";
+		if($latest_blogs = elgg_list_entities($blog_options)){
+			echo "<h2><a href='" . $vars["url"] . "blog/all'>" . elgg_echo("blog:blogs") . "</a></h2>";
 			
-			foreach($latest_blogs as $blog){
-				echo "<div>";
-				echo "<h3>" . elgg_view("output/url", array("href" => $blog->getURL(), "text" => $blog->title)) . "</h3>";
-				echo "<div class='strapline'>";
-				echo elgg_echo("blog:strapline", array(date("F j, Y", $blog->time_created)));
-				echo " " . elgg_echo('by') . " " . elgg_view("output/url", array("href" => $vars["url"] . "pg/blog/owner/" . $blog->getOwnerEntity()->username, "text" => $blog->getOwnerEntity()->name));
-				echo "</div>";
-				echo elgg_get_excerpt($blog->description, 200);
-				echo " " . elgg_view("output/url", array("href" => $blog->getURL(), "text" => elgg_echo('blog:read_more')));
-				echo "</div>";
-			}
+			echo $latest_blogs;
 			
 			echo "<hr />";
 		}
@@ -67,7 +54,7 @@
 
 	// New Groups and users section
 	// Groups
-	if(is_plugin_enabled("groups")){
+	if(elgg_is_active_plugin("groups")){
 		$group_items = "";
 		
 		$group_options = array(
@@ -102,21 +89,21 @@
 		}
 		
 		if(!empty($group_items)){
-			echo "<h2><a href='" . $vars["url"]. "pg/groups/world'>" . elgg_echo("groups") . "</a></h2>";
+			echo "<h2><a href='" . $vars["url"]. "groups/world'>" . elgg_echo("groups") . "</a></h2>";
 			echo $group_items;
 			echo "<hr />";
 		}
 	}
 	
 	// users
-	if(is_plugin_enabled("profile")){
+	if(elgg_is_active_plugin("profile")){
 		$member_items = "";
 		
 		$member_options = array(
 			"type" => "user",
 			"limit" => 10,
 			"relationship" => "member_of_site",
-			"relationship_guid" => $CONFIG->site_guid,
+			"relationship_guid" => get_config("site_guid"),
 			"inverse_relationship" => true,
 			"wheres" => array("(r.time_created BETWEEN " . $ts_lower . " AND " . $ts_upper . ")")
 		);
@@ -144,11 +131,7 @@
 		}
 		
 		if(!empty($member_items)){
-			if(is_plugin_enabled("riverdashboard")){
-				echo "<h2><a href='" . $vars["url"] . "'>" . elgg_echo("riverdashboard:recentmembers") . "</a></h2>";
-			} else {
-				echo "<h2><a href='" . $vars["url"] . "'>" . elgg_echo("item:user") . "</a></h2>";
-			}
+			echo "<h2><a href='" . $vars["url"] . "'>" . elgg_echo("members") . "</a></h2>";
 			echo $member_items;
 			echo "<hr />";
 		}
