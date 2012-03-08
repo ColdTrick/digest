@@ -12,7 +12,12 @@
 	
 	$user = elgg_get_logged_in_user_entity();
 	
-	$subject = elgg_echo("digest:message:title:site", array(elgg_get_site_entity()->name, elgg_echo("digest:interval:" . $interval)));
+	$vars = array(
+		"user" => $user,
+		"ts_lower" => $ts_lower,
+		"ts_upper" => $ts_upper,
+		"interval" => $interval
+	);
 	
 //	$group_options = array(
 //		"type" => "group",
@@ -26,21 +31,16 @@
 //		$content = elgg_view("digest/message/group_body", array("ts_lower" => time() - (60*60*24*31), "ts_upper" => time(), "group" => $group));
 //	}
 	
-	$digest_url = elgg_get_site_url() . "digest/show?ts_upper=" . $ts_upper . "&ts_lower=" . $ts_lower . "&interval=monthly";
-	$digest_online = "<a href='" . $digest_url . "'>" . elgg_echo("digest:message:online") . "</a><br />";
-	
-	$digest_unsubscribe = digest_create_unsubscribe_link(get_config("site_guid"), $user);
-	
-	$content = elgg_view("digest/elements/site", array("user" => $user, "ts_lower" => $ts_lower, "ts_upper" => $ts_upper));
-	
 	$params = array(
-		"title" => $subject,
-		"content" => $content,
-		"online_link" => $digest_online,
-		"footer" => $digest_unsubscribe
+		"title" => elgg_get_site_entity()->name,
+		"digest_header" => elgg_view("digest/elements/header", $vars),
+		"content" => elgg_view("digest/elements/site", $vars),
+		"online_link" => elgg_view("digest/elements/online", $vars),
+		"footer" => elgg_view("digest/elements/footer", $vars),
+		"digest_unsubscribe" => elgg_view("digest/elements/unsubscribe", $vars)
 	);
 	
-	$msgbody = elgg_view_layout("digest", $subject, $content, $digest_online, $digest_unsubscribe);
+	$msgbody = elgg_view_layout("digest", $params);
 
 	echo $msgbody;
 	
