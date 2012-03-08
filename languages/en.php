@@ -61,9 +61,9 @@
 		'digest:groupsettings:setting' => "Group digest interval",
 		
 		// layout
-		'digest:layout:footer:info' => "This mail is brought to you by %s because you are signed up for these digests.",
-		'digest:layout:footer:update' => "Change your delivery settings",	
-		'digest:layout:footer:unsubscribe' => "To directly unsubscribe from this digest, click here",	
+		'digest:elements:unsubscribe:info' => "This mail is brought to you by %s because you are signed up for these digests.",
+		'digest:elements:unsubscribe:settings' => "Change your %sdelivery settings%s.",	
+		'digest:elements:unsubscribe:unsubscribe' => "To directly unsubscribe from this digest, %sclick here%s.",	
 	
 		// show a digest online
 		'digest:show:error:input' => "Incorrect input to view the digest",
@@ -73,7 +73,7 @@
 		'digest:message:title:site' => "%s: %s digest",
 		'digest:message:title:group' => "%s - %s: %s digest",
 	
-		'digest:message:online' => "If you can't read the mail, you can view the digest online by clicking on this text.",
+		'digest:elements:online' => "If you can't read the mail, view this digest %sonline%s",
 		
 		// admin analysis
 		'digest:analysis:title' => "Digest server analysis",

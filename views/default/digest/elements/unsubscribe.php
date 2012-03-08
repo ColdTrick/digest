@@ -26,6 +26,6 @@
 	$site_url = elgg_view("output/url", array("href" => $site->url, "text" => $site->name));
 	$digest_url = elgg_view("output/url", array("href" => $vars["url"] . "digest", "text" => elgg_echo("digest:layout:footer:update")));
 	
-	echo elgg_echo("digest:layout:footer:info", array($site_url));
-	echo "&nbsp;" . $digest_url . "<br />";
-	echo elgg_view("output/url", array("href" => $unsubscribe_link, "text" => elgg_echo("digest:layout:footer:unsubscribe")));
+	echo elgg_echo("digest:elements:unsubscribe:info", array($site_url));
+	echo "&nbsp;" . elgg_echo("digest:elements:unsubscribe:settings", array("<a href='" . $vars["url"] . "digest/" . $user->username . "'>", "</a>"));
+	echo "&nbsp;" . elgg_echo("digest:elements:unsubscribe:unsubscribe", array("<a href='" . $unsubscribe_link . "'>", "</a>"));

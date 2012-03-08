@@ -12,3 +12,9 @@
 	* 							(as defined in DIGEST_INTERVAL_DAILY, DIGEST_INTERVAL_WEEKLY, DIGEST_INTERVAL_FORTNIGHTLY, DIGEST_INTERVAL_MONTHLY)
 	*
 	*/
+
+	$site = elgg_get_site_entity();
+	
+	if(!empty($site->description)){
+		echo "<span class='digest-footer-quote'>" . $site->description . "</span>";
+	}
