@@ -33,10 +33,10 @@
 	
 	$params = array(
 		"title" => elgg_get_site_entity()->name,
-		"digest_header" => elgg_view("digest/elements/header", $vars),
 		"content" => elgg_view("digest/elements/site", $vars),
-		"online_link" => elgg_view("digest/elements/online", $vars),
 		"footer" => elgg_view("digest/elements/footer", $vars),
+		"digest_header" => elgg_view("digest/elements/header", $vars),
+		"digest_online" => elgg_view("digest/elements/online", $vars),
 		"digest_unsubscribe" => elgg_view("digest/elements/unsubscribe", $vars)
 	);
 	
