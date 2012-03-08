@@ -31,7 +31,14 @@
 	
 	$digest_unsubscribe = digest_create_unsubscribe_link(get_config("site_guid"), $user);
 	
-	$content = elgg_view("digest/message/site_body", array("ts_lower" => $ts_lower, "ts_upper" => $ts_upper));
+	$content = elgg_view("digest/elements/site", array("user" => $user, "ts_lower" => $ts_lower, "ts_upper" => $ts_upper));
+	
+	$params = array(
+		"title" => $subject,
+		"content" => $content,
+		"online_link" => $digest_online,
+		"footer" => $digest_unsubscribe
+	);
 	
 	$msgbody = elgg_view_layout("digest", $subject, $content, $digest_online, $digest_unsubscribe);
 
