@@ -16,5 +16,10 @@
 	$site = elgg_get_site_entity();
 	
 	if(!empty($site->description)){
-		echo "<span class='digest-footer-quote'>" . $site->description . "</span>";
+		echo "<div class='digest-footer-quote'>";
+		echo "<table><tr><td class='digest-footer-quote-left'>";
+		echo "<img src='" .$vars["url"] . "mod/digest/_graphics/quote_left.png' />";
+		echo "</td><td>" . $site->description . "</td><td class='digest-footer-quote-right'>";
+		echo "<img src='" .$vars["url"] . "mod/digest/_graphics/quote_right.png' />";
+		echo "</td></tr></table></div>";
 	}

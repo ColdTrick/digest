@@ -128,3 +128,24 @@ h4 {
 	-moz-border-radius: 0 0 5px 5px;
 	border-radius: 0 0 5px 5px;
 }
+
+.digest-footer-quote {
+	text-align: center;
+	font-size: 20px;
+	color: #AFAFAF;
+}
+
+.digest-footer-quote table {
+	width: 100%;
+}
+
+.digest-footer-quote-left {
+	vertical-align: top;
+	padding-right: 20px;
+	
+}
+
+.digest-footer-quote-right {
+	vertical-align: bottom;
+	padding-left: 20px;
+}
