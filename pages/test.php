@@ -19,21 +19,24 @@
 		"interval" => $interval
 	);
 	
-//	$group_options = array(
-//		"type" => "group",
-//		"limit" => 1,
-//		"relationship" => "member",
-//		"relationship_guid" => $user->getGUID()
-//	);
-//	
-//	if($group = elgg_get_entities($group_options)){
-//		$group = $group[0];
-//		$content = elgg_view("digest/message/group_body", array("ts_lower" => time() - (60*60*24*31), "ts_upper" => time(), "group" => $group));
-//	}
+	$group_options = array(
+		"type" => "group",
+		"limit" => 1,
+		"relationship" => "member",
+		"relationship_guid" => $user->getGUID()
+	);
+	
+	if($groups = elgg_get_entities($group_options)){
+		$vars["group"] = $groups[0];
+		
+		$content = elgg_view("digest/elements/group", $vars);
+	}
+	
+// 	$content = elgg_view("digest/elements/site", $vars);
 	
 	$params = array(
 		"title" => elgg_get_site_entity()->name,
-		"content" => elgg_view("digest/elements/site", $vars),
+		"content" => $content,
 		"footer" => elgg_view("digest/elements/footer", $vars),
 		"digest_header" => elgg_view("digest/elements/header", $vars),
 		"digest_online" => elgg_view("digest/elements/online", $vars),

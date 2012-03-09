@@ -1,7 +1,5 @@
 <?php 
 
-	global $CONFIG;
-	
 	gatekeeper();
 	
 	$ts_lower = (int) get_input("ts_lower");
@@ -15,27 +13,39 @@
 		// get group guid
 		$group_guid = (int) get_input("group_guid");
 		
+		$vars = array(
+			"user" => elgg_get_logged_in_user_entity(),
+			"ts_lower" => $ts_lower,
+			"ts_upper" => $ts_upper,
+			"interval" => $interval
+		);
+		
 		// check if we need to display a group
 		if(!empty($group_guid)){
-			if($group = get_entity($group_guid)){
-				if($group instanceof ElggGroup){
-					$title_text = elgg_echo("digest:message:title:group", array($CONFIG->site->name, $group->name, elgg_echo("digest:interval:" . $interval)));
-					
-					$data = elgg_view("digest/message/group_body", array("ts_lower" => $ts_lower, "ts_upper" => $ts_upper, "group" => $group));
-				}
+			if(($group = get_entity($group_guid)) && elgg_instanceof($group, "group", null, "ElggGroup")){
+				$vars["group"] = $group;
+				
+				$content = elgg_view("digest/elements/group", $vars);
 			}
 		}
 		
-		// no group or invalid group or no data
-		if(empty($group_guid) || empty($data)){
-			$title_text = elgg_echo("digest:message:title:site", array($CONFIG->site->name, elgg_echo("digest:interval:" . $interval)));
-			
-			$data = elgg_view("digest/message/site_body", array("ts_lower" => $ts_lower, "ts_upper" => $ts_upper));
+		// did we have a valid group, or display site digest
+		if(!isset($vars["group"])){
+			$content = elgg_view("digest/elements/site", $vars);
 		}
-	
-		if(!empty($data)){
-			echo elgg_view_layout("digest", $title_text, $data);
-		} else {
+		
+		if(!empty($content)){
+			$params = array(
+				"title" => elgg_get_site_entity()->name,
+				"content" => $content,
+				"footer" => elgg_view("digest/elements/footer", $vars),
+				"digest_header" => elgg_view("digest/elements/header", $vars),
+				"digest_online" => elgg_view("digest/elements/online", $vars),
+				"digest_unsubscribe" => elgg_view("digest/elements/unsubscribe", $vars)
+			);
+			
+			echo elgg_view_layout("digest", $params);
+		}else {
 			system_message(elgg_echo("digest:show:no_data"));
 			forward();
 		}

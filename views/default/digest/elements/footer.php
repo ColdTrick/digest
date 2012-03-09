@@ -13,13 +13,28 @@
 	*
 	*/
 
-	$site = elgg_get_site_entity();
+	$group = elgg_extract("group", $vars);
 	
-	if(!empty($site->description)){
+	if(!empty($group)){
+		$description = $group->briefdescription;
+	} else {
+		$site = elgg_get_site_entity();
+		
+		$description = $site->description;
+	}
+	
+	if(!empty($description)){
 		echo "<div class='digest-footer-quote'>";
-		echo "<table><tr><td class='digest-footer-quote-left'>";
+		echo "<table>";
+		echo "<tr>";
+		echo "<td class='digest-footer-quote-left'>";
 		echo "<img src='" .$vars["url"] . "mod/digest/_graphics/quote_left.png' />";
-		echo "</td><td>" . $site->description . "</td><td class='digest-footer-quote-right'>";
+		echo "</td>";
+		echo "<td>" . $description . "</td>";
+		echo "<td class='digest-footer-quote-right'>";
 		echo "<img src='" .$vars["url"] . "mod/digest/_graphics/quote_right.png' />";
-		echo "</td></tr></table></div>";
+		echo "</td>";
+		echo "</tr>";
+		echo "</table>";
+		echo "</div>";
 	}

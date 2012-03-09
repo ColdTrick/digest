@@ -26,15 +26,22 @@
 	$sql .= " ORDER BY posted DESC";
 	$sql .= " LIMIT " . $offset . "," . $limit;
 
-	$items = get_data($sql);
+	$items = get_data($sql, "elgg_row_to_elgg_river_item");
 
 	if (!empty($items)) {
-		echo elgg_view('river/item/list',array(
-			'limit' => $limit,
-			'offset' => $offset,
-			'items' => $items,
-			'pagination' => false
-		));
+		$title = elgg_view("output/url", array("text" => elgg_echo("groups:activity"), "href" => $group->getURL()));
+		
+		$options = array(
+			"limit" => $limit,
+			"offset" => $offset,
+			"list_class" => "elgg-list-river elgg-river",
+			"count" => count($items),
+			"items" => $items
+		);
+		
+		$content = elgg_view("page/components/list", $options);
+		
+		echo elgg_view_module("digest", $title, $content);
 	}
 
 	unset($items);

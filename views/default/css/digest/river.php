@@ -3,144 +3,123 @@
 	 * River / activity CSS for Digest message
 	 */
 ?>
+
 /* ***************************************
-	RIVER
+	River
 *************************************** */
-#digest_river_item_list div.avatar_menu_button,
-#digest_river_item_list div.sub_menu {
+.elgg-river {
+	padding: 0;
+	margin: 0;
+}
+
+.elgg-river-item .elgg-image {
+	float: left;
+	margin-right: 5px;
+}
+
+.elgg-river-item .elgg-avatar > .elgg-menu,
+.elgg-river-responses,
+.elgg-menu-river {
 	display: none;
 }
-#river,
-.river_item_list {
-	border-top:1px solid #dddddd;
+
+.elgg-list-river > li {
+	border-bottom: 1px solid #CCC;
 }
-.river_item p {
-	margin:0;
-	padding:0 0 0 21px;
-	line-height:1.1em;
-	min-height:17px;
+.elgg-river-item {
+	padding: 7px 0;
 }
-.river_item {
-	border-bottom:1px solid #dddddd;
-	padding:2px 0 2px 0;
+.elgg-river-item .elgg-pict {
+	margin-right: 20px;
 }
-.river_item_time {
-	font-size:90%;
-	color:#666666;
+.elgg-river-timestamp {
+	color: #666;
+	font-size: 85%;
+	font-style: italic;
+	line-height: 1.2em;
 }
-/* IE6 fix */
-* html .river_item p { 
-	padding:3px 0 3px 20px;
+
+.elgg-river-attachments,
+.elgg-river-message,
+.elgg-river-content {
+	border-left: 1px solid #CCC;
+	font-size: 85%;
+	line-height: 1.5em;
+	margin: 8px 0 5px 0;
+	padding-left: 5px;
 }
-/* IE7 */
-*:first-child+html .river_item p {
-	min-height:17px;
+.elgg-river-attachments .elgg-avatar,
+.elgg-river-attachments .elgg-icon {
+	float: left;
 }
-.river_user_update {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_profile.gif) no-repeat left -1px;
+.elgg-river-layout .elgg-input-dropdown {
+	float: right;
+	margin: 10px 0;
 }
-.river_object_user_profileupdate {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_profile.gif) no-repeat left -1px;
-}
-.river_object_user_profileiconupdate {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_profile.gif) no-repeat left -1px;
-}
-.river_object_annotate {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_comment.gif) no-repeat left -1px;
-}
-.river_object_bookmarks_create {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_bookmarks.gif) no-repeat left -1px;
-}
-.river_object_bookmarks_comment {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_comment.gif) no-repeat left -1px;
-}
-.river_object_status_create {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_status.gif) no-repeat left -1px;
-}
-.river_object_file_create {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_files.gif) no-repeat left -1px;
-}
-.river_object_file_update {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_files.gif) no-repeat left -1px;
-}
-.river_object_file_comment {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_comment.gif) no-repeat left -1px;
-}
-.river_object_widget_create {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_plugin.gif) no-repeat left -1px;
-}
-.river_object_forums_create {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_forum.gif) no-repeat left -1px;
-}
-.river_object_forums_update {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_forum.gif) no-repeat left -1px;
-}
-.river_object_widget_update {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_plugin.gif) no-repeat left -1px;	
-}
-.river_object_blog_create {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_blog.gif) no-repeat left -1px;
-}
-.river_object_blog_update {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_blog.gif) no-repeat left -1px;
-}
-.river_object_blog_comment {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_comment.gif) no-repeat left -1px;
-}
-.river_object_forumtopic_create {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_forum.gif) no-repeat left -1px;
-}
-.river_user_friend {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_friends.gif) no-repeat left -1px;
-}
-.river_object_relationship_friend_create {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_friends.gif) no-repeat left -1px;
-}
-.following_icon {
-	background: url(<?php echo $vars['url']; ?>mod/riverdashboard/graphics/follow_icon.png) no-repeat scroll left top transparent;
-    height: 40px;
-    margin: 0 2px;
-    width: 20px;
-}
-.river_object_relationship_member_create {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_forum.gif) no-repeat left -1px;
-}
-.river_object_thewire_create {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_thewire.gif) no-repeat left -1px;
-}
-.river_group_join {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_forum.gif) no-repeat left -1px;
-}
-.river_object_groupforumtopic_annotate {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_comment.gif) no-repeat left -1px;
-}
-.river_object_groupforumtopic_create {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_forum.gif) no-repeat left -1px;
-}
-.river_object_sitemessage_create {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_blog.gif) no-repeat left -1px;	
-}
-.river_user_messageboard {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_comment.gif) no-repeat left -1px;	
-}
-.river_object_page_create {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_pages.gif) no-repeat left -1px;
-}
-.river_object_page_top_create {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_pages.gif) no-repeat left -1px;
-}
-.river_object_page_top_comment {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_comment.gif) no-repeat left -1px;
-}
-.river_object_page_comment {
-	background: url(<?php echo $vars['url']; ?>_graphics/river_icons/river_icon_comment.gif) no-repeat left -1px;
-}
-.river_content_display {
-    border-left: 1px solid #DDDDDD;
-    font-size: 90%;
-    margin: 4px 0 2px 30px;
-    padding: 2px 10px 0;
-}
-.river_content_display table {
+
+.elgg-river-comments-tab {
+	display: block;
+	background-color: #EEE;
+	color: #4690D6;
+	margin-top: 5px;
 	width: auto;
+	float: right;
+	font-size: 85%;
+	padding: 1px 7px;
+	
+	-webkit-border-radius: 5px 5px 0 0;
+	-moz-border-radius: 5px 5px 0 0;
+	border-radius: 5px 5px 0 0;
+}
+
+.elgg-river-comments {
+	margin: 0;
+	border-top: none;
+}
+.elgg-river-comments li:first-child {
+	-webkit-border-radius: 5px 0 0;
+	-moz-border-radius: 5px 0 0;
+	border-radius: 5px 0 0;
+}
+.elgg-river-comments li:last-child {
+	-webkit-border-radius: 0 0 5px 5px;
+	-moz-border-radius-bottomleft: 0 0 5px 5px;
+	border-radius-bottomleft: 0 0 5px 5px;
+}
+.elgg-river-comments li {
+	background-color: #EEE;
+	border-bottom: none;
+	padding: 4px;
+	margin-bottom: 2px;
+}
+.elgg-river-comments .elgg-media {
+	padding: 0;
+}
+.elgg-river-more {
+	background-color: #EEE;
+	
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	
+	padding: 2px 4px;
+	font-size: 85%;
+	margin-bottom: 2px;
+}
+
+.elgg-river-item form {
+	background-color: #EEE;
+	padding: 4px;
+	
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	
+	height: 30px;
+}
+.elgg-river-item input[type=text] {
+	width: 80%;
+}
+.elgg-river-item input[type=submit] {
+	margin: 0 0 0 10px;
 }

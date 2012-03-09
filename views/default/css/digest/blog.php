@@ -4,21 +4,21 @@
 	*/
 ?>
 
-.digest_blog {
+.digest-blog {
 	padding: 10px 0px;
 	display: inline-block;
 	width: 100%;
 }
 
-.digest_blog img {
+.digest-blog img {
 	float: left;
 	padding: 5px 15px 0 0;
 }
 
-.digest_blog h4 {
+.digest-blog h4 {
 	padding-bottom: 5px;
 }
 
-.digest_blog h4 a{
+.digest-blog h4 a{
 	text-decoration: none;
 }
