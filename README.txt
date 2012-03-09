@@ -19,7 +19,6 @@ Sends mails with update information to your site or group members based on defau
 - exclude groups from delivery with a hook
 
 == 2. ToDo ==
-- cleanup dutch translation
 
 == 3. Plugin developers ==
 If you wish to supply content for eighter the Site digest of Group digest you can easily extend the digest.
