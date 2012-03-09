@@ -18,8 +18,6 @@
 	
 		set_time_limit(0);
 	
-		$START_TIME = microtime(true);
-		$INITIAL_MEMORY = memory_get_usage(false);
 		$intervals = array();
 		$debug_mode = false;
 	
@@ -54,6 +52,10 @@
 			$digest_group_sent = 0;
 			
 			foreach($intervals as $interval){
+				// some base values for stat logging
+				$START_TIME = microtime(true);
+				$INITIAL_MEMORY = memory_get_usage(false);
+				
 				// run site digest
 				$include_site_default = false;
 				$site_default_interval = digest_get_default_site_interval();

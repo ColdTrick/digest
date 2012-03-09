@@ -25,6 +25,7 @@
 
 .elgg-list-river > li {
 	border-bottom: 1px solid #CCC;
+	min-height: 55px;
 }
 .elgg-river-item {
 	padding: 7px 0;

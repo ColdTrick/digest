@@ -49,8 +49,8 @@
 	
 	// mail the result?
 	if(get_input("mail")){
-		if(digest_send_mail($user, $subject, $msgbody, $digest_url, true)){
-			echo "mail";
+		if(digest_send_mail($user, "Test message from Digest", $msgbody, digest_get_online_url($vars), true)){
+			echo "mail send<br />";
 		}
 	}
 	
