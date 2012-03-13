@@ -125,7 +125,7 @@
 		// send digest mail
 		'digest:mail:plaintext:description' => "Je email client ondersteunt geen HTML mails. 
 		
-		Om de site updates toch te kunnen lezen kun je de volgende link gebruiken: %.",
+		Om de site updates toch te kunnen lezen kun je de volgende link gebruiken: %s.",
 		'' => "",
 		'' => "",
 		'' => "",

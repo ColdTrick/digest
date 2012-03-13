@@ -1,4 +1,8 @@
 = Version history =
+x.x:
+
+- fixed: missing sprintf in Dutch language file
+
 1.3.4 (2012-03-07):
 
 - fixed: site digest setting not set correctly
