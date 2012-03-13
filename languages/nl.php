@@ -80,6 +80,6 @@ $language = array (
   'digest:action:update:groupsettings:success' => 'Updates instellingen succesvol aangepast',
   'digest:mail:plaintext:description' => 'Je email client ondersteunt geen HTML mails. 
 		
-		Om de site updates toch te kunnen lezen kun je de volgende link gebruiken: %.',
+		Om de site updates toch te kunnen lezen kun je de volgende link gebruiken: %s.',
 );
 add_translation("nl", $language);

@@ -1,4 +1,8 @@
 = Version history =
+x.x:
+
+- fixed: missing sprintf in Dutch language file
+
 2.0 beta (2012-03-09):
 
 - changed: plugin made Elgg 1.8.3 compatible
