@@ -18,5 +18,10 @@
 		<name>html_email_handler</name>
 	</requires>
 	
+	<conflicts>
+		<type>plugin</type>
+		<name>crontrigger</name>
+	</conflicts>
+	
 	<category>ColdTrick</category>
 </plugin_manifest>

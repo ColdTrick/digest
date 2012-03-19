@@ -2,6 +2,7 @@
 x.x:
 
 - fixed: missing sprintf in Dutch language file
+- changed: plugin conflicts with crontrigger, for wrong Elgg upgrades
 
 2.0 beta (2012-03-09):
 
