@@ -36,7 +36,7 @@
 		'digest:settings:interval:description' => "Setting a default value will send out the digest on this interval to all the users who haven't configured a setting of their own.<br /><br /><b>WARNING:</b> This could send out a lot of mails.",
 		
 		'digest:settings:never:title' => "Never logged in users",
-		'digest:settings:never:include' => "Should user who never logged in on the site be included?",
+		'digest:settings:never:include' => "Should users who have never logged in on the site be included?",
 		
 		// usersettings
 		'digest:usersettings:title' => "Personal digest settings",
