@@ -47,7 +47,7 @@
 				$form_body .= ">" . elgg_echo("digest:interval:weekly") . "</option>\n";
 				
 				$form_body .= "<option value='" . DIGEST_INTERVAL_FORTNIGHTLY . "'";
-				if($user_group_interval == DIGEST_INTERVAL_FORNIGHTLY){
+				if($user_group_interval == DIGEST_INTERVAL_FORTNIGHTLY){
 					$form_body .= " selected='selected'";
 				}
 				$form_body .= ">" . elgg_echo("digest:interval:fortnightly") . "</option>\n";

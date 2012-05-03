@@ -16,7 +16,7 @@
 		
 		// make breadcrumb
 		elgg_push_breadcrumb(elgg_echo("settings"), "settings/user/" . $user->username);
-		elgg_push_breadcrumb(elgg_echo("digest:submenu:usersettings"));
+		elgg_push_breadcrumb(elgg_echo("digest:page_menu:settings"));
 		
 		// set page owner
 		elgg_set_page_owner_guid($user->getGUID());
