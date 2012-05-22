@@ -14,7 +14,8 @@
 		"relationship_guid" => $user->getGUID(),
 		"limit" => 5,
 		"posted_time_lower" => $ts_lower,
-		"posted_time_upper" => $ts_upper
+		"posted_time_upper" => $ts_upper,
+		"pagination" => false
 	);
 
 	if($river_items = elgg_list_river($river_options)){
