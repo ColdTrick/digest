@@ -3,6 +3,7 @@ x.x:
 
 - fixed: missing sprintf in Dutch language file
 - fixed: PHP notices and warnings
+- fixed: depricated notice in site digest profile part
 - changed: plugin conflicts with crontrigger, for wrong Elgg upgrades
 
 2.0 beta (2012-03-09):

@@ -29,7 +29,7 @@
 			}
 
 			$member_items .= "<td>";
-			$member_items .= elgg_view_entity_icon($mem, 'medium', array('override' => true)) . "<br />";
+			$member_items .= elgg_view_entity_icon($mem, 'medium', array('use_hover' => false)) . "<br />";
 			$member_items .= "<a href='" .  $mem->getURL() . "'>" . $mem->name . "</a><br />";
 			$member_items .= $mem->briefdescription;
 			$member_items .= "</td>";
