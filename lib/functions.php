@@ -85,6 +85,9 @@
 		global $interval_ts_upper;
 		global $interval_ts_lower;
 		
+		static $custom_text_header;
+		static $custom_text_footer;
+		
 		$result = false;
 		
 		if(!empty($user) && elgg_instanceof($user, "user", null, "ElggUser")){
@@ -116,10 +119,27 @@
 			$userdata = elgg_view("digest/elements/site", $vars);
 			
 			if(!empty($userdata)){
+				// check if there are custom header/footer texts
+				if(!isset($custom_text_header)){
+					$custom_text_header = "";
+					
+					if($text = elgg_get_plugin_setting("custom_text_site_header", "digest")){
+						$custom_text_header = elgg_view_module("digest", "", "<div class='elgg-output'>" . $text . "</div>");
+					}
+				}
+				
+				if(!isset($custom_text_footer)){
+					$custom_text_footer = "";
+						
+					if($text = elgg_get_plugin_setting("custom_text_site_footer", "digest")){
+						$custom_text_footer = elgg_view_module("digest", "", "<div class='elgg-output'>" . $text . "</div>");
+					}
+				}
+				
 				// there is content so send it to the user
 				$params = array(
 					"title" => elgg_get_site_entity()->name,
-					"content" => $userdata,
+					"content" => $custom_text_header . $userdata . $custom_text_footer,
 					"footer" => elgg_view("digest/elements/footer", $vars),
 					"digest_header" => elgg_view("digest/elements/header", $vars),
 					"digest_online" => elgg_view("digest/elements/online", $vars),
@@ -180,6 +200,9 @@
 		global $interval_ts_lower;
 		global $is_admin;
 		
+		static $custom_text_header;
+		static $custom_text_footer;
+		
 		$result = false;
 		
 		// check if group digest is enabled
@@ -216,10 +239,27 @@
 				$userdata = elgg_view("digest/elements/group", $vars);
 				
 				if(!empty($userdata)){
+					// check if there are custom header/footer texts
+					if(!isset($custom_text_header)){
+						$custom_text_header = "";
+							
+						if($text = elgg_get_plugin_setting("custom_text_group_header", "digest")){
+							$custom_text_header = elgg_view_module("digest", "", "<div class='elgg-output'>" . $text . "</div>");
+						}
+					}
+					
+					if(!isset($custom_text_footer)){
+						$custom_text_footer = "";
+					
+						if($text = elgg_get_plugin_setting("custom_text_group_footer", "digest")){
+							$custom_text_footer = elgg_view_module("digest", "", "<div class='elgg-output'>" . $text . "</div>");
+						}
+					}
+					
 					// there is content so send it to the user
 					$params = array(
 						"title" => elgg_get_site_entity()->name,
-						"content" => $userdata,
+						"content" => $custom_text_header . $userdata . $custom_text_footer,
 						"footer" => elgg_view("digest/elements/footer", $vars),
 						"digest_header" => elgg_view("digest/elements/header", $vars),
 						"digest_online" => elgg_view("digest/elements/online", $vars),

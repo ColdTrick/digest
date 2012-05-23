@@ -38,6 +38,13 @@
 		'digest:settings:never:title' => "Never logged in users",
 		'digest:settings:never:include' => "Should users who have never logged in on the site be included?",
 		
+		'digest:settings:custon_text:title' => "Custom text",
+		'digest:settings:custon_text:description' => "Here you can define a custom text for in the header and/or footer of each digest.",
+		'digest:settings:custom_text:site:header' => "Site header text",
+		'digest:settings:custom_text:site:footer' => "Site footer text",
+		'digest:settings:custom_text:group:header' => "Group header text",
+		'digest:settings:custom_text:group:footer' => "Group footer text",
+		
 		// usersettings
 		'digest:usersettings:title' => "Personal digest settings",
 		'digest:usersettings:error:user' => "You don't have access to this users digest settings",

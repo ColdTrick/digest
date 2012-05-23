@@ -1,6 +1,7 @@
 = Version history =
 x.x:
 
+- added: custom texts for site and group digest
 - fixed: missing sprintf in Dutch language file
 - fixed: PHP notices and warnings
 - fixed: depricated notice in site digest profile part

@@ -1,5 +1,11 @@
 <?php
 $language = array (
+  'digest:settings:custon_text:title' => 'Extra tekst',
+  'digest:settings:custon_text:description' => 'Hier kun je een tekst opgeven welke wordt opgenomen in de header en/of footer van iedere digest',
+  'digest:settings:custom_text:site:header' => 'Site header tekst',
+  'digest:settings:custom_text:site:footer' => 'Site footer tekst',
+  'digest:settings:custom_text:group:header' => 'Groep header tekst',
+  'digest:settings:custom_text:group:footer' => 'Groep footer tekst',
   'digest:page_menu:settings' => 'Digest instellingen',
   'digest:page_menu:theme_preview' => 'Digest voorbeeld',
   'admin:statistics:digest' => 'Digest analyse',

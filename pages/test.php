@@ -26,13 +26,19 @@
 		"relationship_guid" => $user->getGUID()
 	);
 	
-	if($groups = elgg_get_entities($group_options)){
-		$vars["group"] = $groups[0];
+// 	if($groups = elgg_get_entities($group_options)){
+// 		$vars["group"] = $groups[0];
 		
-		$content = elgg_view("digest/elements/group", $vars);
-	}
+// 		$content = elgg_view("digest/elements/group", $vars);
+// 	}
 	
-// 	$content = elgg_view("digest/elements/site", $vars);
+	
+	$header_text = elgg_get_plugin_setting("custom_text_site_header", "digest");
+	$footer_text = elgg_get_plugin_setting("custom_text_site_footer", "digest");
+	
+	$content = elgg_view_module("digest", "", "<div class='elgg-output'>" . $header_text . "</div>");
+	$content .= elgg_view("digest/elements/site", $vars);
+	$content .= elgg_view_module("digest", "", "<div class='elgg-output'>" . $footer_text . "</div>");
 	
 	$params = array(
 		"title" => elgg_get_site_entity()->name,
