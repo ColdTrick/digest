@@ -9,12 +9,25 @@
 	$ts_lower = (int) elgg_extract("ts_lower", $vars);
 	$ts_upper = (int) elgg_extract("ts_upper", $vars);
 
+	// only show blogs that are published
+	$dbprefix = elgg_get_config("dbprefix");
+	
+	$blog_status_name_id = add_metastring("status");
+	$blog_published_value_id = add_metastring("published");
+	
 	$blog_options = array(
 		"type" => "object",
 		"subtype" => "blog",
 		"limit" => 5,
 		"created_time_lower" => $ts_lower,
-		"created_time_upper" => $ts_upper
+		"created_time_upper" => $ts_upper,
+		"joins" => array(
+				"JOIN " . $dbprefix . "metadata bm ON e.guid = bm.entity_guid"				
+		),
+		"wheres" => array(
+				"bm.name_id = " . $blog_status_name_id,				
+				"bm.value_id = " . $blog_published_value_id				
+		)
 	);
 
 	if($blogs = elgg_get_entities($blog_options)){
