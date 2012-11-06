@@ -12,18 +12,12 @@
 		global $dbcalls;
 		global $DB_QUERY_CACHE;
 		global $ENTITY_CACHE;
-		global $DB_PROFILE;
 		global $digest_mail_send;
 		global $interval_ts_upper;
 	
 		set_time_limit(0);
 	
 		$intervals = array();
-		$debug_mode = false;
-	
-		if(get_config("debug")){
-			$debug_mode = true;
-		}
 		
 		// set correct time
 		$interval_ts_upper = elgg_extract("time", $params, time());
@@ -52,6 +46,9 @@
 			$digest_group_sent = 0;
 			
 			foreach($intervals as $interval){
+				// clear cache to save memory
+				$DB_QUERY_CACHE->clear();
+				
 				// some base values for stat logging
 				$START_TIME = microtime(true);
 				$INITIAL_MEMORY = memory_get_usage(false);
@@ -67,9 +64,8 @@
 				$site_members = digest_get_users(get_config("site_guid"), $interval, $include_site_default);
 	
 				if(!empty($site_members)){
-					$db_query_backup = $DB_QUERY_CACHE;
 					$entity_backup = $ENTITY_CACHE;
-						
+					
 					foreach($site_members as $index => $site_member){
 						$cur_mem = memory_get_usage(false);
 	
@@ -83,18 +79,12 @@
 							error_log("Site digest tried a non user: " . $site_member->guid);
 						}
 	
-						$DB_QUERY_CACHE = null;
-						unset($GLOBALS["DB_QUERY_CACHE"]);
-						$DB_QUERY_CACHE = $db_query_backup;
-	
+						// clear cache to save memory
+						$DB_QUERY_CACHE->clear();
+				
 						$ENTITY_CACHE = null;
 						unset($GLOBALS["ENTITY_CACHE"]);
 						$ENTITY_CACHE = $entity_backup;
-	
-						if(!$debug_mode){
-							$DB_PROFILE = null;
-							unset($GLOBALS["DB_PROFILE"]);
-						}
 	
 						$last_mem = $cur_mem;
 					}
@@ -116,6 +106,9 @@
 				elgg_set_plugin_setting("site_digest_" . $interval . "_run_time", $site_run_time, "digest");
 				elgg_set_plugin_setting("site_digest_" . $interval . "_send", $digest_mail_send, "digest");
 	
+				// clear cache to save memory
+				$DB_QUERY_CACHE->clear();
+				
 				// reset mail counter
 				$digest_mail_send = 0;
 	
@@ -137,7 +130,6 @@
 						$total_group_members_count = 0;
 	
 						// backup cache
-						$db_query_backup = $DB_QUERY_CACHE;
 						$entity_backup = $ENTITY_CACHE;
 	
 						foreach($groups as $group){
@@ -174,33 +166,22 @@
 										}
 									}
 										
-									$DB_QUERY_CACHE = null;
-									unset($GLOBALS["DB_QUERY_CACHE"]);
-									$DB_QUERY_CACHE = $db_query_backup_members;
-										
+									// clear cache to save memory
+									$DB_QUERY_CACHE->clear();
+									
 									$ENTITY_CACHE = null;
 									unset($GLOBALS["ENTITY_CACHE"]);
 									$ENTITY_CACHE = $entity_backup_members;
 										
-									if(!$debug_mode){
-										$DB_PROFILE = null;
-										unset($GLOBALS["DB_PROFILE"]);
-									}
 								}
 							}
 								
-							$DB_QUERY_CACHE = null;
-							unset($GLOBALS["DB_QUERY_CACHE"]);
-							$DB_QUERY_CACHE = $db_query_backup;
-								
+							// clear cache to save memory
+							$DB_QUERY_CACHE->clear();
+							
 							$ENTITY_CACHE = null;
 							unset($GLOBALS["ENTITY_CACHE"]);
 							$ENTITY_CACHE = $entity_backup;
-								
-							if(!$debug_mode){
-								$DB_PROFILE = null;
-								unset($GLOBALS["DB_PROFILE"]);
-							}
 						}
 	
 						// group stats
@@ -230,6 +211,13 @@
 					$digest_mail_send = 0;
 				}
 			}
+			
+			// clear cache to save memory
+			$DB_QUERY_CACHE->clear();
+				
+			$ENTITY_CACHE = null;
+			unset($GLOBALS["ENTITY_CACHE"]);
+			$ENTITY_CACHE = $entity_backup;
 		}
 	}
 	

@@ -6,7 +6,9 @@ x.x:
 - fixed: PHP notices and warnings
 - fixed: depricated notice in site digest profile part
 - fixed: pagination in site digest river part
+- fixed: only showing published blogs
 - changed: plugin conflicts with crontrigger, for wrong Elgg upgrades
+- changed: different way to reset caching, so less memory is used
 
 2.0 beta (2012-03-09):
 
