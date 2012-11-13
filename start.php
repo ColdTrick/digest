@@ -7,9 +7,10 @@
 	define("DIGEST_INTERVAL_FORTNIGHTLY", "fortnightly");
 	define("DIGEST_INTERVAL_MONTHLY", "monthly");
 	
-	require_once(dirname(__FILE__) . "/lib/functions.php");
 	require_once(dirname(__FILE__) . "/lib/events.php");
+	require_once(dirname(__FILE__) . "/lib/functions.php");
 	require_once(dirname(__FILE__) . "/lib/hooks.php");
+	require_once(dirname(__FILE__) . "/lib/pahe_handlers.php");
 	
 	// register elgg events
 	elgg_register_event_handler("init", "system", "digest_init");
@@ -27,6 +28,9 @@
 		
 		// extend register with subscribe option
 		elgg_extend_view("register/extend", "digest/register");
+		
+		// extend groups edit screen
+		elgg_extend_view("groups/edit", "digest/groupsettings/form", 400);
 		
 		// register plugin hooks
 		elgg_register_plugin_hook_handler("register", "user", "digest_register_user_hook");
@@ -49,12 +53,6 @@
 	function digest_pagesetup(){
 		
 		if($user = elgg_get_logged_in_user_entity()){
-			$context = elgg_get_context();
-			
-			// extend groups edit screen
-			if(($context == "groups") && digest_group_enabled()){
-				elgg_extend_view("groups/edit", "digest/groupsettings/form", 400);
-			}
 			
 			elgg_register_menu_item("page", array(
 				"name" => "digest",
@@ -72,29 +70,5 @@
 			
 			elgg_register_admin_menu_item("administer", "digest", "statistics");
 		}
-	}
-	
-	function digest_page_handler($page){
-		
-		switch($page[0]){
-			case "test":
-				include(dirname(__FILE__) . "/pages/test.php");
-				break;
-			case "show":
-				include(dirname(__FILE__) . "/pages/show.php");
-				break;
-			case "unsubscribe":
-				include(dirname(__FILE__) . "/procedures/unsubscribe.php");
-				break;
-			case "user":
-			default:
-				if(!empty($page[1])){
-					set_input("username", $page[1]);
-				}
-				include(dirname(__FILE__) . "/pages/usersettings.php");
-				break;
-		}
-		
-		return true;
 	}
 	
