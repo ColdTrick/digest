@@ -58,10 +58,6 @@
 		'digest:usersettings:groups:group_header' => "Groupname",
 		'digest:usersettings:groups:setting_header' => "Interval",
 		
-		// user group setting
-		'digest:usersettings:group:setting' => "Your current digest interval for this group is",
-		'digest:usersettings:group:more' => "Digest settings",
-		
 		// group settings
 		'digest:groupsettings:title' => "Group digest setting",
 		'digest:groupsettings:description' => "At what interval do you which your members to receive a digest of the group activity. This setting will be used as a default value, your members can personaly overrule this setting.",
