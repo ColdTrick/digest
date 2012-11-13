@@ -56,10 +56,6 @@
 				elgg_extend_view("groups/edit", "digest/groupsettings/form", 400);
 			}
 			
-			if((elgg_get_page_owner_entity() instanceof ElggGroup) && ($context == "group_profile")){
-				elgg_extend_view("page/elements/owner_block/extend", "digest/usersettings/group");
-			}
-			
 			elgg_register_menu_item("page", array(
 				"name" => "digest",
 				"text" => elgg_echo("digest:page_menu:settings"),
