@@ -11,6 +11,10 @@
 	require_once(dirname(__FILE__) . "/lib/events.php");
 	require_once(dirname(__FILE__) . "/lib/hooks.php");
 	
+	// register elgg events
+	elgg_register_event_handler("init", "system", "digest_init");
+	elgg_register_event_handler("pagesetup", "system", "digest_pagesetup");
+	
 	function digest_init(){
 		// extend css
 		elgg_extend_view("css/elgg", "digest/css/site");
@@ -22,11 +26,24 @@
 		elgg_register_page_handler("digest", "digest_page_handler");
 		
 		// extend register with subscribe option
-		if(($setting = digest_get_default_site_interval()) && ($setting != DIGEST_INTERVAL_NONE)){
-			elgg_extend_view("register/extend", "digest/register");
-			
-			elgg_register_plugin_hook_handler("register", "user", "digest_register_user_hook");
-		}
+		elgg_extend_view("register/extend", "digest/register");
+		
+		// register plugin hooks
+		elgg_register_plugin_hook_handler("register", "user", "digest_register_user_hook");
+		
+		elgg_register_plugin_hook_handler("cron", "daily", "digest_cron_handler");
+		
+		elgg_register_plugin_hook_handler("public_pages", "walled_garden", "digest_walled_garden_hook");
+		
+		// register events
+		elgg_register_event_handler("leave", "group", "digest_group_leave_event");
+		
+		// register actions
+		elgg_register_action("digest/settings/save", dirname(__FILE__) . "/actions/settings/save.php", "admin");
+		
+		elgg_register_action("digest/update/usersettings", dirname(__FILE__) . "/actions/update/usersettings.php");
+		elgg_register_action("digest/update/groupsettings", dirname(__FILE__) . "/actions/update/groupsettings.php");
+		
 	}
 	
 	function digest_pagesetup(){
@@ -84,50 +101,4 @@
 		
 		return true;
 	}
-	
-	function digest_message_css(){
-		
-		elgg_extend_view("css/digest/core", "css/digest/river");
-		elgg_extend_view("digest/elements/site", "digest/elements/site/river");
-		elgg_extend_view("digest/elements/group", "digest/elements/group/river");
-		
-		if(elgg_is_active_plugin("blog")){
-			elgg_extend_view("css/digest/core", "css/digest/blog");
-			
-			elgg_extend_view("digest/elements/site", "digest/elements/site/blog");
-		}
-		
-		if(elgg_is_active_plugin("groups")){
-			elgg_extend_view("css/digest/core", "css/digest/groups");
-			
-			elgg_extend_view("digest/elements/site", "digest/elements/site/groups");
-		}
-		
-		if(elgg_is_active_plugin("profile")){
-			elgg_extend_view("css/digest/core", "css/digest/profile");
-			
-			elgg_extend_view("digest/elements/site", "digest/elements/site/profile");
-		}
-	}
-	
-	// register elgg events
-	elgg_register_event_handler("init", "system", "digest_init");
-	elgg_register_event_handler("pagesetup", "system", "digest_pagesetup");
-
-	// register cron events
-	elgg_register_plugin_hook_handler("cron", "daily", "digest_cron_handler");
-	elgg_register_plugin_hook_handler("cron", "weekly", "digest_cron_handler");
-	elgg_register_plugin_hook_handler("cron", "monthly", "digest_cron_handler");
-	
-	// allow some pages through walled garden
-	elgg_register_plugin_hook_handler("public_pages", "walled_garden", "digest_walled_garden_hook");
-	
-	// register on group leave
-	elgg_register_event_handler("leave", "group", "digest_group_leave_event");
-	
-	// register actions
-	elgg_register_action("digest/settings/save", dirname(__FILE__) . "/actions/settings/save.php", "admin");
-	
-	elgg_register_action("digest/update/usersettings", dirname(__FILE__) . "/actions/update/usersettings.php");
-	elgg_register_action("digest/update/groupsettings", dirname(__FILE__) . "/actions/update/groupsettings.php");
 	

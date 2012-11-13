@@ -628,3 +628,29 @@
 		
 		return $result;
 	}
+	
+	function digest_message_css(){
+	
+		elgg_extend_view("css/digest/core", "css/digest/river");
+		elgg_extend_view("digest/elements/site", "digest/elements/site/river");
+		elgg_extend_view("digest/elements/group", "digest/elements/group/river");
+	
+		if(elgg_is_active_plugin("blog")){
+			elgg_extend_view("css/digest/core", "css/digest/blog");
+				
+			elgg_extend_view("digest/elements/site", "digest/elements/site/blog");
+		}
+	
+		if(elgg_is_active_plugin("groups")){
+			elgg_extend_view("css/digest/core", "css/digest/groups");
+				
+			elgg_extend_view("digest/elements/site", "digest/elements/site/groups");
+		}
+	
+		if(elgg_is_active_plugin("profile")){
+			elgg_extend_view("css/digest/core", "css/digest/profile");
+				
+			elgg_extend_view("digest/elements/site", "digest/elements/site/profile");
+		}
+	}
+	
