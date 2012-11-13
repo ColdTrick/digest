@@ -14,6 +14,20 @@
 		DIGEST_INTERVAL_FORTNIGHTLY => elgg_echo("digest:interval:fortnightly"),
 		DIGEST_INTERVAL_MONTHLY => elgg_echo("digest:interval:monthly")
 	);
+	
+	$distribution_options_week = array(
+		0 => elgg_echo("digest:sunday"),
+		1 => elgg_echo("digest:monday"),
+		2 => elgg_echo("digest:tuesday"),
+		3 => elgg_echo("digest:wednesday"),
+		4 => elgg_echo("digest:thursday"),
+		5 => elgg_echo("digest:friday"),
+		6 => elgg_echo("digest:saturday"),
+		"distributed" => elgg_echo("digest:distribution:distributed"),
+	);
+	
+	$distribution_options_month = array_combine(range(1, 28), range(1, 28));
+	$distribution_options_month["distributed"] = elgg_echo("digest:distribution:distributed");
 
 	// Is Digest in production
 	$settings_production = "<div>";
@@ -41,6 +55,21 @@
 	$settings_interval .= "<div>";
 	$settings_interval .= elgg_echo("digest:settings:interval:group_default");
 	$settings_interval .= "&nbsp;" . elgg_view("input/dropdown", array("name" => "params[group_default]", "options_values" => $interval_options, "value" => $plugin->group_default));
+	$settings_interval .= "</div><br />";
+	
+	$settings_interval .= "<div>";
+	$settings_interval .= elgg_echo("digest:settings:distribution") . " weeky";
+	$settings_interval .= "&nbsp;" . elgg_view("input/dropdown", array("name" => "params[weekly_distribution]", "options_values" => $distribution_options_week, "value" => $plugin->weekly_distribution));
+	$settings_interval .= "</div><br />";
+	
+	$settings_interval .= "<div>";
+	$settings_interval .= elgg_echo("digest:settings:distribution") . " fortnightly";
+	$settings_interval .= "&nbsp;" . elgg_view("input/dropdown", array("name" => "params[fortnightly_distribution]", "options_values" => $distribution_options_week, "value" => $plugin->fortnightly_distribution));
+	$settings_interval .= "</div><br />";
+	
+	$settings_interval .= "<div>";
+	$settings_interval .= elgg_echo("digest:settings:distribution") . " monthly";
+	$settings_interval .= "&nbsp;" . elgg_view("input/dropdown", array("name" => "params[monthly_distribution]", "options_values" => $distribution_options_month, "value" => $plugin->monthly_distribution));
 	$settings_interval .= "</div><br />";
 	
 	$settings_interval .= "<div>";
