@@ -654,3 +654,28 @@
 		}
 	}
 	
+	function digest_get_default_distribution($interval){
+		static $distributions;
+		
+		if(!isset($distributions)){
+			$distributions = array();
+		}
+		
+		if(!empty($interval) && in_array($interval, array(DIGEST_INTERVAL_WEEKLY, DIGEST_INTERVAL_FORTNIGHTLY, DIGEST_INTERVAL_MONTHLY))){
+			
+			if(!isset($distributions[$interval])){
+				if($setting = elgg_get_plugin_setting($interval . "_distribution", "digest")){
+					$distributions[$interval] = $setting;
+				} else {
+					// no setting or 0 (zero)
+					if($interval == DIGEST_INTERVAL_MONTHLY){
+						$distributions[$interval] = 1; // first day of the month
+					} else {
+						$distributions[$interval] = 0; // first day of the week (sunday)
+					}
+				}
+			}
+		}
+		
+		return $distributions[$interval];
+	}
