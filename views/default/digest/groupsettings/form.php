@@ -11,46 +11,22 @@
 				$group_interval = digest_get_default_group_interval();
 			}
 			
-			$form_body = elgg_view("input/hidden", array("name" => "group_guid", "value" => $group->getGUID()));
+			$interval_options = array(
+				DIGEST_INTERVAL_NONE => elgg_echo("digest:interval:none"),
+				DIGEST_INTERVAL_DAILY => elgg_echo("digest:interval:daily"),
+				DIGEST_INTERVAL_WEEKLY => elgg_echo("digest:interval:weekly"),
+				DIGEST_INTERVAL_FORTNIGHTLY => elgg_echo("digest:interval:fortnightly"),
+				DIGEST_INTERVAL_MONTHLY => elgg_echo("digest:interval:monthly")
+			);
 			
-			$form_body .= "<div>\n";
+			// make form
+			$form_body = "<div>\n";
 			$form_body .= elgg_echo("digest:groupsettings:setting");
-			$form_body .= "&nbsp;<select name='digest_interval'>\n";
-			
-			$form_body .= "<option value='" . DIGEST_INTERVAL_NONE . "' class='digest_interval_disabled'";
-			if($group_interval == DIGEST_INTERVAL_NONE){
-				$form_body .= " selected='selected'";
-			}
-			$form_body .= ">" . elgg_echo("digest:interval:none") . "</option>\n";
-			
-			$form_body .= "<option value='" . DIGEST_INTERVAL_DAILY . "'";
-			if($group_interval == DIGEST_INTERVAL_DAILY){
-				$form_body .= " selected='selected'";
-			}
-			$form_body .= ">" . elgg_echo("digest:interval:daily") . "</option>\n";
-			
-			$form_body .= "<option value='" . DIGEST_INTERVAL_WEEKLY . "'";
-			if($group_interval == DIGEST_INTERVAL_WEEKLY){
-				$form_body .= " selected='selected'";
-			}
-			$form_body .= ">" . elgg_echo("digest:interval:weekly") . "</option>\n";
-			
-			$form_body .= "<option value='" . DIGEST_INTERVAL_FORTNIGHTLY . "'";
-			if($group_interval == DIGEST_INTERVAL_FORTNIGHTLY){
-				$form_body .= " selected='selected'";
-			}
-			$form_body .= ">" . elgg_echo("digest:interval:fortnightly") . "</option>\n";
-			
-			$form_body .= "<option value='" . DIGEST_INTERVAL_MONTHLY . "'";
-			if($group_interval == DIGEST_INTERVAL_MONTHLY){
-				$form_body .= " selected='selected'";
-			}
-			$form_body .= ">" . elgg_echo("digest:interval:monthly") . "</option>\n";
-			
-			$form_body .= "</select>\n";
+			$form_body .= "&nbsp;" . elgg_view("input/dropdown", array("name" => "digest_interval", "options_values" => $interval_options, "value" => $group_interval));
 			$form_body .= "</div>\n";
 			
-			$form_body .= "<div>\n";
+			$form_body .= "<div class='elgg-foot'>\n";
+			$form_body .= elgg_view("input/hidden", array("name" => "group_guid", "value" => $group->getGUID()));
 			$form_body .= elgg_view("input/submit", array("value" => elgg_echo("save")));
 			$form_body .= "</div>\n";
 			
