@@ -21,51 +21,19 @@
 					$user_group_interval = DIGEST_INTERVAL_DEFAULT;
 				}
 				
+				$interval_options = array(
+					DIGEST_INTERVAL_NONE => elgg_echo("digest:interval:none"),
+					DIGEST_INTERVAL_DEFAULT => elgg_echo("digest:interval:default", array(elgg_echo("digest:interval:" . $group_interval))),
+					DIGEST_INTERVAL_DAILY => elgg_echo("digest:interval:daily"),
+					DIGEST_INTERVAL_WEEKLY => elgg_echo("digest:interval:weekly"),
+					DIGEST_INTERVAL_FORTNIGHTLY => elgg_echo("digest:interval:fortnightly"),
+					DIGEST_INTERVAL_MONTHLY => elgg_echo("digest:interval:monthly")
+				);
+				
 				$group_items .= "<tr>\n";
 				$group_items .= "<td class='digest_table_layout_left'><a href='" . $group->getURL() . "' title='" . strip_tags($group->description) . "'>" . $group->name . "</a></td>\n";
 				$group_items .= "<td>";
-				
-				// begin select
-				$group_items .= "<select name='digest[" . $group->getGUID() . "]'>\n";
-				$group_items .= "<option value='" . DIGEST_INTERVAL_NONE . "' class='digest_interval_disabled'";
-				if($user_group_interval == DIGEST_INTERVAL_NONE){
-					$group_items .= " selected='selected'";
-				}
-				$group_items .= ">" . elgg_echo("digest:interval:none") . "</option>\n";
-				
-				$group_items .= "<option value='" . DIGEST_INTERVAL_DEFAULT . "'";
-				if($user_group_interval == DIGEST_INTERVAL_DEFAULT){
-					$group_items .= " selected='selected'";
-				}
-				$group_items .= ">" . elgg_echo("digest:interval:default", array(elgg_echo("digest:interval:" . $group_interval))) . "</option>\n";
-				
-				$group_items .= "<option value='" . DIGEST_INTERVAL_DAILY . "'";
-				if($user_group_interval == DIGEST_INTERVAL_DAILY){
-					$group_items .= " selected='selected'";
-				}
-				$group_items .= ">" . elgg_echo("digest:interval:daily") . "</option>\n";
-				
-				$group_items .= "<option value='" . DIGEST_INTERVAL_WEEKLY . "'";
-				if($user_group_interval == DIGEST_INTERVAL_WEEKLY){
-					$group_items .= " selected='selected'";
-				}
-				$group_items .= ">" . elgg_echo("digest:interval:weekly") . "</option>\n";
-				
-				$group_items .= "<option value='" . DIGEST_INTERVAL_FORTNIGHTLY . "'";
-				if($user_group_interval == DIGEST_INTERVAL_FORTNIGHTLY){
-					$group_items .= " selected='selected'";
-				}
-				$group_items .= ">" . elgg_echo("digest:interval:fortnightly") . "</option>\n";
-				
-				$group_items .= "<option value='" . DIGEST_INTERVAL_MONTHLY . "'";
-				if($user_group_interval == DIGEST_INTERVAL_MONTHLY){
-					$group_items .= " selected='selected'";
-				}
-				$group_items .= ">" . elgg_echo("digest:interval:monthly") . "</option>\n";
-				
-				$group_items .= "</select>\n";
-				//end select
-				
+				$group_items .= elgg_view("input/dropdown", array("name" => "digest[" . $group->getGUID() . "]", "options_values" => $interval_options, "value" => $user_group_interval));
 				$group_items .= "</td>\n";
 				$group_items .= "</tr>\n";
 			}
