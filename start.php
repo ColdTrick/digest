@@ -10,7 +10,7 @@
 	require_once(dirname(__FILE__) . "/lib/events.php");
 	require_once(dirname(__FILE__) . "/lib/functions.php");
 	require_once(dirname(__FILE__) . "/lib/hooks.php");
-	require_once(dirname(__FILE__) . "/lib/pahe_handlers.php");
+	require_once(dirname(__FILE__) . "/lib/page_handlers.php");
 	
 	// register elgg events
 	elgg_register_event_handler("init", "system", "digest_init");
