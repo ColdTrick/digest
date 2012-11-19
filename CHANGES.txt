@@ -9,6 +9,7 @@ x.x:
 - fixed: only showing published blogs
 - changed: plugin conflicts with crontrigger, for wrong Elgg upgrades
 - changed: different way to reset caching, so less memory is used
+- changed: layout of admin settings form
 
 2.0 beta (2012-03-09):
 

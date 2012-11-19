@@ -4,13 +4,25 @@
 		'digest' => "Digest",
 	
 		// digest intervals
-		'digest:interval:none' => "Disabled",
+		'digest:interval:none' => "None",
 		'digest:interval:default' => "Use group interval (currently: %s)",
 		'digest:interval:daily' => "Daily",
 		'digest:interval:weekly' => "Weekly",
 		'digest:interval:fortnightly' => "Fortnightly",
 		'digest:interval:monthly' => "Monthly",
 	
+		'digest:distribution' => "Distribution",
+		'digest:distribution:distributed' => "Distributed",
+		'digest:distribution:description' => "Select a specific delivery day or day of month. If you choose distributed the delivery day will be generated for each user so it will spread out over the interval. Users will not have the option to set their delivery day.",
+		
+		'digest:day:sunday' => "Sunday",
+		'digest:day:monday' => "Monday",
+		'digest:day:tuesday' => "Tuesday",
+		'digest:day:wednesday' => "Wednesday",
+		'digest:day:thursday' => "Thursday",
+		'digest:day:friday' => "Friday",
+		'digest:day:saturday' => "Saturday",
+		
 		'digest:interval:error' => "Invalid Interval",
 	
 		// readable time
@@ -25,21 +37,24 @@
 		'admin:statistics:digest' => "Digest analysis",
 		
 		// admin settings
-		'digest:settings:production:title' => "Digest production settings",
+		'digest:settings:notice' => "<b>BE ADVISED:</b> Using digests can send out lots of emails.",
+		
+		'digest:settings:production' => "In production",
 		'digest:settings:production:description' => "Using Digest could send out a lot of mails to your users, depending on the settings. To make sure no mails are send to your users before you're ready, this setting allows you to test the system. When you're ready set the system in production.",
 		'digest:settings:production:option' => "Enable sending of digest mails",
 		'digest:settings:production:group_option' => "Enable group digest mails",
-	
+		
 		'digest:settings:interval:title' => "Digest interval settings",
+		'digest:settings:interval:default' => "Default interval settings",
 		'digest:settings:interval:site_default' => "The default interval of the Site digest",
 		'digest:settings:interval:group_default' => "The default interval of the Group digest",
-		'digest:settings:interval:description' => "Setting a default value will send out the digest on this interval to all the users who haven't configured a setting of their own.<br /><br /><b>WARNING:</b> This could send out a lot of mails.",
+		'digest:settings:interval:description' => "Setting a default value will send out the digest on this interval to all the users who haven't configured a setting of their own.",
 		
 		'digest:settings:never:title' => "Never logged in users",
 		'digest:settings:never:include' => "Should users who have never logged in on the site be included?",
 		
-		'digest:settings:custon_text:title' => "Custom text",
-		'digest:settings:custon_text:description' => "Here you can define a custom text for in the header and/or footer of each digest.",
+		'digest:settings:custom_text:title' => "Custom text",
+		'digest:settings:custom_text:description' => "Here you can define a custom text for the header and/or footer of each digest.",
 		'digest:settings:custom_text:site:header' => "Site header text",
 		'digest:settings:custom_text:site:footer' => "Site footer text",
 		'digest:settings:custom_text:group:header' => "Group header text",
