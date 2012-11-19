@@ -4,20 +4,20 @@
 	
 		switch($page[0]){
 			case "test":
-				include(dirname(__FILE__) . "/pages/test.php");
+				include(dirname(dirname(__FILE__)) . "/pages/test.php");
 				break;
 			case "show":
-				include(dirname(__FILE__) . "/pages/show.php");
+				include(dirname(dirname(__FILE__)) . "/pages/show.php");
 				break;
 			case "unsubscribe":
-				include(dirname(__FILE__) . "/procedures/unsubscribe.php");
+				include(dirname(dirname(__FILE__)) . "/procedures/unsubscribe.php");
 				break;
 			case "user":
 			default:
 				if(!empty($page[1])){
 					set_input("username", $page[1]);
 				}
-				include(dirname(__FILE__) . "/pages/usersettings.php");
+				include(dirname(dirname(__FILE__)) . "/pages/usersettings.php");
 				break;
 		}
 	
