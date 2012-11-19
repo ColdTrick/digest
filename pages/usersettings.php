@@ -53,6 +53,6 @@
 		elgg_pop_context();
 	} else {
 		register_error(elgg_echo("digest:usersettings:error:user"));
-		forward("settings/user/");
+		forward();
 	}
 	
