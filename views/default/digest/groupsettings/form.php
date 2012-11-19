@@ -24,25 +24,19 @@
 				);
 				
 				// make form
-				$form_body = "<div>\n";
+				$form_body = "<div>";
 				$form_body .= elgg_echo("digest:groupsettings:setting");
-				$form_body .= "&nbsp;" . elgg_view("input/dropdown", array("name" => "digest_interval", "options_values" => $interval_options, "value" => $group_interval));
-				$form_body .= "</div>\n";
+				$form_body .= elgg_view("input/dropdown", array("name" => "digest_interval", "options_values" => $interval_options, "value" => $group_interval, "class" => "mlm"));
+				$form_body .= "</div>";
 				
-				$form_body .= "<div class='elgg-foot'>\n";
+				$form_body .= "<div class='elgg-foot'>";
 				$form_body .= elgg_view("input/hidden", array("name" => "group_guid", "value" => $group->getGUID()));
 				$form_body .= elgg_view("input/submit", array("value" => elgg_echo("save")));
-				$form_body .= "</div>\n";
+				$form_body .= "</div>";
 				
-				$form = elgg_view("input/form", array("body" => $form_body,
-														"action" => $vars["url"] . "action/digest/update/groupsettings"));
+				$form = elgg_view("input/form", array("body" => $form_body, "action" => "action/digest/update/groupsettings"));
 				
-				// build content
-				$content = "<div>" . elgg_echo("digest:groupsettings:description") . "</div>";
-				$content .= "<br />";
-				$content .= $form;
-				
-				echo elgg_view_module("info", elgg_echo("digest:groupsettings:title"), $content); 
+				echo elgg_view_module("info", elgg_echo("digest:groupsettings:title") . "<span class='elgg-icon elgg-icon-info mlm digest-groupsettings-interval-info' title='" . elgg_echo("digest:groupsettings:description") . "'></span>", $form); 
 			}
 		}
 	}
