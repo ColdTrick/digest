@@ -1,11 +1,10 @@
 <?php
 
 	/**
-	* Shows the latests blogs in the Digest
+	* Shows the newest members in the Digest
 	*
 	*/
 	
-	$user = elgg_extract("user", $vars, elgg_get_logged_in_user_entity());
 	$ts_lower = (int) elgg_extract("ts_lower", $vars);
 	$ts_upper = (int) elgg_extract("ts_upper", $vars);
 
@@ -13,7 +12,7 @@
 		"type" => "user",
 		"limit" => 6,
 		"relationship" => "member_of_site",
-		"relationship_guid" => get_config("site_guid"),
+		"relationship_guid" => elgg_get_site_entity()->getGUID(),
 		"inverse_relationship" => true,
 		"wheres" => array("(r.time_created BETWEEN " . $ts_lower . " AND " . $ts_upper . ")")
 	);
@@ -25,6 +24,7 @@
 		
 		foreach($newest_members as $index => $mem){
 			if(($index % 3 == 0)){
+				// only 3 per line
 				$member_items .= "<tr>";
 			}
 
@@ -38,7 +38,9 @@
 				$member_items .= "</tr>";
 			}
 		}
+		
 		if(($index % 3) !== 2){
+			// fill up empty columns
 			if(($index + 2) % 3){
 				$member_items .= "<td>&nbsp;</td>";
 				$member_items .= "<td>&nbsp;</td>";

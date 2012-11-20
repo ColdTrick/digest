@@ -5,7 +5,6 @@
 	*
 	*/
 	
-	$user = elgg_extract("user", $vars, elgg_get_logged_in_user_entity());
 	$ts_lower = (int) elgg_extract("ts_lower", $vars);
 	$ts_upper = (int) elgg_extract("ts_upper", $vars);
 

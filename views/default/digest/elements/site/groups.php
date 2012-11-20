@@ -1,17 +1,16 @@
 <?php
 
 	/**
-	* Shows the latests blogs in the Digest
+	* Shows the newest groups in the Digest
 	*
 	*/
 	
-	$user = elgg_extract("user", $vars, elgg_get_logged_in_user_entity());
 	$ts_lower = (int) elgg_extract("ts_lower", $vars);
 	$ts_upper = (int) elgg_extract("ts_upper", $vars);
 	
 	$group_options = array(
 		"type" => "group",
-		"limit" => 10,
+		"limit" => 6,
 		"created_time_lower" => $ts_lower,
 		"created_time_upper" => $ts_upper
 	);
