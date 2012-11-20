@@ -45,7 +45,7 @@
 			break;
 		default:
 			$interval = DIGEST_INTERVAL_MONTHLY;
-			$ts_lower = 0;			
+			$ts_lower = 1;			
 	}
 	
 	$user = elgg_get_logged_in_user_entity();
