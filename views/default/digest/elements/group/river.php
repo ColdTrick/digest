@@ -32,11 +32,9 @@
 		$title = elgg_view("output/url", array("text" => elgg_echo("groups:activity"), "href" => $group->getURL()));
 		
 		$options = array(
-			"limit" => $limit,
-			"offset" => $offset,
 			"list_class" => "elgg-list-river elgg-river",
-			"count" => count($items),
-			"items" => $items
+			"items" => $items,
+			"pagination" => false
 		);
 		
 		$content = elgg_view("page/components/list", $options);
