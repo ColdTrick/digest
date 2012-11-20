@@ -36,7 +36,7 @@
 				
 				$form = elgg_view("input/form", array("body" => $form_body, "action" => "action/digest/update/groupsettings"));
 				
-				echo elgg_view_module("info", elgg_echo("digest:groupsettings:title") . "<span class='elgg-icon elgg-icon-info mlm digest-groupsettings-interval-info' title='" . elgg_echo("digest:groupsettings:description") . "'></span>", $form); 
+				echo elgg_view_module("info", elgg_echo("digest:groupsettings:title") . "<span class='elgg-icon elgg-icon-info mlm digest-settings-title-info' title='" . elgg_echo("digest:groupsettings:description") . "'></span>", $form); 
 			}
 		}
 	}

@@ -30,30 +30,21 @@
 					DIGEST_INTERVAL_MONTHLY => elgg_echo("digest:interval:monthly")
 				);
 				
-				$group_items .= "<tr>\n";
-				$group_items .= "<td class='digest_table_layout_left'><a href='" . $group->getURL() . "' title='" . strip_tags($group->description) . "'>" . $group->name . "</a></td>\n";
-				$group_items .= "<td>";
-				$group_items .= elgg_view("input/dropdown", array("name" => "digest[" . $group->getGUID() . "]", "options_values" => $interval_options, "value" => $user_group_interval));
-				$group_items .= "</td>\n";
-				$group_items .= "</tr>\n";
+				$group_items .= "<tr>";
+				$group_items .= "<td class='digest_table_layout_left'><a href='" . $group->getURL() . "' title='" . strip_tags($group->description) . "'>" . $group->name . "</a></td>";
+				$group_items .= "<td>" . elgg_view("input/dropdown", array("name" => "digest[" . $group->getGUID() . "]", "options_values" => $interval_options, "value" => $user_group_interval)) . "</td>";
+				$group_items .= "</tr>";
 			}
 		}
 		
 		if(!empty($group_items)){
-			$group_list = "<table class='elgg-table'>\n";
 			
-			$group_list .= "<tr>\n";
-			$group_list .= "<th>" . elgg_echo("digest:usersettings:groups:group_header") . "</th>\n";
-			$group_list .= "<th>" . elgg_echo("digest:usersettings:groups:setting_header") . "</th>\n";
-			$group_list .= "</tr>\n";
-			
+			$group_list = "<table class='elgg-table-alt'>";
+			$group_list .= "<tr><th>" . elgg_echo("digest:usersettings:groups:group_header") . "</th><th>" . elgg_echo("digest:usersettings:groups:setting_header") . "</th></tr>";
 			$group_list .= $group_items;
+			$group_list .= "</table>";
 			
-			$group_list .= "</table>\n";
-			
-			echo "<div>" . elgg_echo("digest:usersettings:groups:description") . "</div>";
-			echo "<br />";
-			echo $group_list;
+			echo elgg_view_module("info", elgg_echo("digest:usersettings:groups:title") . "<span class='elgg-icon elgg-icon-info digest-settings-title-info mlm' title='" . elgg_echo("digest:usersettings:groups:description") . "'></span>", $group_list);
 		}
 	}
 	

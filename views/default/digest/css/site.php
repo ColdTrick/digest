@@ -2,7 +2,7 @@
 
 ?>
 /* Digest CSS */
-.digest-groupsettings-interval-info {
+.digest-settings-title-info {
 	vertical-align: top;
 }
 
