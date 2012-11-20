@@ -772,11 +772,11 @@
 				// there is a default site setting
 				$query .= " UNION ALL";
 				
-				$query .= " SELECT ue.guid, '" . $interval_settings[DIGEST_INTERVAL_DEFAULT] . "' as user_interval";
+				$query .= " SELECT ue2.guid, '" . $interval_settings[DIGEST_INTERVAL_DEFAULT] . "' as user_interval";
 				$query .= " FROM " . $dbprefix . "users_entity ue2";
 				$query .= " JOIN " . $dbprefix . "entities e2 ON ue2.guid = e2.guid";
 				$query .= " JOIN " . $dbprefix . "entity_relationships r2 ON ue2.guid = r2.guid_one";
-				$query .= " WHERE (r.guid_two = " . $site->getGUID() . " AND r.relationship = 'member_of_site')"; // user must be a member of the site
+				$query .= " WHERE (r2.guid_two = " . $site->getGUID() . " AND r2.relationship = 'member_of_site')"; // user must be a member of the site
 				$query .= " AND (e2.enabled = 'yes' AND ue2.banned = 'no'"; // user must be enabled and not banned
 				if(!$include_never_logged_in){
 					$query .= " AND ue2.last_login > 0"; // exclude all users that have never logged in
@@ -784,7 +784,7 @@
 				$query .= ")";
 				$query .= " AND ue2.guid NOT IN (";
 				$query .= "SELECT DISTINCT entity_guid";
-				$query .= " FROM " . dbprefix . "private_settings";
+				$query .= " FROM " . $dbprefix . "private_settings";
 				$query .= " WHERE name = 'digest_" . $site->getGUID() . "'";
 				$query .= ")";
 				
@@ -807,12 +807,14 @@
 					case DIGEST_INTERVAL_MONTHLY:
 						if($interval_settings[DIGEST_INTERVAL_MONTHLY] == "distributed"){
 							// delivery is distributed, this means (user_guid % 28) + 1 = day of the month
-							$query .= " AND ((ue.guid % 28) + 1) = " . $dotm;
+							$query .= " AND ((ue2.guid % 28) + 1) = " . $dotm;
 						}
 						break;
 				}
 			}
 		}
+		
+		echo $query;
 		
 		// execute the query
 		if($rows = get_data($query)){
