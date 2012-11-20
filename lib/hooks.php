@@ -8,7 +8,7 @@
 	 * @param bool $returnvalue
 	 * @param array $params
 	 */
-	function digest_cron_handler($hook, $entity_type, $returnvalue, $params){
+	function digest_cron_handler_old($hook, $entity_type, $returnvalue, $params){
 		global $dbcalls;
 		global $DB_QUERY_CACHE;
 		global $ENTITY_CACHE;
@@ -224,18 +224,25 @@
 	/**
 	 * Lets figure out what we need to do
 	 * 
-	 * @param unknown_type $hook
-	 * @param unknown_type $entity_type
-	 * @param unknown_type $returnvalue
-	 * @param unknown_type $params
+	 * @param string $hook
+	 * @param string $entity_type
+	 * @param bool $returnvalue
+	 * @param array $params
 	 */
-	function digest_cron_handler2($hook, $entity_type, $returnvalue, $params) {
+	function digest_cron_handler($hook, $entity_type, $returnvalue, $params) {
 		global $interval_ts_upper;
 		global $DB_QUERY_CACHE;
 		global $ENTITY_CACHE;
 		
 		if (!empty($params) && is_array($params)) {
+			// set global start time of digest run
 			$interval_ts_upper = elgg_extract("time", $params, time());
+			
+			// should new users be included
+			$never_logged_in = false;
+			if (elgg_get_plugin_setting("include_never_logged_in", "digest") == "yes") {
+				$never_logged_in = true;
+			}
 			
 			// should the site digest be sent
 			if (digest_site_enabled()) {
@@ -248,11 +255,6 @@
 					DIGEST_INTERVAL_FORTNIGHTLY => digest_get_default_distribution(DIGEST_INTERVAL_FORTNIGHTLY),
 					DIGEST_INTERVAL_MONTHLY => digest_get_default_distribution(DIGEST_INTERVAL_MONTHLY)
 				);
-				
-				$never_logged_in = false;
-				if (elgg_get_plugin_setting("include_never_logged_in", "digest") == "yes") {
-					$never_logged_in = true;
-				}
 				
 				if ($users = digest_get_site_users($site_intervals, $never_logged_in)) {
 					foreach($users as $user_setting){
@@ -274,7 +276,69 @@
 			
 			// should the group digest be sent
 			if (digest_group_enabled()) {
+				$options = array(
+					"type" => "group",
+					"limit" => false,
+					"callback" => "digest_row_to_guid"
+				);
 				
+				$group_intervals = array(
+					DIGEST_INTERVAL_WEEKLY => digest_get_default_distribution(DIGEST_INTERVAL_WEEKLY),
+					DIGEST_INTERVAL_FORTNIGHTLY => digest_get_default_distribution(DIGEST_INTERVAL_FORTNIGHTLY),
+					DIGEST_INTERVAL_MONTHLY => digest_get_default_distribution(DIGEST_INTERVAL_MONTHLY)
+				);
+				
+				// ignore access to get all groups
+				$ia = elgg_set_ignore_access(true);
+				
+				if ($group_guids = elgg_get_entities($options)) {
+					
+					foreach ($group_guids as $group_guid) {
+						// get group
+						$group = get_entity($group_guid);
+						
+						// get group default interval
+						$group_interval = $group->digest_interval;
+						
+						if (empty($group_interval)) {
+							// group has no interval, so fallback to site default
+							$group_interval = digest_get_default_group_interval();
+						}
+						
+						$group_intervals[DIGEST_INTERVAL_DEFAULT] = $group_interval;
+						
+						// restore access
+						elgg_set_ignore_access($ia);
+						
+						if ($users = digest_get_group_users($group_guid, $group_intervals, $never_logged_in)) {
+							foreach ($users as $user_setting) {
+								// get the user 
+								$user = get_user($user_setting["guid"]);
+								
+								digest_group($group, $user, $user_setting["user_interval"]);
+								
+								// reset cache
+								unset($ENTITY_CACHE);
+								$ENTITY_CACHE = $entity_cache_backup;
+								
+								$DB_QUERY_CACHE->clear();
+								
+								unset($user);
+							}
+						}
+						
+						// reset cache
+						unset($ENTITY_CACHE);
+						$ENTITY_CACHE = $entity_cache_backup;
+						
+						$DB_QUERY_CACHE->clear();
+						
+						unset($group);
+					}
+				}
+				
+				// restore access settings
+				elgg_set_ignore_access($ia);
 			}
 		}
 	}
