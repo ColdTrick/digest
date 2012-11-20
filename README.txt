@@ -21,7 +21,7 @@ Sends mails with update information to your site or group members based on defau
 == 2. ToDo ==
 
 == 3. Plugin developers ==
-If you wish to supply content for eighter the Site digest of Group digest you can easily extend the digest.
+If you wish to supply content for either the Site digest of Group digest you can easily extend the digest.
 
 === For the Site digest ===
 Please extend the view "digest/elements/site" with the content from your plugin and
@@ -64,7 +64,7 @@ The content of the digest will be made using the view view "digest/elements/site
 Both view are just empty wrapper view, all plugins are required to extend to these views in order to display content.
  
 ==== Footer ====
-In the view "digest/elements/footer" this contains a description of eighter the Site or the Group, depending on the digest.
+In the view "digest/elements/footer" this contains a description of either the Site or the Group, depending on the digest.
 
 ==== Unsubscribe ====
 In the view "digest/elements/unsubscribe" this contains some information about where the digest came from, how the user can change the settings of the digest 
