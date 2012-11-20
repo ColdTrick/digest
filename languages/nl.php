@@ -49,6 +49,7 @@ $language = array (
   'digest:settings:never:include' => 'Moeten ook gebruikers die nog nooit zijn aangemeld een update ontvangen?',
   'digest:usersettings:title' => 'Persoonlijk Updates instellingen',
   'digest:usersettings:error:user' => 'Je hebt geen toegang tot de update instellingen van deze gebruiker',
+  'digest:usersettings:no_settings' => "Er zijn op dit moment geen instellingen te maken voor de updates.",
   'digest:usersettings:site:title' => 'Site Updates instellingen',
   'digest:usersettings:site:description' => 'De Site Update zal je informeren over recente activiteit op site niveau.',
   'digest:usersettings:site:setting' => 'Hoe vaak wil je een Site Update ontvangen?',

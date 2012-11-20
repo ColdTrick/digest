@@ -10,10 +10,15 @@
 		$form_body .= elgg_view("digest/usersettings/groups", array("user" => $user, "groups" => $groups));
 	}
 	
-	$form_body .= "<div class='elgg-foot'>";
-	$form_body .= elgg_view("input/hidden", array("name" => "user_guid", "value" => $user->getGUID()));
-	$form_body .= elgg_view("input/submit", array("value" => elgg_echo("save")));
-	$form_body .= "</div>";
+	if (!empty($form_body)) {
+		$form_body .= "<div class='elgg-foot'>";
+		$form_body .= elgg_view("input/hidden", array("name" => "user_guid", "value" => $user->getGUID()));
+		$form_body .= elgg_view("input/submit", array("value" => elgg_echo("save")));
+		$form_body .= "</div>";
+		
+		echo elgg_view("input/form", array("body" => $form_body, "action" => "action/digest/update/usersettings", "class" => "elgg-form-alt"));
+	} else {
+		echo elgg_echo("digest:usersettings:no_settings");
+	}
 	
-	echo elgg_view("input/form", array("body" => $form_body, "action" => "action/digest/update/usersettings", "class" => "elgg-form-alt"));
 	

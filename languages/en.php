@@ -63,6 +63,7 @@
 		// usersettings
 		'digest:usersettings:title' => "Personal digest settings",
 		'digest:usersettings:error:user' => "You don't have access to this users digest settings",
+		'digest:usersettings:no_settings' => "No digest settings available to configure.",
 		
 		'digest:usersettings:site:title' => "Site digest settings",
 		'digest:usersettings:site:description' => "The Site digest will inform you of recent activity on the site in different categories like Blog, Groups, recent members.",
