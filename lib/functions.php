@@ -350,29 +350,19 @@
 	 * @param bool $bypass
 	 * @return boolean
 	 */
-	function digest_send_mail(ElggUser $user, $subject, $html_body, $plain_link = "", $bypass = false){
+	function digest_send_mail(ElggUser $user, $subject, $html_body, $plain_link = ""){
 		global $digest_mail_send;
-		
-		static $in_production;
-		if(!isset($in_production)){
-			$in_production = false;
-			if(elgg_get_plugin_setting("in_production", "digest") == "yes"){
-				$in_production = true;
-			}
-		}
 		
 		$result = false;
 		
 		if(!empty($user) && elgg_instanceof($user, "user", null, "ElggUser") && !empty($subject) && !empty($html_body)){
 			// convert css
-			if(defined("XML_DOCUMENT_NODE")){
-				if($transform = html_email_handler_css_inliner($html_body)){
-					$html_body = $transform;
-				}
+			if($transform = html_email_handler_css_inliner($html_body)){
+				$html_body = $transform;
 			}
 			
 			// email settings
-			$to = $user->name . " <" . $user->email . ">";
+			$to = html_email_handler_make_rfc822_address($user);
 			
 			if(!empty($plain_link)){
 				// make a plaintext message for non HTML users
@@ -380,24 +370,14 @@
 			}
 			
 			// send out the mail
-			if(($in_production === true) || ($bypass === true)){
-				$options = array(
-					"to" => $to,
-					"subject" => $subject,
-					"html_message" => $html_body,
-					"plaintext_message" => $plaintext_message
-				);
-				
-				if(html_email_handler_send_email($options)){
-					if(empty($digest_mail_send)){
-						$digest_mail_send = 1;
-					} else {
-						$digest_mail_send++;
-					}
-					
-					$result = true;
-				}
-			} else {
+			$options = array(
+				"to" => $to,
+				"subject" => $subject,
+				"html_message" => $html_body,
+				"plaintext_message" => $plaintext_message
+			);
+			
+			if(html_email_handler_send_email($options)){
 				if(empty($digest_mail_send)){
 					$digest_mail_send = 1;
 				} else {
@@ -916,9 +896,6 @@
 				$query .= ")";
 			}
 		}
-		
-		echo $query;
-		exit();
 		
 		// execute the query
 		if ($rows = get_data($query)) {
