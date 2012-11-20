@@ -28,11 +28,11 @@
 		echo "<table>";
 		echo "<tr>";
 		echo "<td class='digest-footer-quote-left'>";
-		echo "<img src='" .$vars["url"] . "mod/digest/_graphics/quote_left.png' />";
+		echo "<img src='" . elgg_get_site_url() . "mod/digest/_graphics/quote_left.png' />";
 		echo "</td>";
 		echo "<td>" . $description . "</td>";
 		echo "<td class='digest-footer-quote-right'>";
-		echo "<img src='" .$vars["url"] . "mod/digest/_graphics/quote_right.png' />";
+		echo "<img src='" . elgg_get_site_url() . "mod/digest/_graphics/quote_right.png' />";
 		echo "</td>";
 		echo "</tr>";
 		echo "</table>";
