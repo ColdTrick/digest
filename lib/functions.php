@@ -723,7 +723,7 @@
 		$query .= " JOIN " . $dbprefix . "entity_relationships r ON ue.guid = r.guid_one";
 		$query .= " WHERE (r.guid_two = " . $site->getGUID() . " AND r.relationship = 'member_of_site')"; // user must be a member of the site
 		$query .= " AND (e.enabled = 'yes' AND ue.banned = 'no'"; // user must be enabled and not banned
-		if(!$include_never_logged_in){
+		if (!$include_never_logged_in) {
 			$query .= " AND ue.last_login > 0"; // exclude all users that have never logged in
 		}
 		$query .= ")";
@@ -731,43 +731,42 @@
 		$query .= " AND (ps.value = '" . DIGEST_INTERVAL_DAILY . "'"; // user has daily delivery
 		
 		// check the weekly interval settings
-		if(($setting = $interval_settings[DIGEST_INTERVAL_WEEKLY]) == "distributed"){
+		if (($setting = $interval_settings[DIGEST_INTERVAL_WEEKLY]) == "distributed") {
 			// delivery is distributed, this means user_guid % 7 = day of the week
 			$query .= " OR (ps.value = '" . DIGEST_INTERVAL_WEEKLY . "' AND (ue.guid % 7) = " . $dotw . ")";
-		} elseif($setting == $dotw) {
+		} elseif ($setting == $dotw) {
 			$query .= " OR ps.value = '" . DIGEST_INTERVAL_WEEKLY . "'";
 		}
 		
 		// check the fortnightly interval settings
-		if(($setting = $interval_settings[DIGEST_INTERVAL_FORTNIGHTLY]) == "distributed"){
+		if (($setting = $interval_settings[DIGEST_INTERVAL_FORTNIGHTLY]) == "distributed") {
 			// delivery is distributed, this means user_guid % 14 = day of the week
 			$query .= " OR (ps.value = '" . DIGEST_INTERVAL_FORTNIGHTLY . "' AND (ue.guid % 14) = " . $dotfn . ")";
-		} elseif($odd_week && ($setting == $dotw)) {
+		} elseif ($odd_week && ($setting == $dotw)) {
 			$query .= " OR ps.value = '" . DIGEST_INTERVAL_FORTNIGHTLY . "'";
 		}
 		
 		// check the monthly interval settings
-		if(($setting = $interval_settings[DIGEST_INTERVAL_MONTHLY]) == "distributed"){
+		if (($setting = $interval_settings[DIGEST_INTERVAL_MONTHLY]) == "distributed") {
 			// delivery is distributed, this means (user_guid % 28) + 1 = day of the month
 			$query .= " OR (ps.value = '" . DIGEST_INTERVAL_MONTHLY . "' AND (((ue.guid % 28) + 1) = " . $dotm . "))";
-		} elseif($setting == $dotm) {
+		} elseif ($setting == $dotm) {
 			$query .= " OR ps.value = '" . DIGEST_INTERVAL_MONTHLY . "'";
 		}
 		
 		$query .= ")";
 		
 		// check default site setting
-		if($interval_settings[DIGEST_INTERVAL_DEFAULT] != DIGEST_INTERVAL_NONE){
+		if ($interval_settings[DIGEST_INTERVAL_DEFAULT] != DIGEST_INTERVAL_NONE) {
 			// should the default run today
-			if(
-				$interval_settings[DIGEST_INTERVAL_DEFAULT] == DIGEST_INTERVAL_DAILY // daily interval
+			if ($interval_settings[DIGEST_INTERVAL_DEFAULT] == DIGEST_INTERVAL_DAILY // daily interval
 				|| ($interval_settings[DIGEST_INTERVAL_DEFAULT] == DIGEST_INTERVAL_WEEKLY && // weekly interval
 						($interval_settings[DIGEST_INTERVAL_WEEKLY] == "distributed" || $interval_settings[DIGEST_INTERVAL_WEEKLY] == $dotw))
 				|| ($interval_settings[DIGEST_INTERVAL_DEFAULT] == DIGEST_INTERVAL_FORTNIGHTLY && // fortnightly interval
 						($interval_settings[DIGEST_INTERVAL_FORTNIGHTLY] == "distributed" || $interval_settings[DIGEST_INTERVAL_FORTNIGHTLY] == $dotfn))
 				|| ($interval_settings[DIGEST_INTERVAL_DEFAULT] == DIGEST_INTERVAL_MONTHLY && // monthly interval
 						($interval_settings[DIGEST_INTERVAL_MONTHLY] == "distributed" || $interval_settings[DIGEST_INTERVAL_MONTHLY] == $dotm))
-			){
+			) {
 				
 				// there is a default site setting
 				$query .= " UNION ALL";
@@ -788,24 +787,24 @@
 				$query .= " WHERE name = 'digest_" . $site->getGUID() . "'";
 				$query .= ")";
 				
-				switch($interval_settings[DIGEST_INTERVAL_DEFAULT]){
+				switch ($interval_settings[DIGEST_INTERVAL_DEFAULT]) {
 					case DIGEST_INTERVAL_DAILY:
 						// no further limit
 						break;
 					case DIGEST_INTERVAL_WEEKLY:
-						if($interval_settings[DIGEST_INTERVAL_WEEKLY] == "distributed"){
+						if ($interval_settings[DIGEST_INTERVAL_WEEKLY] == "distributed") {
 							// delivery is distributed, this means user_guid % 7 = day of the week
 							$query .= " AND (ue2.guid % 7) = " . $dotw;
 						}
 						break;
 					case DIGEST_INTERVAL_FORTNIGHTLY:
-						if($interval_settings[DIGEST_INTERVAL_FORTNIGHTLY] == "distributed"){
+						if ($interval_settings[DIGEST_INTERVAL_FORTNIGHTLY] == "distributed") {
 							// delivery is distributed, this means user_guid % 14 = day of the week
 							$query .= " AND (ue2.guid % 14) = " . $dotfn;
 						}
 						break;
 					case DIGEST_INTERVAL_MONTHLY:
-						if($interval_settings[DIGEST_INTERVAL_MONTHLY] == "distributed"){
+						if ($interval_settings[DIGEST_INTERVAL_MONTHLY] == "distributed") {
 							// delivery is distributed, this means (user_guid % 28) + 1 = day of the month
 							$query .= " AND ((ue2.guid % 28) + 1) = " . $dotm;
 						}
@@ -814,13 +813,11 @@
 			}
 		}
 		
-		echo $query;
-		
 		// execute the query
-		if($rows = get_data($query)){
+		if ($rows = get_data($query)) {
 			$result = array();
 			
-			foreach($rows as $row){
+			foreach ($rows as $row) {
 				$result[] = array(
 					"guid" => $row->guid,
 					"user_interval" => $row->user_interval

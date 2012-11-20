@@ -231,12 +231,17 @@
 	 */
 	function digest_cron_handler2($hook, $entity_type, $returnvalue, $params) {
 		global $interval_ts_upper;
+		global $DB_QUERY_CACHE;
+		global $ENTITY_CACHE;
 		
-		if(!empty($params) && is_array($params)){
+		if (!empty($params) && is_array($params)) {
 			$interval_ts_upper = elgg_extract("time", $params, time());
 			
 			// should the site digest be sent
-			if(digest_site_enabled()){
+			if (digest_site_enabled()) {
+				// backup some cache
+				$entity_cache_backup = $ENTITY_CACHE;
+				
 				$site_intervals = array(
 					DIGEST_INTERVAL_DEFAULT => digest_get_default_site_interval(),
 					DIGEST_INTERVAL_WEEKLY => digest_get_default_distribution(DIGEST_INTERVAL_WEEKLY),
@@ -245,13 +250,31 @@
 				);
 				
 				$never_logged_in = false;
-				if(elgg_get_plugin_setting("include_never_logged_in", "digest") == "yes"){
+				if (elgg_get_plugin_setting("include_never_logged_in", "digest") == "yes") {
 					$never_logged_in = true;
 				}
 				
-				if($users = digest_get_site_users($site_intervals, $never_logged_in)){
-					
+				if ($users = digest_get_site_users($site_intervals, $never_logged_in)) {
+					foreach($users as $user_setting){
+						// sent site digest for this user
+						$user = get_user($user_setting["guid"]);
+						
+						digest_site($user, $user_setting["user_interval"]);
+						
+						// reset cache
+						unset($ENTITY_CACHE);
+						$ENTITY_CACHE = $entity_cache_backup;
+
+						$DB_QUERY_CACHE->clear();
+						
+						unset($user);
+					}
 				}
+			}
+			
+			// should the group digest be sent
+			if (digest_group_enabled()) {
+				
 			}
 		}
 	}
