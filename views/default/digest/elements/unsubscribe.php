@@ -18,14 +18,14 @@
 	 */
 
 	$user = elgg_extract("user", $vars);
-	$digest_entity = elgg_extract("group", $vars, elgg_get_site_entity());
 	$site = elgg_get_site_entity();
+	$digest_entity = elgg_extract("group", $vars, $site);
 	
 	$unsubscribe_link = digest_create_unsubscribe_link($digest_entity->getGUID(), $user);
 
 	$site_url = elgg_view("output/url", array("href" => $site->url, "text" => $site->name));
-	$digest_url = elgg_view("output/url", array("href" => $vars["url"] . "digest", "text" => elgg_echo("digest:layout:footer:update")));
-	
+	$digest_url = elgg_view("output/url", array("href" => "digest", "text" => elgg_echo("digest:layout:footer:update")));
+
 	echo elgg_echo("digest:elements:unsubscribe:info", array($site_url));
-	echo "&nbsp;" . elgg_echo("digest:elements:unsubscribe:settings", array("<a href='" . $vars["url"] . "digest/" . $user->username . "'>", "</a>"));
+	echo "&nbsp;" . elgg_echo("digest:elements:unsubscribe:settings", array("<a href='" . $site->url . "digest/" . $user->username . "'>", "</a>"));
 	echo "&nbsp;" . elgg_echo("digest:elements:unsubscribe:unsubscribe", array("<a href='" . $unsubscribe_link . "'>", "</a>"));
