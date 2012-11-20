@@ -222,6 +222,41 @@
 	}
 	
 	/**
+	 * Lets figure out what we need to do
+	 * 
+	 * @param unknown_type $hook
+	 * @param unknown_type $entity_type
+	 * @param unknown_type $returnvalue
+	 * @param unknown_type $params
+	 */
+	function digest_cron_handler2($hook, $entity_type, $returnvalue, $params) {
+		global $interval_ts_upper;
+		
+		if(!empty($params) && is_array($params)){
+			$interval_ts_upper = elgg_extract("time", $params, time());
+			
+			// should the site digest be sent
+			if(digest_site_enabled()){
+				$site_intervals = array(
+					DIGEST_INTERVAL_DEFAULT => digest_get_default_site_interval(),
+					DIGEST_INTERVAL_WEEKLY => digest_get_default_distribution(DIGEST_INTERVAL_WEEKLY),
+					DIGEST_INTERVAL_FORTNIGHTLY => digest_get_default_distribution(DIGEST_INTERVAL_FORTNIGHTLY),
+					DIGEST_INTERVAL_MONTHLY => digest_get_default_distribution(DIGEST_INTERVAL_MONTHLY)
+				);
+				
+				$never_logged_in = false;
+				if(elgg_get_plugin_setting("include_never_logged_in", "digest") == "yes"){
+					$never_logged_in = true;
+				}
+				
+				if($users = digest_get_site_users($site_intervals, $never_logged_in)){
+					
+				}
+			}
+		}
+	}
+	
+	/**
 	 * when a default site interval is set, the user must tell us wether he/shw wants te receive a digest
 	 * 
 	 * @param string $hook
