@@ -5,10 +5,48 @@
 	// remove some view extensions
 	digest_revert_views();
 	
+	$digest = "site";
+	$interval = DIGEST_INTERVAL_MONTHLY;
+	$header_text = elgg_get_plugin_setting("custom_text_site_header", "digest");
+	$footer_text = elgg_get_plugin_setting("custom_text_site_footer", "digest");
+	
+	switch($page[1]){
+		case "group":
+			if(!empty($page[3]) && ($group = get_entity($page[3])) && elgg_instanceof($group, "group")){
+				$digest = "group";
+				
+				$header_text = elgg_get_plugin_setting("custom_text_group_header", "digest");
+				$footer_text = elgg_get_plugin_setting("custom_text_group_footer", "digest");
+				
+			} else {
+				forward();
+			}
+		case "site":
+		default:
+			$interval = $page[2];
+			break;
+	}
+	
 	// set some interval settings
 	$ts_upper = time();
-	$ts_lower = time() - (60*60*24*31);
-	$interval = "monthly";
+	
+	switch($interval){
+		case DIGEST_INTERVAL_DAILY:
+			$ts_lower = $ts_upper - (60*60*24);
+			break;
+		case DIGEST_INTERVAL_WEEKLY:
+			$ts_lower = $ts_upper - (60*60*24*7);
+			break;
+		case DIGEST_INTERVAL_FORTNIGHTLY:
+			$ts_lower = $ts_upper - (60*60*24*14);
+			break;
+		case DIGEST_INTERVAL_MONTHLY:
+			$ts_lower = $ts_upper - (60*60*24*31);
+			break;
+		default:
+			$interval = DIGEST_INTERVAL_MONTHLY;
+			$ts_lower = 0;			
+	}
 	
 	$user = elgg_get_logged_in_user_entity();
 	
@@ -16,29 +54,21 @@
 		"user" => $user,
 		"ts_lower" => $ts_lower,
 		"ts_upper" => $ts_upper,
-		"interval" => $interval
+		"interval" => $interval,
+		"group" => $group
 	);
-	
-	$group_options = array(
-		"type" => "group",
-		"limit" => 1,
-		"relationship" => "member",
-		"relationship_guid" => $user->getGUID()
-	);
-	
-// 	if($groups = elgg_get_entities($group_options)){
-// 		$vars["group"] = $groups[0];
 		
-// 		$content = elgg_view("digest/elements/group", $vars);
-// 	}
+	$content = "";
 	
+	if(!empty($header_text)){
+		$content .= elgg_view_module("digest", "", "<div class='elgg-output'>" . $header_text . "</div>");
+	}
 	
-	$header_text = elgg_get_plugin_setting("custom_text_site_header", "digest");
-	$footer_text = elgg_get_plugin_setting("custom_text_site_footer", "digest");
+	$content .= elgg_view("digest/elements/" . $digest, $vars);
 	
-	$content = elgg_view_module("digest", "", "<div class='elgg-output'>" . $header_text . "</div>");
-	$content .= elgg_view("digest/elements/site", $vars);
-	$content .= elgg_view_module("digest", "", "<div class='elgg-output'>" . $footer_text . "</div>");
+	if(!empty($footer_text)){
+		$content .= elgg_view_module("digest", "", "<div class='elgg-output'>" . $footer_text . "</div>");
+	}
 	
 	$params = array(
 		"title" => elgg_get_site_entity()->name,
