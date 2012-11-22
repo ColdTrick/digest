@@ -78,7 +78,7 @@
 	 * 
 	 * @param ElggUser $user
 	 * @param string $interval
-	 * @return boolean
+	 * @return true (mail sent successfull) || false (some error) || -1 (no content)
 	 */
 	function digest_site(ElggUser $user, $interval){
 		global $SESSION;
@@ -159,7 +159,7 @@
 				$result = digest_send_mail($user, $message_subject, $message_body, $digest_online_url);
 			} else {
 				// no data is still succesful
-				$result = true;
+				$result = -1;
 			}
 			
 			// to save memory
@@ -192,7 +192,7 @@
 	 * @param ElggGroup $group
 	 * @param ElggUser $user
 	 * @param string $interval
-	 * @return boolean
+	 * @return true (mail sent successfull) || false (some error) || -1 (no content)
 	 */
 	function digest_group(ElggGroup $group, ElggUser $user, $interval){
 		global $SESSION;
@@ -279,7 +279,7 @@
 					$result = digest_send_mail($user, $message_subject, $message_body, $digest_online_url);
 				} else {
 					// no data is still succesful
-					$result = true;
+					$result = -1;
 				}
 				
 				// save memory
@@ -964,5 +964,86 @@
 		
 		// save new stats
 		return elgg_set_plugin_setting("site_statistics", json_encode($site_stats), "digest");
+	}
+	
+	function digest_prepare_group_statistics() {
+		return array(
+			DIGEST_INTERVAL_DAILY => array(
+				"groups" => array(),
+				"users" => 0,
+				"mails" => 0,
+				"total_memory" => 0,
+				"total_time" => 0
+			),
+			DIGEST_INTERVAL_WEEKLY => array(
+				"groups" => array(),
+				"users" => 0,
+				"mails" => 0,
+				"total_memory" => 0,
+				"total_time" => 0
+			),
+			DIGEST_INTERVAL_FORTNIGHTLY => array(
+				"groups" => array(),
+				"users" => 0,
+				"mails" => 0,
+				"total_memory" => 0,
+				"total_time" => 0
+			),
+			DIGEST_INTERVAL_MONTHLY => array(
+				"groups" => array(),
+				"users" => 0,
+				"mails" => 0,
+				"total_memory" => 0,
+				"total_time" => 0
+			),
+			"general" => array(
+				"mts_start_digest" => 0,
+				"ts_start_cron" => 0,
+				"mts_group_selection_done" => 0,
+				"total_time_user_selection" => 0,
+				"mts_end_digest" => 0,
+				"peak_memory_start" => 0,
+				"peak_memory_end" => 0,
+				"total_memory" => 0
+			)
+		);
+	}
+	
+	function digest_save_group_statistics($stats, $timestamp){
+		$dotw = date("w", $timestamp); // Day of the Week (0 (sunday) - 6 (saturday))
+		$dotm = date("j", $timestamp); // Day of the Month (1 - 31)
+		$odd_week = (date("W", $timestamp) & 1); // Odd weeknumber or not
+		
+		$dotfn = $dotw; // Day of the Fortnight (0 (sunday 1st week) - 6 (saturday 1st week))
+		if(!$odd_week){
+			$dotfn += 7; // in even weeks + 7 days (7 (sunday 2nd week) - 13 (saturday 2nd week))
+		}
+		
+		// get saved site statistics
+		if($group_stats = elgg_get_plugin_setting("group_statistics", "digest")){
+			$group_stats = json_decode($group_stats, true);
+		} else {
+			$group_stats = array(
+				DIGEST_INTERVAL_WEEKLY => array(),
+				DIGEST_INTERVAL_FORTNIGHTLY => array(),
+				DIGEST_INTERVAL_MONTHLY => array()
+			);
+		}
+		
+		// convert group guids to count
+		$stats[DIGEST_INTERVAL_DAILY]["groups"] = count($stats[DIGEST_INTERVAL_DAILY]["groups"]);
+		$stats[DIGEST_INTERVAL_WEEKLY]["groups"] = count($stats[DIGEST_INTERVAL_WEEKLY]["groups"]);
+		$stats[DIGEST_INTERVAL_FORTNIGHTLY]["groups"] = count($stats[DIGEST_INTERVAL_FORTNIGHTLY]["groups"]);
+		$stats[DIGEST_INTERVAL_MONTHLY]["groups"] = count($stats[DIGEST_INTERVAL_MONTHLY]["groups"]);
+		
+		// convert collected stats to correct format
+		$group_stats[DIGEST_INTERVAL_DAILY] = $stats[DIGEST_INTERVAL_DAILY];
+		$group_stats[DIGEST_INTERVAL_WEEKLY]["day_" . $dotw] = $stats[DIGEST_INTERVAL_WEEKLY];
+		$group_stats[DIGEST_INTERVAL_FORTNIGHTLY]["day_" . $dotfn] = $stats[DIGEST_INTERVAL_FORTNIGHTLY];
+		$group_stats[DIGEST_INTERVAL_MONTHLY]["day_" . $dotm] = $stats[DIGEST_INTERVAL_MONTHLY];
+		$group_stats["general"] = $stats["general"];
+		
+		// save new stats
+		return elgg_set_plugin_setting("group_statistics", json_encode($group_stats), "digest");
 	}
 	
