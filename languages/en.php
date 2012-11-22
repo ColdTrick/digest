@@ -24,8 +24,9 @@
 		'digest:day:saturday' => "Saturday",
 		
 		'digest:interval:error' => "Invalid Interval",
-	
+		
 		// readable time
+		'digest:readable:time:mseconds' => "msec",
 		'digest:readable:time:seconds' => "sec",
 		'digest:readable:time:minutes' => "min",
 		'digest:readable:time:hours' => "hrs",
@@ -94,33 +95,28 @@
 	
 		'digest:elements:online' => "If you can't read the mail, view this digest %sonline%s",
 		
-		// admin analysis
-		'digest:analysis:title' => "Digest server analysis",
+		// admin stats
+		'digest:admin:stats:site:title' => "Site digest statistics",
+		'digest:admin:stats:general:ts_start_cron' => "Time the CRON started",
+		'digest:admin:stats:general:mts_start_digest' => "Time it took before the digest started",
+		'digest:admin:stats:general:peak_memory_start' => "Peak memory before the digest started",
+		'digest:admin:stats:general:peak_memory_end' => "Peak memory after the digest finished",
+		'digest:admin:stats:general:mts_end_digest' => "Time it took to process the digest",
+
+		'digest:admin:stats:site:general:mts_user_selection_done' => "Time it took to select all the users",
+		'digest:admin:stats:total_time' => "Total run time",
+		'digest:admin:stats:total_memory' => "Total memory leaked",
 		
-		'digest:analysis:last_run' => "Last run",
-		'digest:analysis:current' => "Current",
-		'digest_analysis:predict' => "Predict",
+		'digest:admin:stats:groups' => "Groups processed",
+		'digest:admin:stats:users' => "Users processed",
+		'digest:admin:stats:mails' => "Mails sent",
+		'digest:admin:stats:distribution:fortnightly' => "Odd weeks on %s",
+		'digest:admin:stats:distribution:monthly' => "%s of the month",
 		
-		'digest:analysis:site:title' => "Site digest",
-		'digest:analysis:site:members' => "Members",
-		'digest:analysis:site:avg_memory' => "Avg memory",
-		'digest:analysis:site:total_memory' => "Total memory",
-		'digest:analysis:site:avg_run_time' => "Avg run time",
-		'digest:analysis:site:run_time' => "Total run time",
-		'digest:analysis:site:send' => "Sent digests",
+		'digest:admin:stats:group:title' => "Group digest statistics",
+		'digest:admin:stats:group:general:mts_group_selection_done' => "Time it took to select all groups",
+		'digest:admin:stats:group:general:total_time_user_selection' => "Total time spend on user selection",
 		
-		'digest:analysis:group:title' => "Group digest",
-		'digest:analysis:group:count' => "Groups on site",
-		'digest:analysis:group:total_members' => "Total group members",
-		'digest:analysis:group:avg_members' => "Avg members per group",
-		'digest:analysis:group:avg_members_memory' => "Avg memory per member",
-		'digest:analysis:group:total_members_memory' => "Total memory for members",
-		'digest:analysis:group:avg_memory' => "Avg memory per group",
-		'digest:analysis:group:total_memory' => "Total memory",
-		'digest:analysis:group:avg_run_time' => "Avg run time per group",
-		'digest:analysis:group:run_time' => "Total run time",
-		'digest:analysis:group:send' => "Sent digests",
-	
 		// register 
 		'digest:register:enable' => "I wish to receive a site digest",
 		
