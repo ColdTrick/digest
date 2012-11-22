@@ -291,8 +291,7 @@
 						$site_stats[$user_setting["user_interval"]]["total_time"] += (microtime(true) - $stats_mts_before);
 						
 						// reset cache
-						unset($ENTITY_CACHE);
-						$ENTITY_CACHE = $entity_cache_backup;
+						$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
 
 						$DB_QUERY_CACHE->clear();
 						
@@ -337,6 +336,9 @@
 				if ($group_guids = elgg_get_entities($options)) {
 					
 					foreach ($group_guids as $group_guid) {
+						// make sure we can get the group
+						elgg_set_ignore_access(true);
+						
 						// get group
 						$group = get_entity($group_guid);
 						
@@ -361,8 +363,7 @@
 								digest_group($group, $user, $user_setting["user_interval"]);
 								
 								// reset cache
-								unset($ENTITY_CACHE);
-								$ENTITY_CACHE = $entity_cache_backup;
+								$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
 								
 								$DB_QUERY_CACHE->clear();
 								
@@ -371,8 +372,7 @@
 						}
 						
 						// reset cache
-						unset($ENTITY_CACHE);
-						$ENTITY_CACHE = $entity_cache_backup;
+						$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
 						
 						$DB_QUERY_CACHE->clear();
 						
