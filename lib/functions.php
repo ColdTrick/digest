@@ -693,7 +693,7 @@
 		
 		$dotfn = $dotw; // Day of the Fortnight (0 (sunday 1st week) - 6 (saturday 1st week))
 		if(!$odd_week){
-			$dotfn + 7; // in even weeks + 7 days (7 (sunday 2nd week) - 13 (saturday 2nd week))
+			$dotfn += 7; // in even weeks + 7 days (7 (sunday 2nd week) - 13 (saturday 2nd week))
 		}
 		
 		$query = "SELECT ue.guid, ps.value as user_interval";
@@ -821,7 +821,7 @@
 		
 		$dotfn = $dotw; // Day of the Fortnight (0 (sunday 1st week) - 6 (saturday 1st week))
 		if(!$odd_week){
-			$dotfn + 7; // in even weeks + 7 days (7 (sunday 2nd week) - 13 (saturday 2nd week))
+			$dotfn += 7; // in even weeks + 7 days (7 (sunday 2nd week) - 13 (saturday 2nd week))
 		}
 		
 		$query = "SELECT ue.guid, ps.value as user_interval";
@@ -869,11 +869,11 @@
 			// should the default run today
 			if ($interval_settings[DIGEST_INTERVAL_DEFAULT] == DIGEST_INTERVAL_DAILY // daily interval
 			|| ($interval_settings[DIGEST_INTERVAL_DEFAULT] == DIGEST_INTERVAL_WEEKLY && // weekly interval
-			(($interval_settings[DIGEST_INTERVAL_WEEKLY] == "distributed" && (($group_guid % 7) == $dotw)) || $interval_settings[DIGEST_INTERVAL_WEEKLY] == $dotw))
+					(($interval_settings[DIGEST_INTERVAL_WEEKLY] == "distributed" && (($group_guid % 7) == $dotw)) || $interval_settings[DIGEST_INTERVAL_WEEKLY] == $dotw))
 			|| ($interval_settings[DIGEST_INTERVAL_DEFAULT] == DIGEST_INTERVAL_FORTNIGHTLY && // fortnightly interval
-			(($interval_settings[DIGEST_INTERVAL_FORTNIGHTLY] == "distributed" && (($group_guid % 14) == $dotfn)) || ($odd_week && $interval_settings[DIGEST_INTERVAL_FORTNIGHTLY] == $dotw)))
+					(($interval_settings[DIGEST_INTERVAL_FORTNIGHTLY] == "distributed" && (($group_guid % 14) == $dotfn)) || ($odd_week && $interval_settings[DIGEST_INTERVAL_FORTNIGHTLY] == $dotw)))
 			|| ($interval_settings[DIGEST_INTERVAL_DEFAULT] == DIGEST_INTERVAL_MONTHLY && // monthly interval
-			(($interval_settings[DIGEST_INTERVAL_MONTHLY] == "distributed" && ((($group_guid % 28) + 1) == $dotm)) || $interval_settings[DIGEST_INTERVAL_MONTHLY] == $dotm))
+					(($interval_settings[DIGEST_INTERVAL_MONTHLY] == "distributed" && ((($group_guid % 28) + 1) == $dotm)) || $interval_settings[DIGEST_INTERVAL_MONTHLY] == $dotm))
 			) {
 		
 				// there is a default group setting
@@ -915,3 +915,73 @@
 	function digest_row_to_guid($row) {
 		return (int) $row->guid;
 	}
+	
+	function digest_prepare_site_statistics() {
+		return array(
+			DIGEST_INTERVAL_DAILY => array(
+				"users" => 0,
+				"mails" => 0,
+				"total_memory" => 0,
+				"total_time" => 0
+			),
+			DIGEST_INTERVAL_WEEKLY => array(
+				"users" => 0,
+				"mails" => 0,
+				"total_memory" => 0,
+				"total_time" => 0
+			),
+			DIGEST_INTERVAL_FORTNIGHTLY => array(
+				"users" => 0,
+				"mails" => 0,
+				"total_memory" => 0,
+				"total_time" => 0
+			),
+			DIGEST_INTERVAL_MONTHLY => array(
+				"users" => 0,
+				"mails" => 0,
+				"total_memory" => 0,
+				"total_time" => 0
+			),
+			"general" => array(
+				"mts_start_digest" => 0,
+				"ts_start_cron" => 0,
+				"mts_user_selection_done" => 0,
+				"mts_end_digest" => 0,
+				"peak_memory_start" => 0,
+				"peak_memory_end" => 0
+			)
+		);
+	}
+	
+	function digest_save_site_statistics($stats, $timestamp){
+		$dotw = date("w", $timestamp); // Day of the Week (0 (sunday) - 6 (saturday))
+		$dotm = date("j", $timestamp); // Day of the Month (1 - 31)
+		$odd_week = (date("W", $timestamp) & 1); // Odd weeknumber or not
+		
+		$dotfn = $dotw; // Day of the Fortnight (0 (sunday 1st week) - 6 (saturday 1st week))
+		if(!$odd_week){
+			$dotfn += 7; // in even weeks + 7 days (7 (sunday 2nd week) - 13 (saturday 2nd week))
+		}
+		
+		// get saved site statistics
+		if($site_stats = elgg_get_plugin_setting("site_statistics", "digest")){
+			$site_stats = json_decode($site_stats, true);
+		} else {
+			$site_stats = array(
+				DIGEST_INTERVAL_WEEKLY => array(),
+				DIGEST_INTERVAL_FORTNIGHTLY => array(),
+				DIGEST_INTERVAL_MONTHLY => array()
+			);
+		}
+		
+		// convert collected stats to correct format
+		$site_stats[DIGEST_INTERVAL_DAILY] = $stats[DIGEST_INTERVAL_DAILY];
+		$site_stats[DIGEST_INTERVAL_WEEKLY]["day_" . $dotw] = $stats[DIGEST_INTERVAL_WEEKLY];
+		$site_stats[DIGEST_INTERVAL_FORTNIGHTLY]["day_" . $dotfn] = $stats[DIGEST_INTERVAL_FORTNIGHTLY];
+		$site_stats[DIGEST_INTERVAL_MONTHLY]["day_" . $dotm] = $stats[DIGEST_INTERVAL_MONTHLY];
+		$site_stats["general"] = $stats["general"];
+		
+		// save new stats
+		return elgg_set_plugin_setting("site_statistics", json_encode($site_stats), "digest");
+	}
+	

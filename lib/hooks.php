@@ -244,10 +244,18 @@
 				$never_logged_in = true;
 			}
 			
+			// backup some cache
+			$entity_cache_backup = $ENTITY_CACHE;
+			
 			// should the site digest be sent
 			if (digest_site_enabled()) {
-				// backup some cache
-				$entity_cache_backup = $ENTITY_CACHE;
+				// prepare stats logging
+				$site_stats = digest_prepare_site_statistics();
+				
+				// log some beginning stats
+				$site_stats["general"]["mts_start_digest"] = microtime(true);
+				$site_stats["general"]["ts_start_cron"] = $interval_ts_upper;
+				$site_stats["general"]["peak_memory_start"] = memory_get_peak_usage(false);
 				
 				$site_intervals = array(
 					DIGEST_INTERVAL_DEFAULT => digest_get_default_site_interval(),
@@ -256,12 +264,31 @@
 					DIGEST_INTERVAL_MONTHLY => digest_get_default_distribution(DIGEST_INTERVAL_MONTHLY)
 				);
 				
+				// find users 
 				if ($users = digest_get_site_users($site_intervals, $never_logged_in)) {
+					// log selection time
+					$site_stats["general"]["mts_user_selection_done"] = microtime(true);
+					
+					// use a fair memory footprint
+					$DB_QUERY_CACHE->clear();
+					$stats_last_memory = memory_get_usage(false);
+					
+					// process users
 					foreach($users as $user_setting){
+						// stat logging
+						$site_stats[$user_setting["user_interval"]]["users"]++;
+						
 						// sent site digest for this user
 						$user = get_user($user_setting["guid"]);
 						
+						// log start time
+						$stats_mts_before = microtime(true);
+						
+						// sent out the digest
 						digest_site($user, $user_setting["user_interval"]);
+						
+						// stats logging
+						$site_stats[$user_setting["user_interval"]]["total_time"] += (microtime(true) - $stats_mts_before);
 						
 						// reset cache
 						unset($ENTITY_CACHE);
@@ -270,8 +297,24 @@
 						$DB_QUERY_CACHE->clear();
 						
 						unset($user);
+						
+						// stats logging of memory leak
+						$stats_current_memory = memory_get_usage(false);
+						$site_stats[$user_setting["user_interval"]]["total_memory"] += ($stats_current_memory - $stats_last_memory);
+						$stats_last_memory = $stats_current_memory;
 					}
 				}
+				
+				// cleanup some stuff
+				unset($users);
+				unset($site_intervals);
+				
+				// log some end stats
+				$site_stats["general"]["mts_end_digest"] = microtime(true);
+				$site_stats["general"]["peak_memory_end"] = memory_get_peak_usage(false);
+				
+				// save stats logging
+				digest_save_site_statistics($site_stats, $interval_ts_upper);
 			}
 			
 			// should the group digest be sent
