@@ -600,6 +600,35 @@
 				}
 			}
 			
+			// undo registrations on menu hooks
+			if(isset($CONFIG->hooks["register"])){
+				if(isset($CONFIG->hooks["register"]["menu:user_hover"])){
+					$CONFIG->hooks["register"]["menu:user_hover"] = array();
+				}
+			
+				if(isset($CONFIG->hooks["register"]["menu:river"])){
+					$CONFIG->hooks["register"]["menu:river"] = array();
+				}
+				
+				if(isset($CONFIG->hooks["register"]["menu:entity"])){
+					$CONFIG->hooks["register"]["menu:entity"] = array();
+				}
+			}
+				
+			if(isset($CONFIG->hooks["prepare"])){
+				if(isset($CONFIG->hooks["prepare"]["menu:user_hover"])){
+					$CONFIG->hooks["prepare"]["menu:user_hover"] = array();
+				}
+			
+				if(isset($CONFIG->hooks["prepare"]["menu:river"])){
+					$CONFIG->hooks["prepare"]["menu:river"] = array();
+				}
+				
+				if(isset($CONFIG->hooks["prepare"]["menu:entity"])){
+					$CONFIG->hooks["prepare"]["menu:entity"] = array();
+				}
+			}
+			
 			// only let this happen once
 			$run_once = true;
 		}
