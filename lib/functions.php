@@ -712,8 +712,8 @@
 		$site = elgg_get_site_entity();
 		$dbprefix = elgg_get_config("dbprefix");
 		
-		$dotw = date("w", $interval_ts_upper); // Day of the Week (0 (sunday) - 6 (saturday))
-		$dotm = date("j", $interval_ts_upper); // Day of the Month (1 - 31)
+		$dotw = (int) date("w", $interval_ts_upper); // Day of the Week (0 (sunday) - 6 (saturday))
+		$dotm = (int) date("j", $interval_ts_upper); // Day of the Month (1 - 31)
 		$odd_week = (date("W", $interval_ts_upper) & 1); // Odd weeknumber or not 
 		
 		$dotfn = $dotw; // Day of the Fortnight (0 (sunday 1st week) - 6 (saturday 1st week))
@@ -827,8 +827,8 @@
 		
 		$dbprefix = elgg_get_config("dbprefix");
 		
-		$dotw = date("w", $interval_ts_upper); // Day of the Week (0 (sunday) - 6 (saturday))
-		$dotm = date("j", $interval_ts_upper); // Day of the Month (1 - 31)
+		$dotw = (int) date("w", $interval_ts_upper); // Day of the Week (0 (sunday) - 6 (saturday))
+		$dotm = (int) date("j", $interval_ts_upper); // Day of the Month (1 - 31)
 		$odd_week = (date("W", $interval_ts_upper) & 1); // Odd weeknumber or not
 		
 		$dotfn = $dotw; // Day of the Fortnight (0 (sunday 1st week) - 6 (saturday 1st week))
