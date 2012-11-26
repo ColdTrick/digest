@@ -92,7 +92,7 @@
 		
 		if(!empty($user) && elgg_instanceof($user, "user", null, "ElggUser")){
 			// remove some view extensions
-			digest_revert_views();
+			digest_prepare_run();
 			
 			// set timestamps for interval
 			digest_set_interval_timestamps($interval);
@@ -211,7 +211,7 @@
 			if(!empty($group) && elgg_instanceof($group, "group", null, "ElggGroup") && !empty($user) && elgg_instanceof($user, "user", null, "ElggUser")){
 				
 				// remove some view extensions
-				digest_revert_views();
+				digest_prepare_run();
 				
 				// set timestamps for interval
 				digest_set_interval_timestamps($interval);
@@ -574,7 +574,7 @@
 	 * 
 	 * @param bool $refresh
 	 */
-	function digest_revert_views($refresh = false){
+	function digest_prepare_run($refresh = false){
 		global $CONFIG;
 		
 		static $run_once;
@@ -628,6 +628,10 @@
 					$CONFIG->hooks["prepare"]["menu:entity"] = array();
 				}
 			}
+			
+			// set alternate view location for some views
+			elgg_set_view_location("icon/user/default", dirname(dirname(__FILE__)) . "/views_alt/", "default");
+			elgg_set_view_location("river/elements/body", dirname(dirname(__FILE__)) . "/views_alt/", "default");
 			
 			// only let this happen once
 			$run_once = true;

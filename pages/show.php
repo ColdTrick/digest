@@ -8,7 +8,7 @@
 	
 	if(!empty($ts_lower) && !empty($ts_upper) && !empty($interval)){
 		// remove some view extensions
-		digest_revert_views();
+		digest_prepare_run();
 		
 		// get group guid
 		$group_guid = (int) get_input("group_guid");
