@@ -277,6 +277,7 @@
 					foreach($users as $user_setting){
 						// stat logging
 						$site_stats[$user_setting["user_interval"]]["users"]++;
+						$site_stats["general"]["users"]++;
 						
 						// sent site digest for this user
 						$user = get_user($user_setting["guid"]);
@@ -288,6 +289,7 @@
 						if(digest_site($user, $user_setting["user_interval"]) === true){
 							// mail was sent
 							$site_stats[$user_setting["user_interval"]]["mails"]++;
+							$site_stats["general"]["mails"]++;
 						}
 						
 						// stats logging
@@ -355,6 +357,9 @@
 					$stats_last_group_memory = memory_get_usage(false);
 					
 					foreach ($group_guids as $group_guid) {
+						// stats logging
+						$group_stats["general"]["groups"]++;
+						
 						// make sure we can get the group
 						elgg_set_ignore_access(true);
 						
@@ -391,6 +396,7 @@
 								if(!in_array($group_guid, $group_stats[$user_setting["user_interval"]]["groups"])){
 									$group_stats[$user_setting["user_interval"]]["groups"][] = $group_guid;
 								}
+								$group_stats["general"]["users"]++;
 								
 								// get the user 
 								$user = get_user($user_setting["guid"]);
@@ -402,6 +408,7 @@
 								if(digest_group($group, $user, $user_setting["user_interval"]) === true){
 									// mail was sent
 									$group_stats[$user_setting["user_interval"]]["mails"]++;
+									$group_stats["general"]["mails"]++;
 								}
 								
 								// stats logging

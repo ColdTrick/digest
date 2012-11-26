@@ -401,6 +401,9 @@
 		$result = false;
 		
 		if(!empty($value)){
+			$neg = gmp_sign($value);
+			$value = abs($value);
+			
 			if($value > 1024){
 				$value = round($value / 1024, 2);
 				
@@ -420,37 +423,61 @@
 			} else {
 				$result = $value . " B";
 			}
+			
+			if($neg === -1){
+				$result = "-" . $result;
+			}
 		}
 		
 		return $result;
 	}
 	
 	/**
-	 * Convert a time in seconds to something readable
+	 * Convert a time in microseconds to something readable
 	 * 
 	 * @param int $value
 	 * @return bool|string false | human readable time value
 	 */
-	function digest_readable_time($value){
-		$result = false;
+	function digest_readable_time($microtime){
+		$time_array = array(
+			"hours" => 0,
+			"minutes" => 0,
+			"seconds" => 0,
+			"microseconds" => 0
+		);
 		
-		if(!empty($value)){
-			if($value > 60){
-				$value = round($value / 60, 2);
-				
-				if($value > 60){
-					$value = round($value / 60, 2);
-					
-					$result = $value . " " . elgg_echo("digest:readable:time:hours");
-				} else {
-					$result = $value . " " . elgg_echo("digest:readable:time:minutes");
-				}
-			} else {
-				$result = $value . " " . elgg_echo("digest:readable:time:seconds");
-			}
+		$ts = (int) $microtime;
+		$time_array["microseconds"] = $microtime - $ts;
+		
+		$time_array["seconds"] = ($ts % 60);
+		$ts = $ts - $time_array["seconds"];
+		
+		$time_array["minutes"] = (($ts % 3600) / 60);
+		$time_array["hours"] = (($ts - ($time_array["minutes"] * 60)) / 3600);
+		
+		// build result
+		$result = "";
+		if ($time_array["hours"]) {
+			$result = $time_array["hours"] . " " . elgg_echo("digest:readable:time:hours");
 		}
 		
-		return $result;
+		if ($time_array["minutes"]) {
+			$result .= " " . $time_array["minutes"] . " "  . elgg_echo("digest:readable:time:minutes");
+		} elseif(!empty($result)) {
+			$result .= " 00 M";
+		}
+		
+		if ($time_array["seconds"]) {
+			$result .= " " . $time_array["seconds"] . " "  . elgg_echo("digest:readable:time:seconds");
+		} elseif(!empty($result)) {
+			$result .= " 00 sec";
+		}
+		
+		if ($time_array["microseconds"]) {
+			$result .= " " . round($time_array["microseconds"] * 1000) . " " . elgg_echo("digest:readable:time:mseconds");
+		}
+		
+		return trim($result);
 	}
 	
 	/**
@@ -573,6 +600,35 @@
 				}
 			}
 			
+			// undo registrations on menu hooks
+			if(isset($CONFIG->hooks["register"])){
+				if(isset($CONFIG->hooks["register"]["menu:user_hover"])){
+					$CONFIG->hooks["register"]["menu:user_hover"] = array();
+				}
+			
+				if(isset($CONFIG->hooks["register"]["menu:river"])){
+					$CONFIG->hooks["register"]["menu:river"] = array();
+				}
+				
+				if(isset($CONFIG->hooks["register"]["menu:entity"])){
+					$CONFIG->hooks["register"]["menu:entity"] = array();
+				}
+			}
+				
+			if(isset($CONFIG->hooks["prepare"])){
+				if(isset($CONFIG->hooks["prepare"]["menu:user_hover"])){
+					$CONFIG->hooks["prepare"]["menu:user_hover"] = array();
+				}
+			
+				if(isset($CONFIG->hooks["prepare"]["menu:river"])){
+					$CONFIG->hooks["prepare"]["menu:river"] = array();
+				}
+				
+				if(isset($CONFIG->hooks["prepare"]["menu:entity"])){
+					$CONFIG->hooks["prepare"]["menu:entity"] = array();
+				}
+			}
+			
 			// only let this happen once
 			$run_once = true;
 		}
@@ -685,8 +741,8 @@
 		$site = elgg_get_site_entity();
 		$dbprefix = elgg_get_config("dbprefix");
 		
-		$dotw = date("w", $interval_ts_upper); // Day of the Week (0 (sunday) - 6 (saturday))
-		$dotm = date("j", $interval_ts_upper); // Day of the Month (1 - 31)
+		$dotw = (int) date("w", $interval_ts_upper); // Day of the Week (0 (sunday) - 6 (saturday))
+		$dotm = (int) date("j", $interval_ts_upper); // Day of the Month (1 - 31)
 		$odd_week = (date("W", $interval_ts_upper) & 1); // Odd weeknumber or not 
 		
 		$dotfn = $dotw; // Day of the Fortnight (0 (sunday 1st week) - 6 (saturday 1st week))
@@ -800,8 +856,8 @@
 		
 		$dbprefix = elgg_get_config("dbprefix");
 		
-		$dotw = date("w", $interval_ts_upper); // Day of the Week (0 (sunday) - 6 (saturday))
-		$dotm = date("j", $interval_ts_upper); // Day of the Month (1 - 31)
+		$dotw = (int) date("w", $interval_ts_upper); // Day of the Week (0 (sunday) - 6 (saturday))
+		$dotm = (int) date("j", $interval_ts_upper); // Day of the Month (1 - 31)
 		$odd_week = (date("W", $interval_ts_upper) & 1); // Odd weeknumber or not
 		
 		$dotfn = $dotw; // Day of the Fortnight (0 (sunday 1st week) - 6 (saturday 1st week))
@@ -924,6 +980,8 @@
 				"total_time" => 0
 			),
 			"general" => array(
+				"users" => 0,
+				"mails" => 0,
 				"mts_start_digest" => 0,
 				"ts_start_cron" => 0,
 				"mts_user_selection_done" => 0,
@@ -997,6 +1055,9 @@
 				"total_time" => 0
 			),
 			"general" => array(
+				"groups" => 0,
+				"users" => 0,
+				"mails" => 0,
 				"mts_start_digest" => 0,
 				"ts_start_cron" => 0,
 				"mts_group_selection_done" => 0,
@@ -1045,5 +1106,29 @@
 		
 		// save new stats
 		return elgg_set_plugin_setting("group_statistics", json_encode($group_stats), "digest");
+	}
+	
+	function digest_compress_statistics($stats){
+		
+		foreach(array(DIGEST_INTERVAL_WEEKLY, DIGEST_INTERVAL_FORTNIGHTLY, DIGEST_INTERVAL_MONTHLY) as $interval){
+			$temp_stats = array();
+			
+			if(!empty($stats[$interval])){
+				
+				foreach($stats[$interval] as $day){
+					
+					foreach($day as $key => $value){
+						if(!isset($temp_stats[$key])){
+							$temp_stats[$key] = 0;
+						}
+						$temp_stats[$key] += $value;
+					}
+				}
+			}
+			
+			$stats[$interval] = $temp_stats;
+		}
+		
+		return $stats;
 	}
 	
