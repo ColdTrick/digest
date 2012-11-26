@@ -401,7 +401,7 @@
 		$result = false;
 		
 		if(!empty($value)){
-			$neg = gmp_sign($value);
+			$neg = ($value < 0);
 			$value = abs($value);
 			
 			if($value > 1024){
