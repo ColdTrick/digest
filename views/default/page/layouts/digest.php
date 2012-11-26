@@ -1,4 +1,12 @@
-<?php ?>
+<?php 
+
+	global $digest_css_contents;
+	if(!isset($digest_css_contents)){
+		// cache digest css as it is the same for all users / groups
+		$digest_css_contents = elgg_view("css/digest/core");
+	}
+
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
@@ -9,7 +17,7 @@
 	</head>
 	<body>
 		<style type="text/css">		
-			<?php echo elgg_view("css/digest/core"); ?>
+			<?php echo $digest_css_contents; ?>
 		</style>
 		<div id="digest_online">
 			<?php echo $vars["digest_online"]; ?>
@@ -30,6 +38,5 @@
 				<?php echo $vars["digest_unsubscribe"]; ?>
 			</div>
 		</div>
-	
 	</body>
 </html>
