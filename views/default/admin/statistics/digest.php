@@ -10,6 +10,9 @@
 		elgg_echo("digest:day:saturday")
 	);
 	
+	$site_content = "";
+	$group_content = "";
+	
 	if(digest_site_enabled()){
 		if($site_stats = elgg_get_plugin_setting("site_statistics", "digest")){
 			$site_stats = json_decode($site_stats, true);
@@ -149,11 +152,19 @@
 					
 					$interval_table .= "</table>";
 					
-					echo elgg_view_module("inline", elgg_echo("digest:admin:stats:site:title"), $gen_table . $interval_table);
+					$site_content = $gen_table . $interval_table;
 				}
 			}
 		}
+		
+		if(empty($site_content)){
+			$site_content = elgg_echo("digest:admin:stats:not_collected");
+		}
+	} else {
+		$site_content = elgg_echo("digest:admin:stats:site:not_enabled");
 	}
+	
+	echo elgg_view_module("inline", elgg_echo("digest:admin:stats:site:title"), $site_content);
 	
 	if(digest_group_enabled()){
 		if($group_stats = elgg_get_plugin_setting("group_statistics", "digest")){
@@ -318,8 +329,16 @@
 					
 					$interval_table .= "</table>";
 						
-					echo elgg_view_module("inline", elgg_echo("digest:admin:stats:group:title"), $gen_table . $interval_table);
+					$group_content = $gen_table . $interval_table;
 				}
 			}
 		}
+		
+		if(empty($group_content)){
+			$group_content = elgg_echo("digest:admin:stats:not_collected");
+		}
+	} else {
+		$group_content = elgg_echo("digest:admin:stats:group:not_enabled");
 	}
+	
+	echo elgg_view_module("inline", elgg_echo("digest:admin:stats:group:title"), $group_content);

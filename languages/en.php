@@ -97,6 +97,7 @@
 		
 		// admin stats
 		'digest:admin:stats:site:title' => "Site digest statistics",
+		'digest:admin:stats:site:not_enabled' => "Site digest is not enabled in the plugin settings",
 		'digest:admin:stats:general:ts_start_cron' => "Time the CRON started",
 		'digest:admin:stats:general:mts_start_digest' => "Time it took before the digest started",
 		'digest:admin:stats:general:peak_memory_start' => "Peak memory before the digest started",
@@ -106,6 +107,7 @@
 		'digest:admin:stats:site:general:mts_user_selection_done' => "Time it took to select all the users",
 		'digest:admin:stats:total_time' => "Total run time",
 		'digest:admin:stats:total_memory' => "Total memory leaked",
+		'digest:admin:stats:not_collected' => "No statistics have been collected yet",
 		
 		'digest:admin:stats:groups' => "Groups processed",
 		'digest:admin:stats:users' => "Users processed",
@@ -114,6 +116,7 @@
 		'digest:admin:stats:distribution:monthly' => "%s of the month",
 		
 		'digest:admin:stats:group:title' => "Group digest statistics",
+		'digest:admin:stats:group:not_enabled' => "Group digest is not enabled in the plugin settings",
 		'digest:admin:stats:group:general:mts_group_selection_done' => "Time it took to select all groups",
 		'digest:admin:stats:group:general:total_time_user_selection' => "Total time spend on user selection",
 		

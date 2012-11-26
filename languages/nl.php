@@ -1,5 +1,8 @@
 <?php
 $language = array (
+  'digest:admin:stats:site:not_enabled' => 'Site digest is niet ingeschakeld in de plugin instellingen',
+  'digest:admin:stats:not_collected' => 'Er zijn nog geen statistieken verzameld',
+  'digest:admin:stats:group:not_enabled' => 'Groep digest is niet ingeschakeld in de plugin instellingen',
   'digest:readable:time:mseconds' => 'msec',
   'digest:admin:stats:site:title' => 'Site digest statistieken',
   'digest:admin:stats:general:ts_start_cron' => 'Tijdstip dat de CRON startte',
