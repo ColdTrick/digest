@@ -424,7 +424,7 @@
 				$result = $value . " B";
 			}
 			
-			if($neg === -1){
+			if($neg){
 				$result = "-" . $result;
 			}
 		}
