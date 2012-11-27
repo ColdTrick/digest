@@ -47,15 +47,3 @@
 .elgg-river-attachments .elgg-icon {
 	float: left;
 }
-
-.elgg-river-more {
-	background-color: #EEE;
-	
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
-	
-	padding: 2px 4px;
-	font-size: 85%;
-	margin-bottom: 2px;
-}
