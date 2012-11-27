@@ -3,7 +3,7 @@
 	admin_gatekeeper();
 
 	// remove some view extensions
-	digest_revert_views();
+	digest_prepare_run();
 	
 	$digest = "site";
 	$interval = DIGEST_INTERVAL_MONTHLY;
