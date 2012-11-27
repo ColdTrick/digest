@@ -21,9 +21,6 @@
 		elgg_extend_view("css/elgg", "css/digest/site");
 		elgg_extend_view("css/admin", "css/digest/admin");
 		
-		// extend the Digest message CSS
-		digest_message_css();
-		
 		// register page handler for nice url's
 		elgg_register_page_handler("digest", "digest_page_handler");
 		

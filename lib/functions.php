@@ -5,75 +5,6 @@
 	global $interval_ts_lower;
 
 	/**
-	 * Function to retrieve all user guid that need to receive a digest
-	 * 
-	 * @param int $guid of the site or group
-	 * @param string $interval
-	 * @param bool $including_default if true will also retrieve users with no personal configuration
-	 * @return false (no results) or array of objects with user guids
-	 */
-	function digest_get_users($guid, $interval, $including_default = false){
-		static $include_never_logged_in;
-		
-		if(!isset($include_never_logged_in)){
-			$include_never_logged_in = false;
-			if(elgg_get_plugin_setting("include_never_logged_in", "digest") == "yes"){
-				$include_never_logged_in = true;	
-			}
-		}
-		
-		$result = false;
-		
-		// validate input
-		$guid = sanitise_int($guid, false);
-		
-		if(!empty($guid)){
-			// get some config values
-			$dbprefix = get_config("dbprefix");
-			$site_guid = (int) get_config("site_guid");
-			
-			// begin building query
-			$user_setting_name = "digest_" . $guid;
-	
-			$query = "SELECT u.guid";
-			$query .= " FROM " . $dbprefix . "users_entity u";
-			$query .= " JOIN " . $dbprefix . "entities e ON e.guid = u.guid";
-			$query .= " JOIN " . $dbprefix . "entity_relationships r ON u.guid = r.guid_one";
-			$query .= " WHERE u.banned = 'no' AND u.email <> '' AND e.enabled = 'yes' AND e.type = 'user'";
-	
-			if($guid != $site_guid){
-				// there should also be a relation with a group
-				$relationship = "member";
-			} else {
-				// there should be a relationship between user and site
-				$relationship = "member_of_site";
-			}
-			$query .= " AND r.guid_two = " . $guid . " AND r.relationship = '" . $relationship . "'";
-			
-			// select correct interval		
-			$query .= " AND (u.guid IN (SELECT entity_guid FROM " . $dbprefix . "private_settings WHERE name = '" . $user_setting_name . "' AND value = '" . $interval . "')";
-			
-			if($including_default){
-				//also include the users which have NO configuration for this setting
-				$query .= " || u.guid NOT IN (SELECT entity_guid FROM " . $dbprefix . "private_settings WHERE name = '" . $user_setting_name . "')";
-			}
-			
-			$query .= ")";
-			
-			if(!$include_never_logged_in){
-				// exclude account without a single login (but is an enabled account)
-				// this could occur when a user registers and validates, but never logs in or in situations with imported users 
-				$query .= " AND u.last_login > 0";
-			}
-			
-			// execute query and return results
-			$result = get_data($query);
-		}
-		
-		return $result;
-	}
-	
-	/**
 	 * Make the site digest
 	 * 
 	 * @param ElggUser $user
@@ -580,6 +511,12 @@
 		static $run_once;
 		
 		if(!isset($run_once) || ($refresh === true)){
+			// add views and css to digest handling
+			digest_message_css();
+			
+			// let other plugins know they need to add their views/css
+			elgg_trigger_event("prepare", "digest");
+			
 			// undo likes extension
 			elgg_unregister_event_handler("pagesetup", "system", "likes_setup");
 			
