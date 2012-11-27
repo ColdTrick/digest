@@ -9,11 +9,14 @@
 	 * @param array $params
 	 */
 	function digest_cron_handler($hook, $entity_type, $returnvalue, $params) {
+		global $interval_ts_upper;
 		
 		if (!empty($params) && is_array($params)) {
+			$interval_ts_upper = (int) elgg_extract("time", $params, time());
+			
 			// prepare some settings
 			$digest_settings = array(
-				"timestamp" => (int) elgg_extract("time", $params, time()),
+				"timestamp" => $interval_ts_upper,
 				"memory_limit" => ini_get("memory_limit"),
 				"host" => $_SERVER["HTTP_HOST"],
 				"secret" => digest_generate_commandline_secret()
@@ -21,6 +24,11 @@
 			
 			// is multicore support enabled
 			if(($cores = (int) elgg_get_plugin_setting("multi_core", "digest")) && ($cores > 1)){
+				$include_never_logged_in = false;
+				if(elgg_get_plugin_setting("include_never_logged_in", "digest") == "yes"){
+					$include_never_logged_in = true;
+				}
+				
 				// multi core is enabled now try to find out how many users/groups to send per core
 				$site_users_count = 0;
 				$site_users_interval = 0;
@@ -34,13 +42,13 @@
 						DIGEST_INTERVAL_WEEKLY => digest_get_default_distribution(DIGEST_INTERVAL_WEEKLY),
 						DIGEST_INTERVAL_FORTNIGHTLY => digest_get_default_distribution(DIGEST_INTERVAL_FORTNIGHTLY),
 						DIGEST_INTERVAL_MONTHLY => digest_get_default_distribution(DIGEST_INTERVAL_MONTHLY),
-						"count" => true,
+						"include_never_logged_in" => $include_never_logged_in,
 					);
 					
-					$site_users_count = digest_get_site_users($site_intervals);
-					$site_users_count = (int) $site_users_count[0]["total"];
+					$site_users = digest_get_site_users($site_intervals);
+					$site_users_count = count($site_users);
 					
-					$site_users_interval = (int) floor($site_users_count / $cores);
+					$site_users_interval = (int) ceil($site_users_count / $cores);
 				}
 				
 				// group digest settings
@@ -51,7 +59,7 @@
 					);
 					
 					$group_count = elgg_get_entities($group_options);
-					$group_interval = (int) floor($group_count / $cores);
+					$group_interval = (int) ceil($group_count / $cores);
 				}
 				
 				$site_offset = 0;
@@ -60,28 +68,12 @@
 				for($i = 0; $i < $cores; $i++){
 					if($site_users_count > 0){
 						$digest_settings["site_offset"] = $site_users_interval * $i;
-						if($i > 0){
-							$digest_settings["site_offset"]++;
-						}
-						
-						if(($i + 1) == $cores){
-							$digest_settings["site_limit"] = $site_users_count;
-						} else {
-							$digest_settings["site_limit"] = $site_users_interval * ($i + 1);
-						}
+						$digest_settings["site_limit"] = $site_users_interval;
 					}
 					
 					if ($group_count > 0){
 						$digest_settings["group_offset"] = $group_interval * $i;
-						if($i > 0){
-							$digest_settings["group_offset"]++;
-						}
-						
-						if(($i + 1) == $cores){
-							$digest_settings["group_limit"] = $group_count;
-						} else {
-							$digest_settings["group_limit"] = $group_interval * ($i + 1);
-						}
+						$digest_settings["group_limit"] = $group_interval;
 					}
 					
 					digest_start_commandline($digest_settings);

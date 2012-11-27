@@ -147,6 +147,9 @@
 		'digest:mail:plaintext:description' => "Your e-mail client needs to support HTML mails to view the digest. 
 
 You can also view the digest online using the following link: %s.",
+
+		// command line script
+		'digest:cli:error:secret' => "The provided secret is invalid, the digest can't run",
 		
 	);
 	

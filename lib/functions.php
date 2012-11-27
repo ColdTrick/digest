@@ -693,11 +693,7 @@
 		
 		$include_never_logged_in = (bool) elgg_extract("include_never_logged_in", $settings, false);
 		
-		if(elgg_extract("count", $settings, false)){
-			$query = "SELECT count(ue.guid) as total";
-		} else {
-			$query = "SELECT ue.guid, ps.value as user_interval";
-		}
+		$query = "SELECT count(ue.guid) as total";
 		$query .= " FROM " . $dbprefix . "users_entity ue";
 		$query .= " JOIN " . $dbprefix . "entities e ON ue.guid = e.guid";
 		$query .= " JOIN " . $dbprefix . "private_settings ps ON ue.guid = ps.entity_guid";
@@ -794,7 +790,7 @@
 			}
 		}
 		
-		if(!elgg_extract("count", $settings, false) && ($limit = (int) elgg_extract("limit", $settings, 0))){
+		if($limit = (int) elgg_extract("limit", $settings, 0)){
 			$offset = (int) elgg_extract("offset", $settings, 0);
 			
 			$query .= " LIMIT " . $offset . ", " . $limit;
