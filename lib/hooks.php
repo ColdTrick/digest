@@ -230,230 +230,86 @@
 	 * @param array $params
 	 */
 	function digest_cron_handler($hook, $entity_type, $returnvalue, $params) {
-		global $interval_ts_upper;
-		global $DB_QUERY_CACHE;
-		global $ENTITY_CACHE;
 		
 		if (!empty($params) && is_array($params)) {
-			// set global start time of digest run
-			$interval_ts_upper = elgg_extract("time", $params, time());
+			// prepare some settings
+			$digest_settings = array(
+				"timestamp" => (int) elgg_extract("time", $params, time()),
+				"memory_limit" => ini_get("memory_limit"),
+				"host" => $_SERVER["HTTP_HOST"],
+				"secret" => digest_generate_commandline_secret()
+			);
 			
-			// should new users be included
-			$never_logged_in = false;
-			if (elgg_get_plugin_setting("include_never_logged_in", "digest") == "yes") {
-				$never_logged_in = true;
-			}
-			
-			// backup some cache
-			$entity_cache_backup = $ENTITY_CACHE;
-			
-			// should the site digest be sent
-			if (digest_site_enabled()) {
-				// prepare stats logging
-				$site_stats = digest_prepare_site_statistics();
+			// is multicore support enabled
+			if(($cores = (int) elgg_get_plugin_setting("multi_core", "digest")) && ($cores > 1)){
+				// multi core is enabled now try to find out how many users/groups to send per core
+				$site_users_count = 0;
+				$site_users_interval = 0;
+				$group_count = 0;
+				$group_interval = 0;
 				
-				// log some beginning stats
-				$site_stats["general"]["mts_start_digest"] = microtime(true);
-				$site_stats["general"]["ts_start_cron"] = $interval_ts_upper;
-				$site_stats["general"]["peak_memory_start"] = memory_get_peak_usage(false);
-				
-				$site_intervals = array(
-					DIGEST_INTERVAL_DEFAULT => digest_get_default_site_interval(),
-					DIGEST_INTERVAL_WEEKLY => digest_get_default_distribution(DIGEST_INTERVAL_WEEKLY),
-					DIGEST_INTERVAL_FORTNIGHTLY => digest_get_default_distribution(DIGEST_INTERVAL_FORTNIGHTLY),
-					DIGEST_INTERVAL_MONTHLY => digest_get_default_distribution(DIGEST_INTERVAL_MONTHLY)
-				);
-				
-				// find users 
-				if ($users = digest_get_site_users($site_intervals, $never_logged_in)) {
-					// log selection time
-					$site_stats["general"]["mts_user_selection_done"] = microtime(true);
+				// site digest settings
+				if(digest_site_enabled()){
+					$site_intervals = array(
+						DIGEST_INTERVAL_DEFAULT => digest_get_default_site_interval(),
+						DIGEST_INTERVAL_WEEKLY => digest_get_default_distribution(DIGEST_INTERVAL_WEEKLY),
+						DIGEST_INTERVAL_FORTNIGHTLY => digest_get_default_distribution(DIGEST_INTERVAL_FORTNIGHTLY),
+						DIGEST_INTERVAL_MONTHLY => digest_get_default_distribution(DIGEST_INTERVAL_MONTHLY),
+						"count" => true,
+					);
 					
-					// use a fair memory footprint
-					$DB_QUERY_CACHE->clear();
-					$stats_last_memory = memory_get_usage(false);
+					$site_users_count = digest_get_site_users($site_intervals);
+					$site_users_count = (int) $site_users_count[0]["total"];
 					
-					// process users
-					foreach($users as $user_setting){
-						// stat logging
-						$site_stats[$user_setting["user_interval"]]["users"]++;
-						$site_stats["general"]["users"]++;
-						
-						// sent site digest for this user
-						$user = get_user($user_setting["guid"]);
-						
-						// log start time
-						$stats_mts_before = microtime(true);
-						
-						// sent out the digest
-						if(digest_site($user, $user_setting["user_interval"]) === true){
-							// mail was sent
-							$site_stats[$user_setting["user_interval"]]["mails"]++;
-							$site_stats["general"]["mails"]++;
-						}
-						
-						// stats logging
-						$site_stats[$user_setting["user_interval"]]["total_time"] += (microtime(true) - $stats_mts_before);
-						
-						// reset cache
-						$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
-
-						$DB_QUERY_CACHE->clear();
-						
-						unset($user);
-						
-						// stats logging of memory leak
-						$stats_current_memory = memory_get_usage(false);
-						$site_stats[$user_setting["user_interval"]]["total_memory"] += ($stats_current_memory - $stats_last_memory);
-						$stats_last_memory = $stats_current_memory;
-					}
+					$site_users_interval = (int) floor($site_users_count / $cores);
 				}
 				
-				// cleanup some stuff
-				unset($users);
-				unset($site_intervals);
-				
-				// log some end stats
-				$site_stats["general"]["mts_end_digest"] = microtime(true);
-				$site_stats["general"]["peak_memory_end"] = memory_get_peak_usage(false);
-				
-				// save stats logging
-				digest_save_site_statistics($site_stats, $interval_ts_upper);
-				unset($site_stats);
-			}
-			
-			// should the group digest be sent
-			if (digest_group_enabled()) {
-				// prepare stats logging
-				$group_stats = digest_prepare_group_statistics();
-				
-				// log some beginning stats
-				$group_stats["general"]["mts_start_digest"] = microtime(true);
-				$group_stats["general"]["ts_start_cron"] = $interval_ts_upper;
-				$group_stats["general"]["peak_memory_start"] = memory_get_peak_usage(false);
-				
-				// prepare group options
-				$options = array(
-					"type" => "group",
-					"limit" => false,
-					"callback" => "digest_row_to_guid"
-				);
-				
-				$group_intervals = array(
-					DIGEST_INTERVAL_WEEKLY => digest_get_default_distribution(DIGEST_INTERVAL_WEEKLY),
-					DIGEST_INTERVAL_FORTNIGHTLY => digest_get_default_distribution(DIGEST_INTERVAL_FORTNIGHTLY),
-					DIGEST_INTERVAL_MONTHLY => digest_get_default_distribution(DIGEST_INTERVAL_MONTHLY)
-				);
-				
-				// ignore access to get all groups
-				$ia = elgg_set_ignore_access(true);
-				
-				if ($group_guids = elgg_get_entities($options)) {
-					// log selection time
-					$group_stats["general"]["mts_group_selection_done"] = microtime(true);
-						
-					// use a fair memory footprint
-					$DB_QUERY_CACHE->clear();
-					$stats_last_group_memory = memory_get_usage(false);
+				// group digest settings
+				if(digest_group_enabled()){
+					$group_options = array(
+						"type" => "group",
+						"count" => true
+					);
 					
-					foreach ($group_guids as $group_guid) {
-						// stats logging
-						$group_stats["general"]["groups"]++;
-						
-						// make sure we can get the group
-						elgg_set_ignore_access(true);
-						
-						// get group
-						$group = get_entity($group_guid);
-						
-						// get group default interval
-						$group_interval = $group->digest_interval;
-						
-						if (empty($group_interval)) {
-							// group has no interval, so fallback to site default
-							$group_interval = digest_get_default_group_interval();
+					$group_count = elgg_get_entities($group_options);
+					$group_interval = (int) floor($group_count / $cores);
+				}
+				
+				$site_offset = 0;
+				$group_offset = 0;
+				
+				for($i = 0; $i < $cores; $i++){
+					if($site_users_count > 0){
+						$digest_settings["site_offset"] = $site_users_interval * $i;
+						if($i > 0){
+							$digest_settings["site_offset"]++;
 						}
 						
-						$group_intervals[DIGEST_INTERVAL_DEFAULT] = $group_interval;
-						
-						// restore access
-						elgg_set_ignore_access($ia);
-						
-						$stats_begin_user_selection = microtime(true);
-						
-						if ($users = digest_get_group_users($group_guid, $group_intervals, $never_logged_in)) {
-							// stats loggin
-							$group_stats["general"]["total_time_user_selection"] += (microtime(true) - $stats_begin_user_selection);
-							
-							// use a fair memory footprint
-							$DB_QUERY_CACHE->clear();
-							$stats_last_memory = memory_get_usage(false);
-							
-							// process users
-							foreach ($users as $user_setting) {
-								// stat logging
-								$group_stats[$user_setting["user_interval"]]["users"]++;
-								if(!in_array($group_guid, $group_stats[$user_setting["user_interval"]]["groups"])){
-									$group_stats[$user_setting["user_interval"]]["groups"][] = $group_guid;
-								}
-								$group_stats["general"]["users"]++;
-								
-								// get the user 
-								$user = get_user($user_setting["guid"]);
-								
-								// log start time
-								$stats_mts_before = microtime(true);
-								
-								// sent digest
-								if(digest_group($group, $user, $user_setting["user_interval"]) === true){
-									// mail was sent
-									$group_stats[$user_setting["user_interval"]]["mails"]++;
-									$group_stats["general"]["mails"]++;
-								}
-								
-								// stats logging
-								$group_stats[$user_setting["user_interval"]]["total_time"] += (microtime(true) - $stats_mts_before);
-								
-								// reset cache
-								$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
-								
-								$DB_QUERY_CACHE->clear();
-								
-								unset($user);
-								
-								// stats logging of memory leak
-								$stats_current_memory = memory_get_usage(false);
-								$group_stats[$user_setting["user_interval"]]["total_memory"] += ($stats_current_memory - $stats_last_memory);
-								$stats_last_memory = $stats_current_memory;
-							}
+						if(($i + 1) == $cores){
+							$digest_settings["site_limit"] = $site_users_count;
 						} else {
-							// stats logging
-							$group_stats["general"]["total_time_user_selection"] += (microtime(true) - $stats_begin_user_selection);
+							$digest_settings["site_limit"] = $site_users_interval * ($i + 1);
+						}
+					}
+					
+					if ($group_count > 0){
+						$digest_settings["group_offset"] = $group_interval * $i;
+						if($i > 0){
+							$digest_settings["group_offset"]++;
 						}
 						
-						// reset cache
-						$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
-						
-						$DB_QUERY_CACHE->clear();
-						
-						unset($group);
-						
-						// stats logging of memory leak
-						$stats_current_group_memory = memory_get_usage(false);
-						$group_stats["general"]["total_memory"] += ($stats_current_group_memory - $stats_last_group_memory);
-						$stats_last_group_memory = $stats_current_group_memory;
+						if(($i + 1) == $cores){
+							$digest_settings["group_limit"] = $group_count;
+						} else {
+							$digest_settings["group_limit"] = $group_interval * ($i + 1);
+						}
 					}
+					
+					digest_start_commandline($digest_settings);
 				}
-				
-				// restore access settings
-				elgg_set_ignore_access($ia);
-				
-				// log some end stats
-				$group_stats["general"]["mts_end_digest"] = microtime(true);
-				$group_stats["general"]["peak_memory_end"] = memory_get_peak_usage(false);
-				
-				// save stats logging
-				digest_save_group_statistics($group_stats, $interval_ts_upper);
+			} else {
+				// procces the digest
+				digest_process($digest_settings);
 			}
 		}
 	}

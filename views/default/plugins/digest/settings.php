@@ -44,7 +44,7 @@
 	}
 	
 	// Interval Settings
-	$settings_interval = "<table class='elgg-table-alt'>";
+	$settings_interval = "<table class='elgg-table-alt mbm'>";
 	$settings_interval .= "<tr><th>&nbsp;</th><th class='center'>" . elgg_echo("site") . "</th><th class='center'>" . elgg_echo("group") . "</th><th>" . elgg_echo("digest:distribution") . "<span class='elgg-icon elgg-icon-digest-info mlm' title='" . elgg_echo("digest:distribution:description") . "'></span></th></tr>";
 	
 	$settings_interval .= "<tr>";
@@ -95,6 +95,12 @@
 	
 	$settings_interval .= "</table>";
 	
+	// Should we include user who never logged in
+	$settings_interval .= "<div>";
+	$settings_interval .= elgg_echo("digest:settings:never:include");
+	$settings_interval .= "&nbsp;" . elgg_view("input/dropdown", array("name" => "params[include_never_logged_in]", "options_values" => $noyes_options, "value" => $plugin->include_never_logged_in));
+	$settings_interval .= "</div>";
+	
 	// add custom header and footer to every digest
 	$custom_text = "<div class='mtm'>";
 	$custom_text .= "<label>" . elgg_echo("digest:settings:custom_text:site:header") . "</label>";
@@ -116,14 +122,21 @@
 	$custom_text .= "<div>" . elgg_view("input/longtext", array("name" => "params[custom_text_group_footer]", "value" => $plugin->custom_text_group_footer)) . "</div>";
 	$custom_text .= "</div>";
 	
-	// output to screen
+	// multi-core support
+	$multi_core =  "<div class='elgg-admin-notices pbn'><p>" . elgg_echo("digest:settings:multi_core:warning") . "</p></div>";
 	
+	$multi_core .= "<div>";
+	$multi_core .= elgg_echo("digest:settings:multi_core:number");
+	$multi_core .= "&nbsp;";
+	$multi_core .= elgg_view("input/dropdown", array("name" => "params[multi_core]", "value" => $plugin->multi_core, "options" => array(1, 2, 4, 8)));
+	$multi_core .= "</div>";
+	
+	// output to screen
 	echo "<div class='elgg-admin-notices pbn'><p>" . elgg_echo("digest:settings:notice") . "</p></div>";
 	
 	echo elgg_view_module("inline", elgg_echo("digest:settings:interval:title") . "<span class='elgg-icon elgg-icon-digest-info mlm' title='" . elgg_echo("digest:settings:interval:description") . "'></span>", $settings_interval);
 	
-	// Should we include user who never logged in
-	echo "<div>" . elgg_echo("digest:settings:never:include") . "&nbsp;" . elgg_view("input/dropdown", array("name" => "params[include_never_logged_in]", "options_values" => $noyes_options, "value" => $plugin->include_never_logged_in)) . "</div>";
-	
 	echo elgg_view_module("inline", elgg_echo("digest:settings:custom_text:title") . "<span class='elgg-icon elgg-icon-digest-info mlm' title='" . elgg_echo("digest:settings:custom_text:description") . "'></span>", $custom_text);
+	
+	echo elgg_view_module("inline", elgg_echo("digest:settings:multi_core:title") . "<span class='elgg-icon elgg-icon-digest-info mlm' title='" . elgg_echo("digest:settings:multi_core:description") . "'></span>", $multi_core);
 	

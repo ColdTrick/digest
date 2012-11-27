@@ -739,7 +739,7 @@
 		return $distributions[$interval];
 	}
 	
-	function digest_get_site_users($interval_settings, $include_never_logged_in = false){
+	function digest_get_site_users($settings){
 		global $interval_ts_upper;
 		
 		$site = elgg_get_site_entity();
@@ -754,7 +754,13 @@
 			$dotfn += 7; // in even weeks + 7 days (7 (sunday 2nd week) - 13 (saturday 2nd week))
 		}
 		
-		$query = "SELECT ue.guid, ps.value as user_interval";
+		$include_never_logged_in = (bool) elgg_extract("include_never_logged_in", $settings, false);
+		
+		if(elgg_extract("count", $settings, false)){
+			$query = "SELECT count(ue.guid) as total";
+		} else {
+			$query = "SELECT ue.guid, ps.value as user_interval";
+		}
 		$query .= " FROM " . $dbprefix . "users_entity ue";
 		$query .= " JOIN " . $dbprefix . "entities e ON ue.guid = e.guid";
 		$query .= " JOIN " . $dbprefix . "private_settings ps ON ue.guid = ps.entity_guid";
@@ -769,7 +775,7 @@
 		$query .= " AND (ps.value = '" . DIGEST_INTERVAL_DAILY . "'"; // user has daily delivery
 		
 		// check the weekly interval settings
-		if (($setting = $interval_settings[DIGEST_INTERVAL_WEEKLY]) === "distributed") {
+		if (($setting = $settings[DIGEST_INTERVAL_WEEKLY]) === "distributed") {
 			// delivery is distributed, this means user_guid % 7 = day of the week
 			$query .= " OR (ps.value = '" . DIGEST_INTERVAL_WEEKLY . "' AND (ue.guid % 7) = " . $dotw . ")";
 		} elseif ($setting === $dotw) {
@@ -777,7 +783,7 @@
 		}
 		
 		// check the fortnightly interval settings
-		if (($setting = $interval_settings[DIGEST_INTERVAL_FORTNIGHTLY]) === "distributed") {
+		if (($setting = $settings[DIGEST_INTERVAL_FORTNIGHTLY]) === "distributed") {
 			// delivery is distributed, this means user_guid % 14 = day of the week
 			$query .= " OR (ps.value = '" . DIGEST_INTERVAL_FORTNIGHTLY . "' AND (ue.guid % 14) = " . $dotfn . ")";
 		} elseif ($odd_week && ($setting === $dotw)) {
@@ -785,7 +791,7 @@
 		}
 		
 		// check the monthly interval settings
-		if (($setting = $interval_settings[DIGEST_INTERVAL_MONTHLY]) === "distributed") {
+		if (($setting = $settings[DIGEST_INTERVAL_MONTHLY]) === "distributed") {
 			// delivery is distributed, this means (user_guid % 28) + 1 = day of the month
 			$query .= " OR (ps.value = '" . DIGEST_INTERVAL_MONTHLY . "' AND (((ue.guid % 28) + 1) = " . $dotm . "))";
 		} elseif ($setting === $dotm) {
@@ -795,21 +801,21 @@
 		$query .= ")";
 		
 		// check default site setting
-		if ($interval_settings[DIGEST_INTERVAL_DEFAULT] != DIGEST_INTERVAL_NONE) {
+		if ($settings[DIGEST_INTERVAL_DEFAULT] != DIGEST_INTERVAL_NONE) {
 			// should the default run today
-			if ($interval_settings[DIGEST_INTERVAL_DEFAULT] === DIGEST_INTERVAL_DAILY // daily interval
-				|| ($interval_settings[DIGEST_INTERVAL_DEFAULT] === DIGEST_INTERVAL_WEEKLY && // weekly interval
-						($interval_settings[DIGEST_INTERVAL_WEEKLY] === "distributed" || $interval_settings[DIGEST_INTERVAL_WEEKLY] === $dotw))
-				|| ($interval_settings[DIGEST_INTERVAL_DEFAULT] === DIGEST_INTERVAL_FORTNIGHTLY && // fortnightly interval
-						($interval_settings[DIGEST_INTERVAL_FORTNIGHTLY] === "distributed" || ($odd_week && $interval_settings[DIGEST_INTERVAL_FORTNIGHTLY] === $dotw)))
-				|| ($interval_settings[DIGEST_INTERVAL_DEFAULT] === DIGEST_INTERVAL_MONTHLY && // monthly interval
-						($interval_settings[DIGEST_INTERVAL_MONTHLY] === "distributed" || $interval_settings[DIGEST_INTERVAL_MONTHLY] === $dotm))
+			if ($settings[DIGEST_INTERVAL_DEFAULT] === DIGEST_INTERVAL_DAILY // daily interval
+				|| ($settings[DIGEST_INTERVAL_DEFAULT] === DIGEST_INTERVAL_WEEKLY && // weekly interval
+						($settings[DIGEST_INTERVAL_WEEKLY] === "distributed" || $settings[DIGEST_INTERVAL_WEEKLY] === $dotw))
+				|| ($settings[DIGEST_INTERVAL_DEFAULT] === DIGEST_INTERVAL_FORTNIGHTLY && // fortnightly interval
+						($settings[DIGEST_INTERVAL_FORTNIGHTLY] === "distributed" || ($odd_week && $settings[DIGEST_INTERVAL_FORTNIGHTLY] === $dotw)))
+				|| ($settings[DIGEST_INTERVAL_DEFAULT] === DIGEST_INTERVAL_MONTHLY && // monthly interval
+						($settings[DIGEST_INTERVAL_MONTHLY] === "distributed" || $settings[DIGEST_INTERVAL_MONTHLY] === $dotm))
 			) {
 				
 				// there is a default site setting
 				$query .= " UNION ALL";
 				
-				$query .= " SELECT ue2.guid, '" . $interval_settings[DIGEST_INTERVAL_DEFAULT] . "' as user_interval";
+				$query .= " SELECT ue2.guid, '" . $settings[DIGEST_INTERVAL_DEFAULT] . "' as user_interval";
 				$query .= " FROM " . $dbprefix . "users_entity ue2";
 				$query .= " JOIN " . $dbprefix . "entities e2 ON ue2.guid = e2.guid";
 				$query .= " JOIN " . $dbprefix . "entity_relationships r2 ON ue2.guid = r2.guid_one";
@@ -825,24 +831,24 @@
 				$query .= " WHERE name = 'digest_" . $site->getGUID() . "'";
 				$query .= ")";
 				
-				switch ($interval_settings[DIGEST_INTERVAL_DEFAULT]) {
+				switch ($settings[DIGEST_INTERVAL_DEFAULT]) {
 					case DIGEST_INTERVAL_DAILY:
 						// no further limit
 						break;
 					case DIGEST_INTERVAL_WEEKLY:
-						if ($interval_settings[DIGEST_INTERVAL_WEEKLY] === "distributed") {
+						if ($settings[DIGEST_INTERVAL_WEEKLY] === "distributed") {
 							// delivery is distributed, this means user_guid % 7 = day of the week
 							$query .= " AND (ue2.guid % 7) = " . $dotw;
 						}
 						break;
 					case DIGEST_INTERVAL_FORTNIGHTLY:
-						if ($interval_settings[DIGEST_INTERVAL_FORTNIGHTLY] === "distributed") {
+						if ($settings[DIGEST_INTERVAL_FORTNIGHTLY] === "distributed") {
 							// delivery is distributed, this means user_guid % 14 = day of the week
 							$query .= " AND (ue2.guid % 14) = " . $dotfn;
 						}
 						break;
 					case DIGEST_INTERVAL_MONTHLY:
-						if ($interval_settings[DIGEST_INTERVAL_MONTHLY] === "distributed") {
+						if ($settings[DIGEST_INTERVAL_MONTHLY] === "distributed") {
 							// delivery is distributed, this means (user_guid % 28) + 1 = day of the month
 							$query .= " AND ((ue2.guid % 28) + 1) = " . $dotm;
 						}
@@ -851,8 +857,14 @@
 			}
 		}
 		
+		if(!elgg_extract("count", $settings, false) && ($limit = (int) elgg_extract("limit", $settings, 0))){
+			$offset = (int) elgg_extract("offset", $settings, 0);
+			
+			$query .= " LIMIT " . $offset . ", " . $limit;
+		}
+		
 		// execute the query
-		return get_data($query, "digest_row_to_user_interval");
+		return get_data($query, "digest_row_to_array");
 	}
 	
 	function digest_get_group_users($group_guid, $interval_settings, $include_never_logged_in = false) {
@@ -943,18 +955,15 @@
 		}
 		
 		// execute the query
-		return get_data($query, "digest_row_to_user_interval");
+		return get_data($query, "digest_row_to_array");
 	}
 	
 	function digest_row_to_guid($row) {
 		return (int) $row->guid;
 	}
 	
-	function digest_row_to_user_interval($row){
-		return array(
-			"guid" => (int) $row->guid,
-			"user_interval" => $row->user_interval
-		);
+	function digest_row_to_array($row){
+		return (array) $row;
 	}
 	
 	function digest_prepare_site_statistics() {
@@ -1134,5 +1143,279 @@
 		}
 		
 		return $stats;
+	}
+	
+	function digest_generate_commandline_secret(){
+		static $result;
+		
+		if(!isset($result)){
+			$site_secret = get_site_secret();
+			$digest_plugin = elgg_get_plugin_from_id("digest");
+			
+			$result = md5($digest_plugin->getGUID() . $site_secret . $digest_plugin->time_created);
+		}
+		
+		return $result;
+	}
+	
+	function digest_validate_commandline_secret($secret){
+		$result = false;
+		
+		if(!empty($secret)){
+			if($correct_secret = digest_generate_commandline_secret()){
+				if($secret === $correct_secret){
+					$result = true;
+				}
+			}
+		}
+		
+		return $result;
+	}
+	
+	function digest_process($settings){
+		global $DB_QUERY_CACHE;
+		global $ENTITY_CACHE;
+		global $interval_ts_upper;
+		
+		$interval_ts_upper = (int) elgg_extract("timestamp", $settings, time());
+		
+		// should new users be included
+		$never_logged_in = false;
+		if (elgg_get_plugin_setting("include_never_logged_in", "digest") == "yes") {
+			$never_logged_in = true;
+		}
+			
+		// backup some cache
+		$entity_cache_backup = $ENTITY_CACHE;
+		
+		// should the site digest be sent
+		if (digest_site_enabled()) {
+			// prepare stats logging
+			$site_stats = digest_prepare_site_statistics();
+		
+			// log some beginning stats
+			$site_stats["general"]["mts_start_digest"] = microtime(true);
+			$site_stats["general"]["ts_start_cron"] = $interval_ts_upper;
+			$site_stats["general"]["peak_memory_start"] = memory_get_peak_usage(false);
+		
+			$site_intervals = array(
+				DIGEST_INTERVAL_DEFAULT => digest_get_default_site_interval(),
+				DIGEST_INTERVAL_WEEKLY => digest_get_default_distribution(DIGEST_INTERVAL_WEEKLY),
+				DIGEST_INTERVAL_FORTNIGHTLY => digest_get_default_distribution(DIGEST_INTERVAL_FORTNIGHTLY),
+				DIGEST_INTERVAL_MONTHLY => digest_get_default_distribution(DIGEST_INTERVAL_MONTHLY),
+				"include_never_logged_in" => $never_logged_in,
+				"offset" => (int) elgg_extract("site_offset", $settings, 0),
+				"limit" => (int) elgg_extract("site_limit", $settings, 0)
+			);
+			
+			// find users
+			if ($users = digest_get_site_users($site_intervals)) {
+				// log selection time
+				$site_stats["general"]["mts_user_selection_done"] = microtime(true);
+					
+				// use a fair memory footprint
+				$DB_QUERY_CACHE->clear();
+				$stats_last_memory = memory_get_usage(false);
+					
+				// process users
+				foreach($users as $user_setting){
+					// stat logging
+					$site_stats[$user_setting["user_interval"]]["users"]++;
+					$site_stats["general"]["users"]++;
+		
+					// sent site digest for this user
+					$user = get_user($user_setting["guid"]);
+		
+					// log start time
+					$stats_mts_before = microtime(true);
+		
+					// sent out the digest
+					if(digest_site($user, $user_setting["user_interval"]) === true){
+						// mail was sent
+						$site_stats[$user_setting["user_interval"]]["mails"]++;
+						$site_stats["general"]["mails"]++;
+					}
+		
+					// stats logging
+					$site_stats[$user_setting["user_interval"]]["total_time"] += (microtime(true) - $stats_mts_before);
+		
+					// reset cache
+					$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
+		
+					$DB_QUERY_CACHE->clear();
+		
+					unset($user);
+		
+					// stats logging of memory leak
+					$stats_current_memory = memory_get_usage(false);
+					$site_stats[$user_setting["user_interval"]]["total_memory"] += ($stats_current_memory - $stats_last_memory);
+					$stats_last_memory = $stats_current_memory;
+				}
+			}
+		
+			// cleanup some stuff
+			unset($users);
+			unset($site_intervals);
+		
+			// log some end stats
+			$site_stats["general"]["mts_end_digest"] = microtime(true);
+			$site_stats["general"]["peak_memory_end"] = memory_get_peak_usage(false);
+		
+			// save stats logging
+			digest_save_site_statistics($site_stats, $interval_ts_upper);
+			unset($site_stats);
+		}
+			
+		// should the group digest be sent
+		if (digest_group_enabled()) {
+			// prepare stats logging
+			$group_stats = digest_prepare_group_statistics();
+		
+			// log some beginning stats
+			$group_stats["general"]["mts_start_digest"] = microtime(true);
+			$group_stats["general"]["ts_start_cron"] = $interval_ts_upper;
+			$group_stats["general"]["peak_memory_start"] = memory_get_peak_usage(false);
+		
+			// prepare group options
+			$options = array(
+				"type" => "group",
+				"limit" => false,
+				"callback" => "digest_row_to_guid"
+			);
+			
+			if($limit = (int) elgg_extract("group_limit", $settings, 0)){
+				$options["limit"] = $limit;
+				$options["offset"] = (int) elgg_extract("group_offset", $settings, 0);
+			}
+		
+			$group_intervals = array(
+				DIGEST_INTERVAL_WEEKLY => digest_get_default_distribution(DIGEST_INTERVAL_WEEKLY),
+				DIGEST_INTERVAL_FORTNIGHTLY => digest_get_default_distribution(DIGEST_INTERVAL_FORTNIGHTLY),
+				DIGEST_INTERVAL_MONTHLY => digest_get_default_distribution(DIGEST_INTERVAL_MONTHLY)
+			);
+		
+			// ignore access to get all groups
+			$ia = elgg_set_ignore_access(true);
+		
+			if ($group_guids = elgg_get_entities($options)) {
+				// log selection time
+				$group_stats["general"]["mts_group_selection_done"] = microtime(true);
+		
+				// use a fair memory footprint
+				$DB_QUERY_CACHE->clear();
+				$stats_last_group_memory = memory_get_usage(false);
+					
+				foreach ($group_guids as $group_guid) {
+					// stats logging
+					$group_stats["general"]["groups"]++;
+		
+					// make sure we can get the group
+					elgg_set_ignore_access(true);
+		
+					// get group
+					$group = get_entity($group_guid);
+		
+					// get group default interval
+					$group_interval = $group->digest_interval;
+		
+					if (empty($group_interval)) {
+						// group has no interval, so fallback to site default
+						$group_interval = digest_get_default_group_interval();
+					}
+		
+					$group_intervals[DIGEST_INTERVAL_DEFAULT] = $group_interval;
+		
+					// restore access
+					elgg_set_ignore_access($ia);
+		
+					$stats_begin_user_selection = microtime(true);
+		
+					if ($users = digest_get_group_users($group_guid, $group_intervals, $never_logged_in)) {
+						// stats loggin
+						$group_stats["general"]["total_time_user_selection"] += (microtime(true) - $stats_begin_user_selection);
+							
+						// use a fair memory footprint
+						$DB_QUERY_CACHE->clear();
+						$stats_last_memory = memory_get_usage(false);
+							
+						// process users
+						foreach ($users as $user_setting) {
+							// stat logging
+							$group_stats[$user_setting["user_interval"]]["users"]++;
+							if(!in_array($group_guid, $group_stats[$user_setting["user_interval"]]["groups"])){
+								$group_stats[$user_setting["user_interval"]]["groups"][] = $group_guid;
+							}
+							$group_stats["general"]["users"]++;
+		
+							// get the user
+							$user = get_user($user_setting["guid"]);
+		
+							// log start time
+							$stats_mts_before = microtime(true);
+		
+							// sent digest
+							if(digest_group($group, $user, $user_setting["user_interval"]) === true){
+								// mail was sent
+								$group_stats[$user_setting["user_interval"]]["mails"]++;
+								$group_stats["general"]["mails"]++;
+							}
+		
+							// stats logging
+							$group_stats[$user_setting["user_interval"]]["total_time"] += (microtime(true) - $stats_mts_before);
+		
+							// reset cache
+							$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
+		
+							$DB_QUERY_CACHE->clear();
+		
+							unset($user);
+		
+							// stats logging of memory leak
+							$stats_current_memory = memory_get_usage(false);
+							$group_stats[$user_setting["user_interval"]]["total_memory"] += ($stats_current_memory - $stats_last_memory);
+							$stats_last_memory = $stats_current_memory;
+						}
+					} else {
+						// stats logging
+						$group_stats["general"]["total_time_user_selection"] += (microtime(true) - $stats_begin_user_selection);
+					}
+		
+					// reset cache
+					$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
+		
+					$DB_QUERY_CACHE->clear();
+		
+					unset($group);
+		
+					// stats logging of memory leak
+					$stats_current_group_memory = memory_get_usage(false);
+					$group_stats["general"]["total_memory"] += ($stats_current_group_memory - $stats_last_group_memory);
+					$stats_last_group_memory = $stats_current_group_memory;
+				}
+			}
+		
+			// restore access settings
+			elgg_set_ignore_access($ia);
+		
+			// log some end stats
+			$group_stats["general"]["mts_end_digest"] = microtime(true);
+			$group_stats["general"]["peak_memory_end"] = memory_get_peak_usage(false);
+		
+			// save stats logging
+			digest_save_group_statistics($group_stats, $interval_ts_upper);
+		}
+	}
+	
+	function digest_start_commandline($settings){
+		$script_location = dirname(dirname(__FILE__)) . "/procedures/cli.php";
+		
+		$query_string = http_build_query($settings, "", " ");
+		
+		if(PHP_OS === "WINNT"){
+			pclose(popen("start /B php " . $script_location . " " . $query_string, "r"));
+		} else {
+			exec("php " . $script_location . " " . $query_string . " > /dev/null &");
+		}
+		echo "done";
 	}
 	

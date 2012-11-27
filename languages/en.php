@@ -61,6 +61,11 @@
 		'digest:settings:custom_text:group:header' => "Group header text",
 		'digest:settings:custom_text:group:footer' => "Group footer text",
 		
+		'digest:settings:multi_core:title' => "Multi-core support settings",
+		'digest:settings:multi_core:description' => "When you have a large site (> 5000 users) you could split the handling of the Digest over several cores. Please do not select more cores then your webserver has, because this will only slow down the Digest.",
+		'digest:settings:multi_core:warning' => "Please leave this setting alone if you don't understand the term multi-core or your site has less then 5000 users.",
+		'digest:settings:multi_core:number' => "Please select the number of cores to use for Digest",
+		
 		// usersettings
 		'digest:usersettings:title' => "Personal digest settings",
 		'digest:usersettings:error:user' => "You don't have access to this users digest settings",

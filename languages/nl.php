@@ -1,5 +1,9 @@
 <?php
 $language = array (
+  'digest:settings:multi_core:title' => 'Multi-core ondersteuning',
+  'digest:settings:multi_core:description' => 'Als je een site hebt met veel gebruikers (> 5000 gebruikers) dan kun je de afhandeling van de Digest splitsen over meerdere cores. Selecteer aub niet meer cores als je webserver heeft, anders heeft werkt dit alleen vertragend op de Digest.',
+  'digest:settings:multi_core:warning' => 'Laat deze instelling aub op de standaard instelling staan als je niet weer wat multi-core betekend of je site minder dan 5000 gebruikers heeft.',
+  'digest:settings:multi_core:number' => 'Selecteer het aantal cores welke gebruikt mogen worden voor Digest',
   'digest:admin:stats:site:not_enabled' => 'Site digest is niet ingeschakeld in de plugin instellingen',
   'digest:admin:stats:not_collected' => 'Er zijn nog geen statistieken verzameld',
   'digest:admin:stats:group:not_enabled' => 'Groep digest is niet ingeschakeld in de plugin instellingen',
