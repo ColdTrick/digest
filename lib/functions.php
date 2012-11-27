@@ -1349,6 +1349,5 @@
 		} else {
 			exec("php " . $script_location . " " . $query_string . " > /dev/null &");
 		}
-		echo "done";
 	}
 	
