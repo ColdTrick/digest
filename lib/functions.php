@@ -661,6 +661,9 @@
 			
 			if(!isset($distributions[$interval])){
 				if($setting = elgg_get_plugin_setting($interval . "_distribution", "digest")){
+					if(is_numeric($setting)){
+						$setting = (int) $setting;
+					}
 					$distributions[$interval] = $setting;
 				} else {
 					// no setting or 0 (zero)
@@ -693,7 +696,7 @@
 		
 		$include_never_logged_in = (bool) elgg_extract("include_never_logged_in", $settings, false);
 		
-		$query = "SELECT count(ue.guid) as total";
+		$query = "SELECT ue.guid, ps.value as user_interval";
 		$query .= " FROM " . $dbprefix . "users_entity ue";
 		$query .= " JOIN " . $dbprefix . "entities e ON ue.guid = e.guid";
 		$query .= " JOIN " . $dbprefix . "private_settings ps ON ue.guid = ps.entity_guid";
@@ -938,9 +941,9 @@
 		);
 	}
 	
-	function digest_save_site_statistics($stats, $timestamp){
-		$dotw = date("w", $timestamp); // Day of the Week (0 (sunday) - 6 (saturday))
-		$dotm = date("j", $timestamp); // Day of the Month (1 - 31)
+	function digest_save_site_statistics($stats, $timestamp, $fork_id = 0){
+		$dotw = (int) date("w", $timestamp); // Day of the Week (0 (sunday) - 6 (saturday))
+		$dotm = (int) date("j", $timestamp); // Day of the Month (1 - 31)
 		$odd_week = (date("W", $timestamp) & 1); // Odd weeknumber or not
 		
 		$dotfn = $dotw; // Day of the Fortnight (0 (sunday 1st week) - 6 (saturday 1st week))
@@ -953,18 +956,20 @@
 			$site_stats = json_decode($site_stats, true);
 		} else {
 			$site_stats = array(
+				DIGEST_INTERVAL_DAILY => array(),
 				DIGEST_INTERVAL_WEEKLY => array(),
 				DIGEST_INTERVAL_FORTNIGHTLY => array(),
-				DIGEST_INTERVAL_MONTHLY => array()
+				DIGEST_INTERVAL_MONTHLY => array(),
+				"general" => array()
 			);
 		}
 		
 		// convert collected stats to correct format
-		$site_stats[DIGEST_INTERVAL_DAILY] = $stats[DIGEST_INTERVAL_DAILY];
-		$site_stats[DIGEST_INTERVAL_WEEKLY]["day_" . $dotw] = $stats[DIGEST_INTERVAL_WEEKLY];
-		$site_stats[DIGEST_INTERVAL_FORTNIGHTLY]["day_" . $dotfn] = $stats[DIGEST_INTERVAL_FORTNIGHTLY];
-		$site_stats[DIGEST_INTERVAL_MONTHLY]["day_" . $dotm] = $stats[DIGEST_INTERVAL_MONTHLY];
-		$site_stats["general"] = $stats["general"];
+		$site_stats[DIGEST_INTERVAL_DAILY][$fork_id] = $stats[DIGEST_INTERVAL_DAILY];
+		$site_stats[DIGEST_INTERVAL_WEEKLY]["day_" . $dotw . "_" . $fork_id] = $stats[DIGEST_INTERVAL_WEEKLY];
+		$site_stats[DIGEST_INTERVAL_FORTNIGHTLY]["day_" . $dotfn . "_" . $fork_id] = $stats[DIGEST_INTERVAL_FORTNIGHTLY];
+		$site_stats[DIGEST_INTERVAL_MONTHLY]["day_" . $dotm . "_" . $fork_id] = $stats[DIGEST_INTERVAL_MONTHLY];
+		$site_stats["general"][$fork_id] = $stats["general"];
 		
 		// save new stats
 		return elgg_set_plugin_setting("site_statistics", json_encode($site_stats), "digest");
@@ -1016,9 +1021,9 @@
 		);
 	}
 	
-	function digest_save_group_statistics($stats, $timestamp){
-		$dotw = date("w", $timestamp); // Day of the Week (0 (sunday) - 6 (saturday))
-		$dotm = date("j", $timestamp); // Day of the Month (1 - 31)
+	function digest_save_group_statistics($stats, $timestamp, $fork_id = 0){
+		$dotw = (int) date("w", $timestamp); // Day of the Week (0 (sunday) - 6 (saturday))
+		$dotm = (int) date("j", $timestamp); // Day of the Month (1 - 31)
 		$odd_week = (date("W", $timestamp) & 1); // Odd weeknumber or not
 		
 		$dotfn = $dotw; // Day of the Fortnight (0 (sunday 1st week) - 6 (saturday 1st week))
@@ -1031,9 +1036,11 @@
 			$group_stats = json_decode($group_stats, true);
 		} else {
 			$group_stats = array(
+				DIGEST_INTERVAL_DAILY => array(),
 				DIGEST_INTERVAL_WEEKLY => array(),
 				DIGEST_INTERVAL_FORTNIGHTLY => array(),
-				DIGEST_INTERVAL_MONTHLY => array()
+				DIGEST_INTERVAL_MONTHLY => array(),
+				"general" => array()
 			);
 		}
 		
@@ -1044,11 +1051,11 @@
 		$stats[DIGEST_INTERVAL_MONTHLY]["groups"] = count($stats[DIGEST_INTERVAL_MONTHLY]["groups"]);
 		
 		// convert collected stats to correct format
-		$group_stats[DIGEST_INTERVAL_DAILY] = $stats[DIGEST_INTERVAL_DAILY];
-		$group_stats[DIGEST_INTERVAL_WEEKLY]["day_" . $dotw] = $stats[DIGEST_INTERVAL_WEEKLY];
-		$group_stats[DIGEST_INTERVAL_FORTNIGHTLY]["day_" . $dotfn] = $stats[DIGEST_INTERVAL_FORTNIGHTLY];
-		$group_stats[DIGEST_INTERVAL_MONTHLY]["day_" . $dotm] = $stats[DIGEST_INTERVAL_MONTHLY];
-		$group_stats["general"] = $stats["general"];
+		$group_stats[DIGEST_INTERVAL_DAILY][$fork_id] = $stats[DIGEST_INTERVAL_DAILY];
+		$group_stats[DIGEST_INTERVAL_WEEKLY]["day_" . $dotw . "_" . $fork_id] = $stats[DIGEST_INTERVAL_WEEKLY];
+		$group_stats[DIGEST_INTERVAL_FORTNIGHTLY]["day_" . $dotfn . "_" . $fork_id] = $stats[DIGEST_INTERVAL_FORTNIGHTLY];
+		$group_stats[DIGEST_INTERVAL_MONTHLY]["day_" . $dotm . "_" . $fork_id] = $stats[DIGEST_INTERVAL_MONTHLY];
+		$group_stats["general"][$fork_id] = $stats["general"];
 		
 		// save new stats
 		return elgg_set_plugin_setting("group_statistics", json_encode($group_stats), "digest");
@@ -1056,14 +1063,15 @@
 	
 	function digest_compress_statistics($stats){
 		
-		foreach(array(DIGEST_INTERVAL_WEEKLY, DIGEST_INTERVAL_FORTNIGHTLY, DIGEST_INTERVAL_MONTHLY) as $interval){
+		// combine the interval stats
+		foreach(array(DIGEST_INTERVAL_DAILY, DIGEST_INTERVAL_WEEKLY, DIGEST_INTERVAL_FORTNIGHTLY, DIGEST_INTERVAL_MONTHLY) as $interval){
 			$temp_stats = array();
 			
 			if(!empty($stats[$interval])){
 				
-				foreach($stats[$interval] as $day){
+				foreach($stats[$interval] as $day_fork_id){
 					
-					foreach($day as $key => $value){
+					foreach($day_fork_id as $key => $value){
 						if(!isset($temp_stats[$key])){
 							$temp_stats[$key] = 0;
 						}
@@ -1074,6 +1082,55 @@
 			
 			$stats[$interval] = $temp_stats;
 		}
+		
+		// combine all general stats
+		$combined_stats = array();
+		
+		foreach($stats["general"] as $fork_id => $info){
+			
+			if(!empty($info)){
+				foreach($info as $key => $value){
+					
+					switch($key){
+						case "users":
+						case "mails":
+						case "groups":
+						case "total_time_user_selection":
+						case "total_memory":
+							// need total count
+							if(!isset($combined_stats[$key])){
+								$combined_stats[$key] = 0;
+							}
+							
+							$combined_stats[$key] += $value;
+							break;
+						case "mts_start_digest":
+						case "ts_start_cron":
+						case "peak_memory_start":
+							// needs minimum
+							if(!isset($combined_stats[$key])){
+								$combined_stats[$key] = $value;
+							} else {
+								$combined_stats[$key] = min($combined_stats[$key], $value);
+							}
+							break;
+						case "mts_user_selection_done":
+						case "mts_group_selection_done":
+						case "mts_end_digest":
+						case "peak_memory_end":
+							// needs maximum
+							if(!isset($combined_stats[$key])){
+								$combined_stats[$key] = $value;
+							} else {
+								$combined_stats[$key] = max($combined_stats[$key], $value);
+							}
+							break;
+					}
+				}
+			}
+		}
+		
+		$stats["general"] = $combined_stats;
 		
 		return $stats;
 	}
@@ -1111,6 +1168,7 @@
 		global $interval_ts_upper;
 		
 		$interval_ts_upper = (int) elgg_extract("timestamp", $settings, time());
+		$fork_id = (int) elgg_extract("fork_id", $settings, 0);
 		
 		// should new users be included
 		$never_logged_in = false;
@@ -1195,7 +1253,7 @@
 			$site_stats["general"]["peak_memory_end"] = memory_get_peak_usage(false);
 		
 			// save stats logging
-			digest_save_site_statistics($site_stats, $interval_ts_upper);
+			digest_save_site_statistics($site_stats, $interval_ts_upper, $fork_id);
 			unset($site_stats);
 		}
 			
@@ -1335,7 +1393,7 @@
 			$group_stats["general"]["peak_memory_end"] = memory_get_peak_usage(false);
 		
 			// save stats logging
-			digest_save_group_statistics($group_stats, $interval_ts_upper);
+			digest_save_group_statistics($group_stats, $interval_ts_upper, $fork_id);
 		}
 	}
 	
@@ -1351,3 +1409,77 @@
 		}
 	}
 	
+	function digest_rebase_stats($timestamp){
+		$dotw = date("w", $timestamp); // Day of the Week (0 (sunday) - 6 (saturday))
+		$dotm = date("j", $timestamp); // Day of the Month (1 - 31)
+		$odd_week = (date("W", $timestamp) & 1); // Odd weeknumber or not
+		
+		$dotfn = $dotw; // Day of the Fortnight (0 (sunday 1st week) - 6 (saturday 1st week))
+		if(!$odd_week){
+			$dotfn += 7; // in even weeks + 7 days (7 (sunday 2nd week) - 13 (saturday 2nd week))
+		}
+		
+		// reset site stats
+		if(digest_site_enabled()){
+			if($site_stats = elgg_get_plugin_setting("site_statistics", "digest")){
+				$site_stats = json_decode($site_stats, true);
+				
+				$site_stats["general"] = array();
+				$site_stats[DIGEST_INTERVAL_DAILY] = array();
+				
+				// reset weekly stats
+				foreach($site_stats[DIGEST_INTERVAL_WEEKLY] as $key => $values){
+					if(stristr($key, "day_" . $dotw . "_")){
+						unset($site_stats[DIGEST_INTERVAL_WEEKLY][$key]);
+					}
+				}
+				// reset weekly stats
+				foreach($site_stats[DIGEST_INTERVAL_FORTNIGHTLY] as $key => $values){
+					if(stristr($key, "day_" . $dotfn . "_")){
+						unset($site_stats[DIGEST_INTERVAL_FORTNIGHTLY][$key]);
+					}
+				}
+				// reset weekly stats
+				foreach($site_stats[DIGEST_INTERVAL_MONTHLY] as $key => $values){
+					if(stristr($key, "day_" . $dotm . "_")){
+						unset($site_stats[DIGEST_INTERVAL_MONTHLY][$key]);
+					}
+				}
+				
+				// save the new stats
+				elgg_set_plugin_setting("site_statistics", json_encode($site_stats), "digest");
+			}
+		}
+		
+		// reset group stats
+		if(digest_group_enabled()){
+			if($group_stats = elgg_get_plugin_setting("group_statistics", "digest")){
+				$group_stats = json_decode($group_stats, true);
+				
+				$group_stats["general"] = array();
+				$group_stats[DIGEST_INTERVAL_DAILY] = array();
+				
+				// reset weekly stats
+				foreach($group_stats[DIGEST_INTERVAL_WEEKLY] as $key => $values){
+					if(stristr($key, "day_" . $dotw . "_")){
+						unset($group_stats[DIGEST_INTERVAL_WEEKLY][$key]);
+					}
+				}
+				// reset weekly stats
+				foreach($group_stats[DIGEST_INTERVAL_FORTNIGHTLY] as $key => $values){
+					if(stristr($key, "day_" . $dotfn . "_")){
+						unset($group_stats[DIGEST_INTERVAL_FORTNIGHTLY][$key]);
+					}
+				}
+				// reset weekly stats
+				foreach($group_stats[DIGEST_INTERVAL_MONTHLY] as $key => $values){
+					if(stristr($key, "day_" . $dotm . "_")){
+						unset($group_stats[DIGEST_INTERVAL_MONTHLY][$key]);
+					}
+				}
+				
+				// save the new stats
+				elgg_set_plugin_setting("group_statistics", json_encode($group_stats), "digest");
+			}
+		}
+	}

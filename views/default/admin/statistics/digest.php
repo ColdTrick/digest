@@ -15,13 +15,12 @@
 	
 	if(digest_site_enabled()){
 		if($site_stats = elgg_get_plugin_setting("site_statistics", "digest")){
-			$site_stats = json_decode($site_stats, true);
+			$site_stats = digest_compress_statistics(json_decode($site_stats, true));
 			
 			$general = elgg_extract("general", $site_stats);
 			
 			if(!empty($general) && is_array($general)){
 				if($general["ts_start_cron"]){
-					$site_stats = digest_compress_statistics($site_stats);
 					
 					// site digest has run at least once
 					$gen_table = "<table class='elgg-table mbl'>";
@@ -168,15 +167,13 @@
 	
 	if(digest_group_enabled()){
 		if($group_stats = elgg_get_plugin_setting("group_statistics", "digest")){
-			$group_stats = json_decode($group_stats, true);
+			$group_stats = digest_compress_statistics(json_decode($group_stats, true));
 			
 			$general = elgg_extract("general", $group_stats);
 				
 			if(!empty($general) && is_array($general)){
 				if($general["ts_start_cron"]){
-					$group_stats = digest_compress_statistics($group_stats);
-					
-					// site digest has run at least once
+					// group digest has run at least once
 					$gen_table = "<table class='elgg-table mbl'>";
 						
 					$gen_table .= "<tr>";

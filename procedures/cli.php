@@ -7,7 +7,8 @@
 		$group_limit = 0;
 		$timestamp = time();
 		$secret = "";
-		$memory_limit = "64M"; 
+		$memory_limit = "64M";
+		$fork_id = 0;
 		
 		foreach($argv as $index => $arg){
 			if(($index > 0) && !empty($arg)){
@@ -19,45 +20,19 @@
 						$_SERVER["HTTP_HOST"] = $value;
 						break;
 					case "site_offset":
-						$value = (int) $value;
-						
-						if($value > 0){
-							$site_offset = $value;
-						}
-						break;
 					case "site_limit":
-						$value = (int) $value;
-						
-						if($value > 0){
-							$site_limit = $value;
-						}
-						break;
 					case "group_offset":
-						$value = (int) $value;
-						
-						if($value > 0){
-							$group_offset = $value;
-						}
-						break;
 					case "group_limit":
-						$value = (int) $value;
-						
-						if($value > 0){
-							$group_limit = $value;
-						}
-						break;
-					case "secret":
-						$secret = $value;
-						break;
-					case "memory_limit":
-						$memory_limit = $value;
-						break;
 					case "timestamp":
+					case "fork_id":
 						$value = (int) $value;
 						
 						if($value > 0){
-							$timestamp = $value;
+							$$key = $value;
 						}
+						break;
+					default:
+						$$key = $value;
 						break;
 				}
 			}
@@ -74,7 +49,8 @@
 					"site_limit" => $site_limit,
 					"group_offset" => $group_offset,
 					"group_limit" => $group_limit,
-					"timestamp" => $timestamp
+					"timestamp" => $timestamp,
+					"fork_id" => $fork_id
 				);
 				
 				digest_process($params);

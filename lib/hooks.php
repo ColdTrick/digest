@@ -19,8 +19,12 @@
 				"timestamp" => $interval_ts_upper,
 				"memory_limit" => ini_get("memory_limit"),
 				"host" => $_SERVER["HTTP_HOST"],
-				"secret" => digest_generate_commandline_secret()
+				"secret" => digest_generate_commandline_secret(),
+				"fork_id" => 0
 			);
+			
+			// rebase the stats
+			digest_rebase_stats($interval_ts_upper);
 			
 			// is multicore support enabled
 			if(($cores = (int) elgg_get_plugin_setting("multi_core", "digest")) && ($cores > 1)){
@@ -62,10 +66,13 @@
 					$group_interval = (int) ceil($group_count / $cores);
 				}
 				
+				// start processes
 				$site_offset = 0;
 				$group_offset = 0;
 				
 				for($i = 0; $i < $cores; $i++){
+					$digest_settings["fork_id"] = $i;
+					
 					if($site_users_count > 0){
 						$digest_settings["site_offset"] = $site_users_interval * $i;
 						$digest_settings["site_limit"] = $site_users_interval;
