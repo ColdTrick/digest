@@ -2,6 +2,8 @@
 x.x:
 
 - added: custom texts for site and group digest
+- added: multi-core/process support
+- added: new distribution options
 - fixed: missing sprintf in Dutch language file
 - fixed: PHP notices and warnings
 - fixed: depricated notice in site digest profile part
@@ -10,6 +12,11 @@ x.x:
 - changed: plugin conflicts with crontrigger, for wrong Elgg upgrades
 - changed: different way to reset caching, so less memory is used
 - changed: layout of admin settings form
+- changed: layout of user settings form
+- changed: layout and gathering of statistics
+- changed: reduced css in digest mail
+- changed: test page now supports more options
+- changed: speed up digest handling
 
 2.0 beta (2012-03-09):
 
