@@ -1,5 +1,8 @@
 <?php
 $language = array (
+  'digest:settings:stats:title' => 'Statistiek instellingen',
+  'digest:settings:stats:reset' => 'Wis alle opgeslagen statistieken',
+  'digest:action:reset_stats:success' => 'De statistieken zijn gewist',
   'digest:admin:stats:general:server_name' => 'De digest is verstuurd door server',
   'digest:cli:error:secret' => 'De opgegeven secret is ongeldig, de digest kan niet worden gestart',
   'digest:settings:multi_core:title' => 'Multi-core ondersteuning',

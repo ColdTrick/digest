@@ -66,6 +66,9 @@
 		'digest:settings:multi_core:warning' => "Please leave this setting alone if you don't understand the term multi-core or your site has less then 5000 users.",
 		'digest:settings:multi_core:number' => "Please select the number of cores to use for Digest",
 		
+		'digest:settings:stats:title' => "Statistic settings",
+		'digest:settings:stats:reset' => "Reset all gathered statistics",
+		
 		// usersettings
 		'digest:usersettings:title' => "Personal digest settings",
 		'digest:usersettings:error:user' => "You don't have access to this users digest settings",
@@ -143,6 +146,9 @@
 		// update groupsettings
 		'digest:action:update:groupsettings:error:save' => "An unknown error occured while saving the settings, please try again",
 		'digest:action:update:groupsettings:success' => "The group digest settings have been saved successfully",
+		
+		// reset stats
+		'digest:action:reset_stats:success' => "The stats have been reset",
 		
 		// send digest mail
 		'digest:mail:plaintext:description' => "Your e-mail client needs to support HTML mails to view the digest. 

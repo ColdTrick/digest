@@ -42,6 +42,7 @@
 		
 		// register actions
 		elgg_register_action("digest/settings/save", dirname(__FILE__) . "/actions/settings/save.php", "admin");
+		elgg_register_action("digest/reset_stats", dirname(__FILE__) . "/actions/reset_stats.php", "admin");
 		
 		elgg_register_action("digest/update/usersettings", dirname(__FILE__) . "/actions/update/usersettings.php");
 		elgg_register_action("digest/update/groupsettings", dirname(__FILE__) . "/actions/update/groupsettings.php");

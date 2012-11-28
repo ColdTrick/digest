@@ -131,6 +131,11 @@
 	$multi_core .= elgg_view("input/dropdown", array("name" => "params[multi_core]", "value" => $plugin->multi_core, "options" => array(1, 2, 4, 8)));
 	$multi_core .= "</div>";
 	
+	// stats
+	$stats = "<div>";
+	$stats .= elgg_view("output/confirmlink", array("href" => "action/digest/reset_stats", "text" => elgg_echo("digest:settings:stats:reset"),"class" => "elgg-button elgg-button-action float"));
+	$stats .= "</div>";
+	
 	// output to screen
 	echo "<div class='elgg-admin-notices pbn'><p>" . elgg_echo("digest:settings:notice") . "</p></div>";
 	
@@ -139,4 +144,6 @@
 	echo elgg_view_module("inline", elgg_echo("digest:settings:custom_text:title") . "<span class='elgg-icon elgg-icon-digest-info mlm' title='" . elgg_echo("digest:settings:custom_text:description") . "'></span>", $custom_text);
 	
 	echo elgg_view_module("inline", elgg_echo("digest:settings:multi_core:title") . "<span class='elgg-icon elgg-icon-digest-info mlm' title='" . elgg_echo("digest:settings:multi_core:description") . "'></span>", $multi_core);
+	
+	echo elgg_view_module("inline", elgg_echo("digest:settings:stats:title"), $stats);
 	
