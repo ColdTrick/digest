@@ -1127,6 +1127,9 @@
 								$combined_stats[$key] = max($combined_stats[$key], $value);
 							}
 							break;
+						default:
+							$combined_stats[$key] = $value;
+							break;
 					}
 				}
 			}
