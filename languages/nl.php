@@ -1,5 +1,6 @@
 <?php
 $language = array (
+  'digest:admin:stats:general:server_name' => 'De digest is verstuurd door server',
   'digest:cli:error:secret' => 'De opgegeven secret is ongeldig, de digest kan niet worden gestart',
   'digest:settings:multi_core:title' => 'Multi-core ondersteuning',
   'digest:settings:multi_core:description' => 'Als je een site hebt met veel gebruikers (> 5000 gebruikers) dan kun je de afhandeling van de Digest splitsen over meerdere cores. Selecteer aub niet meer cores als je webserver heeft, anders heeft werkt dit alleen vertragend op de Digest.',

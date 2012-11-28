@@ -103,6 +103,7 @@
 		// admin stats
 		'digest:admin:stats:site:title' => "Site digest statistics",
 		'digest:admin:stats:site:not_enabled' => "Site digest is not enabled in the plugin settings",
+		'digest:admin:stats:general:server_name' => "Server that handled the digest",
 		'digest:admin:stats:general:ts_start_cron' => "Time the CRON started",
 		'digest:admin:stats:general:mts_start_digest' => "Time it took before the digest started",
 		'digest:admin:stats:general:peak_memory_start' => "Peak memory before the digest started",

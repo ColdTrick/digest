@@ -26,48 +26,53 @@
 					$gen_table = "<table class='elgg-table mbl'>";
 					
 					$gen_table .= "<tr>";
+					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:general:server_name") . "</td>";
+					$gen_table .= "<td>" . elgg_extract("server_name", $general, "&nbsp;") . "</td>";
+					$gen_table .= "</tr>";
+					
+					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:settings:interval:site_default") . "</td>";
 					$gen_table .= "<td>" . elgg_echo("digest:interval:" . digest_get_default_site_interval()) . "</td>";
 					$gen_table .= "</tr>";
 					
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:general:ts_start_cron") . "</td>";
-					$gen_table .= "<td>" . elgg_view_friendly_time($general["ts_start_cron"]) . " (" . htmlspecialchars(date(elgg_echo("friendlytime:date_format"), $general["ts_start_cron"])) . ") </td>";
+					$gen_table .= "<td>" . elgg_view_friendly_time(elgg_extract("ts_start_cron", $general, 0)) . " (" . htmlspecialchars(date(elgg_echo("friendlytime:date_format"), elgg_extract("ts_start_cron", $general, 0))) . ") </td>";
 					$gen_table .= "</tr>";
 					
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:general:mts_start_digest") . "</td>";
-					$gen_table .= "<td>" . digest_readable_time($general["mts_start_digest"] - $general["ts_start_cron"]) . "</td>";
+					$gen_table .= "<td>" . digest_readable_time(elgg_extract("mts_start_digest", $general, 0) - elgg_extract("ts_start_cron", $general, 0)) . "</td>";
 					$gen_table .= "</tr>";
 					
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:site:general:mts_user_selection_done") . "</td>";
-					$gen_table .= "<td>" . digest_readable_time($general["mts_user_selection_done"] - $general["mts_start_digest"]) . "</td>";
+					$gen_table .= "<td>" . digest_readable_time(elgg_extract("mts_user_selection_done", $general, 0) - elgg_extract("mts_start_digest", $general, 0)) . "</td>";
 					$gen_table .= "</tr>";
 					
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:general:mts_end_digest") . "</td>";
-					$gen_table .= "<td>" . digest_readable_time($general["mts_end_digest"] - $general["mts_start_digest"]) . "</td>";
+					$gen_table .= "<td>" . digest_readable_time(elgg_extract("mts_end_digest", $general, 0) - elgg_extract("mts_start_digest", $general, 0)) . "</td>";
 					$gen_table .= "</tr>";
 					
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:users") . "</td>";
-					$gen_table .= "<td>" . (int) $general["users"] . "</td>";
+					$gen_table .= "<td>" . (int) elgg_extract("users", $general, 0) . "</td>";
 					$gen_table .= "</tr>";
 					
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:mails") . "</td>";
-					$gen_table .= "<td>" . (int) $general["mails"] . "</td>";
+					$gen_table .= "<td>" . (int) elgg_extract("mails", $general, 0) . "</td>";
 					$gen_table .= "</tr>";
 					
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:general:peak_memory_start") . "</td>";
-					$gen_table .= "<td>" . digest_readable_bytes($general["peak_memory_start"]) . "</td>";
+					$gen_table .= "<td>" . digest_readable_bytes(elgg_extract("peak_memory_start", $general, 0)) . "</td>";
 					$gen_table .= "</tr>";
 					
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:general:peak_memory_end") . "</td>";
-					$gen_table .= "<td>" . digest_readable_bytes($general["peak_memory_end"]) . "</td>";
+					$gen_table .= "<td>" . digest_readable_bytes(elgg_extract("peak_memory_end", $general, 0)) . "</td>";
 					$gen_table .= "</tr>";
 					
 					$gen_table .= "</table>";
@@ -177,63 +182,68 @@
 					$gen_table = "<table class='elgg-table mbl'>";
 						
 					$gen_table .= "<tr>";
+					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:general:server_name") . "</td>";
+					$gen_table .= "<td>" . elgg_extract("server_name", $general, "&nbsp;") . "</td>";
+					$gen_table .= "</tr>";
+					
+					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:settings:interval:group_default") . "</td>";
 					$gen_table .= "<td>" . elgg_echo("digest:interval:" . digest_get_default_group_interval()) . "</td>";
 					$gen_table .= "</tr>";
 						
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:general:ts_start_cron") . "</td>";
-					$gen_table .= "<td>" . elgg_view_friendly_time($general["ts_start_cron"]) . " (" . htmlspecialchars(date(elgg_echo("friendlytime:date_format"), $general["ts_start_cron"])) . ") </td>";
+					$gen_table .= "<td>" . elgg_view_friendly_time(elgg_extract("ts_start_cron", $general, 0)) . " (" . htmlspecialchars(date(elgg_echo("friendlytime:date_format"), elgg_extract("ts_start_cron", $general, 0))) . ") </td>";
 					$gen_table .= "</tr>";
 						
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:general:mts_start_digest") . "</td>";
-					$gen_table .= "<td>" . digest_readable_time($general["mts_start_digest"] - $general["ts_start_cron"]) . "</td>";
+					$gen_table .= "<td>" . digest_readable_time(elgg_extract("mts_start_digest", $general, 0) - elgg_extract("ts_start_cron", $general, 0)) . "</td>";
 					$gen_table .= "</tr>";
 						
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:group:general:mts_group_selection_done") . "</td>";
-					$gen_table .= "<td>" . digest_readable_time($general["mts_group_selection_done"] - $general["mts_start_digest"]) . "</td>";
+					$gen_table .= "<td>" . digest_readable_time(elgg_extract("mts_group_selection_done", $general, 0) - elgg_extract("mts_start_digest", $general, 0)) . "</td>";
 					$gen_table .= "</tr>";
 					
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:group:general:total_time_user_selection") . "</td>";
-					$gen_table .= "<td>" . digest_readable_time($general["total_time_user_selection"]) . "</td>";
+					$gen_table .= "<td>" . digest_readable_time(elgg_extract("total_time_user_selection", $general, 0)) . "</td>";
 					$gen_table .= "</tr>";
 						
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:general:mts_end_digest") . "</td>";
-					$gen_table .= "<td>" . digest_readable_time($general["mts_end_digest"] - $general["mts_start_digest"]) . "</td>";
+					$gen_table .= "<td>" . digest_readable_time(elgg_extract("mts_end_digest", $general, 0) - elgg_extract("mts_start_digest", $general, 0)) . "</td>";
 					$gen_table .= "</tr>";
 						
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:groups") . "</td>";
-					$gen_table .= "<td>" . (int) $general["groups"] . "</td>";
+					$gen_table .= "<td>" . (int) elgg_extract("groups", $general, 0) . "</td>";
 					$gen_table .= "</tr>";
 					
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:users") . "</td>";
-					$gen_table .= "<td>" . (int) $general["users"] . "</td>";
+					$gen_table .= "<td>" . (int) elgg_extract("users", $general, 0) . "</td>";
 					$gen_table .= "</tr>";
 						
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:mails") . "</td>";
-					$gen_table .= "<td>" . (int) $general["mails"] . "</td>";
+					$gen_table .= "<td>" . (int) elgg_extract("mails", $general, 0) . "</td>";
 					$gen_table .= "</tr>";
 						
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:general:peak_memory_start") . "</td>";
-					$gen_table .= "<td>" . digest_readable_bytes($general["peak_memory_start"]) . "</td>";
+					$gen_table .= "<td>" . digest_readable_bytes(elgg_extract("peak_memory_start", $general, 0)) . "</td>";
 					$gen_table .= "</tr>";
 						
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:general:peak_memory_end") . "</td>";
-					$gen_table .= "<td>" . digest_readable_bytes($general["peak_memory_end"]) . "</td>";
+					$gen_table .= "<td>" . digest_readable_bytes(elgg_extract("peak_memory_end", $general, 0)) . "</td>";
 					$gen_table .= "</tr>";
 					
 					$gen_table .= "<tr>";
 					$gen_table .= "<td>" . elgg_echo("digest:admin:stats:total_memory") . "</td>";
-					$gen_table .= "<td>" . digest_readable_bytes($general["total_memory"]) . "</td>";
+					$gen_table .= "<td>" . digest_readable_bytes(elgg_extract("total_memory", $general, 0)) . "</td>";
 					$gen_table .= "</tr>";
 						
 					$gen_table .= "</table>";

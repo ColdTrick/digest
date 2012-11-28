@@ -936,7 +936,8 @@
 				"mts_user_selection_done" => 0,
 				"mts_end_digest" => 0,
 				"peak_memory_start" => 0,
-				"peak_memory_end" => 0
+				"peak_memory_end" => 0,
+				"server_name" => php_uname("n")
 			)
 		);
 	}
@@ -1016,7 +1017,8 @@
 				"mts_end_digest" => 0,
 				"peak_memory_start" => 0,
 				"peak_memory_end" => 0,
-				"total_memory" => 0
+				"total_memory" => 0,
+				"server_name" => php_uname("n")
 			)
 		);
 	}
