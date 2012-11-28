@@ -1,5 +1,5 @@
 = Version history =
-x.x:
+2.1 (2012-11-28):
 
 - added: custom texts for site and group digest
 - added: multi-core/process support
