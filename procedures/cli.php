@@ -19,6 +19,9 @@
 					case "host":
 						$_SERVER["HTTP_HOST"] = $value;
 						break;
+					case "https":
+						$_SERVER["HTTPS"] = $value;
+						break;
 					case "site_offset":
 					case "site_limit":
 					case "group_offset":

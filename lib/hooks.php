@@ -17,9 +17,6 @@
 			// prepare some settings
 			$digest_settings = array(
 				"timestamp" => $interval_ts_upper,
-				"memory_limit" => ini_get("memory_limit"),
-				"host" => $_SERVER["HTTP_HOST"],
-				"secret" => digest_generate_commandline_secret(),
 				"fork_id" => 0
 			);
 			
@@ -28,6 +25,15 @@
 			
 			// is multicore support enabled
 			if(($cores = (int) elgg_get_plugin_setting("multi_core", "digest")) && ($cores > 1)){
+				// add some settings for the commandline
+				$digest_settings["memory_limit"] = ini_get("memory_limit");
+				$digest_settings["host"] = $_SERVER["HTTP_HOST"];
+				$digest_settings["secret"] = digest_generate_commandline_secret();
+				if(isset($_SERVER["HTTPS"])){
+					$digest_settings["https"] = $_SERVER["HTTPS"];
+				}
+				
+				// shoul we include users who have never logged in
 				$include_never_logged_in = false;
 				if(elgg_get_plugin_setting("include_never_logged_in", "digest") == "yes"){
 					$include_never_logged_in = true;

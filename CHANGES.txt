@@ -1,4 +1,8 @@
 = Version history =
+x.x:
+
+- fixed: https support in multi-core situations
+
 2.1 (2012-11-28):
 
 - added: custom texts for site and group digest
