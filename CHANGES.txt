@@ -2,6 +2,7 @@
 x.x:
 
 - fixed: https support in multi-core situations
+- fixed: spelling errors in Dutch translation
 
 2.1 (2012-11-28):
 
