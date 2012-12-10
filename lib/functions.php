@@ -1210,7 +1210,9 @@
 				$site_stats["general"]["mts_user_selection_done"] = microtime(true);
 					
 				// use a fair memory footprint
-				$DB_QUERY_CACHE->clear();
+				if($DB_QUERY_CACHE){
+					$DB_QUERY_CACHE->clear();
+				}
 				$stats_last_memory = memory_get_usage(false);
 					
 				// process users
@@ -1238,7 +1240,9 @@
 					// reset cache
 					$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
 		
-					$DB_QUERY_CACHE->clear();
+					if($DB_QUERY_CACHE){
+						$DB_QUERY_CACHE->clear();
+					}
 		
 					unset($user);
 		
@@ -1298,7 +1302,9 @@
 				$group_stats["general"]["mts_group_selection_done"] = microtime(true);
 		
 				// use a fair memory footprint
-				$DB_QUERY_CACHE->clear();
+				if($DB_QUERY_CACHE){
+					$DB_QUERY_CACHE->clear();
+				}
 				$stats_last_group_memory = memory_get_usage(false);
 					
 				foreach ($group_guids as $group_guid) {
@@ -1331,7 +1337,9 @@
 						$group_stats["general"]["total_time_user_selection"] += (microtime(true) - $stats_begin_user_selection);
 							
 						// use a fair memory footprint
-						$DB_QUERY_CACHE->clear();
+						if($DB_QUERY_CACHE){
+							$DB_QUERY_CACHE->clear();
+						}
 						$stats_last_memory = memory_get_usage(false);
 							
 						// process users
@@ -1362,7 +1370,9 @@
 							// reset cache
 							$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
 		
-							$DB_QUERY_CACHE->clear();
+							if($DB_QUERY_CACHE){
+								$DB_QUERY_CACHE->clear();
+							}
 		
 							unset($user);
 		
@@ -1379,7 +1389,9 @@
 					// reset cache
 					$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
 		
-					$DB_QUERY_CACHE->clear();
+					if($DB_QUERY_CACHE){
+						$DB_QUERY_CACHE->clear();
+					}
 		
 					unset($group);
 		
