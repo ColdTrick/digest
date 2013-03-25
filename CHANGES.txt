@@ -4,6 +4,7 @@ x.x:
 - fixed: https support in multi-core situations
 - fixed: spelling errors in Dutch translation
 - fixed: issue with $DB_QUERY_CACHE disabled
+- fixed: HTML language in Digest body
 
 2.1 (2012-11-28):
 
