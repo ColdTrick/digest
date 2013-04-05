@@ -1,5 +1,5 @@
 = Version history =
-x.x:
+2.1.1 (2013-04-05):
 
 - fixed: https support in multi-core situations
 - fixed: spelling errors in Dutch translation
