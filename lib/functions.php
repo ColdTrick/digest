@@ -1251,6 +1251,9 @@
 					$site_stats[$user_setting["user_interval"]]["total_memory"] += ($stats_current_memory - $stats_last_memory);
 					$stats_last_memory = $stats_current_memory;
 				}
+			} else {
+				// log selection time
+				$site_stats["general"]["mts_user_selection_done"] = microtime(true);
 			}
 		
 			// cleanup some stuff
@@ -1400,6 +1403,9 @@
 					$group_stats["general"]["total_memory"] += ($stats_current_group_memory - $stats_last_group_memory);
 					$stats_last_group_memory = $stats_current_group_memory;
 				}
+			} else {
+				// log selection time
+				$group_stats["general"]["mts_group_selection_done"] = microtime(true);
 			}
 		
 			// restore access settings

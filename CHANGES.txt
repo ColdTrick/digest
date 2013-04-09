@@ -1,4 +1,7 @@
 = Version history =
+x.x:
+- fixed: not logging some stats if no selection results
+
 2.1.1 (2013-04-05):
 
 - fixed: https support in multi-core situations
