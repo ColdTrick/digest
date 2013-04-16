@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 	define("DIGEST_INTERVAL_NONE", "none");
 	define("DIGEST_INTERVAL_DEFAULT", "default");
@@ -36,6 +36,8 @@
 		elgg_register_plugin_hook_handler("cron", "daily", "digest_cron_handler");
 		
 		elgg_register_plugin_hook_handler("public_pages", "walled_garden", "digest_walled_garden_hook");
+		
+		elgg_register_plugin_hook_handler("register", "menu:groups:my_status", "digest_menu_groups_my_status_hook");
 		
 		// register events
 		elgg_register_event_handler("leave", "group", "digest_group_leave_event");

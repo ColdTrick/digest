@@ -2,7 +2,7 @@
 
 	/**
 	 * Lets figure out what we need to do
-	 * 
+	 *
 	 * @param string $hook
 	 * @param string $entity_type
 	 * @param bool $returnvalue
@@ -100,7 +100,7 @@
 	
 	/**
 	 * when a default site interval is set, the user must tell us wether he/shw wants te receive a digest
-	 * 
+	 *
 	 * @param string $hook
 	 * @param string $type
 	 * @param bool $return_value
@@ -131,7 +131,7 @@
 	
 	/**
 	 * Allow users to directly unsubscribe even in walled garden
-	 * 
+	 *
 	 * @param string $hook
 	 * @param string $type
 	 * @param array $return_value
@@ -143,3 +143,31 @@
 		
 		return $return_value;
 	}
+	
+	/**
+	 * Adds a link to the digest settings for the groups
+	 *
+	 * @param string $hook
+	 * @param string $type
+	 * @param array $return_value
+	 * @param array $params
+	 * @return array ElggMenuItem
+	 */
+	function digest_menu_groups_my_status_hook($hook, $type, $return_value, $params) {
+		$result = $return_value;
+		
+		if (digest_group_enabled()) {
+			if (($user = elgg_get_logged_in_user_entity()) && ($group = elgg_get_page_owner_entity())) {
+				if (elgg_instanceof($group, "group") && $group->isMember($user)) {
+					$result[] = ElggMenuItem::factory(array(
+						"name" => "digest",
+						"text" => elgg_echo("digest:usersettings:groups:title"),
+						"href" => "digest/user/" . $user->username
+					));
+				}
+			}
+		}
+		
+		return $result;
+	}
+	

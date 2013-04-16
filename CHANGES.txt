@@ -1,6 +1,8 @@
 = Version history =
 x.x:
+- added: menu item in group status sidebar
 - fixed: not logging some stats if no selection results
+- changed: Elgg version requirement to 1.8.12
 
 2.1.1 (2013-04-05):
 
