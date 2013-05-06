@@ -1,5 +1,5 @@
 = Version history =
-x.x:
+2.2 (2013-05-06):
 - added: menu item in group status sidebar
 - fixed: not logging some stats if no selection results
 - fixed: using new cache functions
