@@ -1,4 +1,4 @@
-<?php 
+<?php
 	
 	global $running_interval;
 	global $interval_ts_upper;
@@ -6,7 +6,7 @@
 
 	/**
 	 * Make the site digest
-	 * 
+	 *
 	 * @param ElggUser $user
 	 * @param string $interval
 	 * @return true (mail sent successfull) || false (some error) || -1 (no content)
@@ -119,7 +119,7 @@
 
 	/**
 	 * make group digest
-	 * 
+	 *
 	 * @param ElggGroup $group
 	 * @param ElggUser $user
 	 * @param string $interval
@@ -240,7 +240,7 @@
 	
 	/**
 	 * Sets the right upper and lower ts for digest queries
-	 * 
+	 *
 	 * @param string $interval
 	 */
 	function digest_set_interval_timestamps($interval){
@@ -253,7 +253,7 @@
 			
 			switch($interval){
 				case DIGEST_INTERVAL_DAILY:
-					$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24); 
+					$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24);
 					break;
 				case DIGEST_INTERVAL_WEEKLY:
 					$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24 * 7);
@@ -273,7 +273,7 @@
 	
 	/**
 	 * Send out the generated digest
-	 * 
+	 *
 	 * @param ElggUser $user
 	 * @param string $subject
 	 * @param string $html_body
@@ -324,7 +324,7 @@
 	
 	/**
 	 * convert a byte value into something more readable
-	 * 
+	 *
 	 * @param int $value
 	 * @return bool|string  false | human readable byte value
 	 */
@@ -365,7 +365,7 @@
 	
 	/**
 	 * Convert a time in microseconds to something readable
-	 * 
+	 *
 	 * @param int $value
 	 * @return bool|string false | human readable time value
 	 */
@@ -413,7 +413,7 @@
 	
 	/**
 	 * Check if group digest is enabled
-	 * 
+	 *
 	 * @return boolean true|false
 	 */
 	function digest_group_enabled(){
@@ -451,7 +451,7 @@
 	
 	/**
 	 * create an unsubscribe link for a digest
-	 * 
+	 *
 	 * @param int $guid
 	 * @param ElggUser $user
 	 * @return bool|string false | unsubscribe link
@@ -476,7 +476,7 @@
 	
 	/**
 	 * Validate an unsubscribe code
-	 * 
+	 *
 	 * @param int $guid
 	 * @param ElggUser $user
 	 * @param string $code
@@ -502,7 +502,7 @@
 	
 	/**
 	 * Undo some extension to view by other plugins
-	 * 
+	 *
 	 * @param bool $refresh
 	 */
 	function digest_prepare_run($refresh = false){
@@ -687,7 +687,7 @@
 		
 		$dotw = (int) date("w", $interval_ts_upper); // Day of the Week (0 (sunday) - 6 (saturday))
 		$dotm = (int) date("j", $interval_ts_upper); // Day of the Month (1 - 31)
-		$odd_week = (date("W", $interval_ts_upper) & 1); // Odd weeknumber or not 
+		$odd_week = (date("W", $interval_ts_upper) & 1); // Odd weeknumber or not
 		
 		$dotfn = $dotw; // Day of the Fortnight (0 (sunday 1st week) - 6 (saturday 1st week))
 		if(!$odd_week){
@@ -1168,7 +1168,6 @@
 	}
 	
 	function digest_process($settings){
-		global $DB_QUERY_CACHE;
 		global $ENTITY_CACHE;
 		global $interval_ts_upper;
 		
@@ -1210,9 +1209,7 @@
 				$site_stats["general"]["mts_user_selection_done"] = microtime(true);
 					
 				// use a fair memory footprint
-				if($DB_QUERY_CACHE){
-					$DB_QUERY_CACHE->clear();
-				}
+				_elgg_invalidate_query_cache();
 				$stats_last_memory = memory_get_usage(false);
 					
 				// process users
@@ -1239,10 +1236,7 @@
 		
 					// reset cache
 					$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
-		
-					if($DB_QUERY_CACHE){
-						$DB_QUERY_CACHE->clear();
-					}
+					_elgg_invalidate_query_cache();
 		
 					unset($user);
 		
@@ -1305,9 +1299,7 @@
 				$group_stats["general"]["mts_group_selection_done"] = microtime(true);
 		
 				// use a fair memory footprint
-				if($DB_QUERY_CACHE){
-					$DB_QUERY_CACHE->clear();
-				}
+				_elgg_invalidate_query_cache();
 				$stats_last_group_memory = memory_get_usage(false);
 					
 				foreach ($group_guids as $group_guid) {
@@ -1340,9 +1332,7 @@
 						$group_stats["general"]["total_time_user_selection"] += (microtime(true) - $stats_begin_user_selection);
 							
 						// use a fair memory footprint
-						if($DB_QUERY_CACHE){
-							$DB_QUERY_CACHE->clear();
-						}
+						_elgg_invalidate_query_cache();
 						$stats_last_memory = memory_get_usage(false);
 							
 						// process users
@@ -1372,10 +1362,7 @@
 		
 							// reset cache
 							$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
-		
-							if($DB_QUERY_CACHE){
-								$DB_QUERY_CACHE->clear();
-							}
+							_elgg_invalidate_query_cache();
 		
 							unset($user);
 		
@@ -1391,10 +1378,7 @@
 		
 					// reset cache
 					$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
-		
-					if($DB_QUERY_CACHE){
-						$DB_QUERY_CACHE->clear();
-					}
+					_elgg_invalidate_query_cache();
 		
 					unset($group);
 		
