@@ -1171,6 +1171,9 @@
 		global $ENTITY_CACHE;
 		global $interval_ts_upper;
 		
+		// Make sending process safer by disabling max_execution_time (avoids breaks if set too low)
+		set_time_limit(0);
+		
 		$interval_ts_upper = (int) elgg_extract("timestamp", $settings, time());
 		$fork_id = (int) elgg_extract("fork_id", $settings, 0);
 		
