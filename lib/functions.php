@@ -55,18 +55,20 @@ function digest_site(ElggUser $user, $interval) {
 		
 		if (!empty($userdata)) {
 			// check if there are custom header/footer texts
-			if(!isset($custom_text_header)) {
+			if (!isset($custom_text_header)) {
 				$custom_text_header = "";
 				
-				if($text = elgg_get_plugin_setting("custom_text_site_header", "digest")){
+				$text = elgg_get_plugin_setting("custom_text_site_header", "digest");
+				if (!empty($text)) {
 					$custom_text_header = elgg_view_module("digest", "", "<div class='elgg-output'>" . $text . "</div>");
 				}
 			}
 			
 			if (!isset($custom_text_footer)) {
 				$custom_text_footer = "";
-					
-				if($text = elgg_get_plugin_setting("custom_text_site_footer", "digest")){
+				
+				$text = elgg_get_plugin_setting("custom_text_site_footer", "digest");
+				if (!empty($text)) {
 					$custom_text_footer = elgg_view_module("digest", "", "<div class='elgg-output'>" . $text . "</div>");
 				}
 			}
@@ -292,7 +294,7 @@ function digest_set_interval_timestamps($interval) {
  *
  * @return bool
  */
-function digest_send_mail(ElggUser $user, $subject, $html_body, $plain_link = ""){
+function digest_send_mail(ElggUser $user, $subject, $html_body, $plain_link = "") {
 	global $digest_mail_send;
 	
 	$result = false;
@@ -307,9 +309,10 @@ function digest_send_mail(ElggUser $user, $subject, $html_body, $plain_link = ""
 		// email settings
 		$to = html_email_handler_make_rfc822_address($user);
 		
+		$plaintext_message = "";
 		if (!empty($plain_link)) {
 			// make a plaintext message for non HTML users
-			$plaintext_message .= elgg_echo("digest:mail:plaintext:description", array($plain_link));
+			$plaintext_message = elgg_echo("digest:mail:plaintext:description", array($plain_link));
 		}
 		
 		// send out the mail
@@ -379,7 +382,7 @@ function digest_readable_bytes($value) {
 /**
  * Convert a time in microseconds to something readable
  *
- * @param int $value time value
+ * @param int $microtime time value
  *
  * @return bool|string false | human readable time value
  */
@@ -408,13 +411,13 @@ function digest_readable_time($microtime) {
 	
 	if ($time_array["minutes"]) {
 		$result .= " " . $time_array["minutes"] . " "  . elgg_echo("digest:readable:time:minutes");
-	} elseif(!empty($result)) {
+	} elseif (!empty($result)) {
 		$result .= " 00 M";
 	}
 	
 	if ($time_array["seconds"]) {
 		$result .= " " . $time_array["seconds"] . " "  . elgg_echo("digest:readable:time:seconds");
-	} elseif(!empty($result)) {
+	} elseif (!empty($result)) {
 		$result .= " 00 sec";
 	}
 	
@@ -640,7 +643,7 @@ function digest_get_default_group_interval() {
  *
  * @return string|bool
  */
-function digest_get_online_url($params = array()){
+function digest_get_online_url($params = array()) {
 	$result = false;
 	
 	if (!empty($params) && is_array($params)) {
@@ -736,7 +739,7 @@ function digest_get_default_distribution($interval) {
  *
  * @return array
  */
-function digest_get_site_users($settings){
+function digest_get_site_users($settings) {
 	global $interval_ts_upper;
 	
 	$site = elgg_get_site_entity();
@@ -1615,7 +1618,7 @@ function digest_rebase_stats($timestamp) {
 	}
 	
 	// reset group stats
-	if (digest_group_enabled() ){
+	if (digest_group_enabled()) {
 		$group_stats = elgg_get_plugin_setting("group_statistics", "digest");
 		if (!empty($group_stats)) {
 			$group_stats = json_decode($group_stats, true);

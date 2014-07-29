@@ -33,7 +33,7 @@ if (isset($argv) && is_array($argv)) {
 				case "fork_id":
 					$value = (int) $value;
 					
-					if($value > 0){
+					if ($value > 0) {
 						$$key = $value;
 					}
 					break;

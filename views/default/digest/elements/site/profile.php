@@ -62,7 +62,7 @@ if (isset($digest_site_profile_body[$key])) {
 			if (($index + 2) % 3) {
 				$content .= "<td>&nbsp;</td>";
 				$content .= "<td>&nbsp;</td>";
-			} elseif(($index + 1) % 3){
+			} elseif (($index + 1) % 3) {
 				$content .= "<td>&nbsp;</td>";
 			}
 				

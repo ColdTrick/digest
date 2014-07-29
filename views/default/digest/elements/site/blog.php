@@ -30,7 +30,7 @@ $blog_options = array(
 
 $blogs = elgg_get_entities($blog_options);
 if (!empty($blogs)) {
-	$title = elgg_view("output/url", array("text" => elgg_echo("blog:blogs"), "href" => "blog/all" ));
+	$title = elgg_view("output/url", array("text" => elgg_echo("blog:blogs"), "href" => "blog/all"));
 	
 	$latest_blogs = "";
 	
@@ -38,7 +38,7 @@ if (!empty($blogs)) {
 		$blog_url = $blog->getURL();
 		
 		$latest_blogs .= "<div class='digest-blog'>";
-		if($blog->icontime){
+		if ($blog->icontime) {
 			$latest_blogs .= "<a href='" . $blog_url . "'><img src='" . $blog->getIconURL("medium") . "' /></a>";
 		}
 		$latest_blogs .= "<span>";

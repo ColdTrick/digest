@@ -79,9 +79,6 @@ function digest_cron_handler($hook, $entity_type, $returnvalue, $params) {
 			}
 			
 			// start processes
-			$site_offset = 0;
-			$group_offset = 0;
-			
 			for ($i = 0; $i < $cores; $i++) {
 				$digest_settings["fork_id"] = $i;
 				

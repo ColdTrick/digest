@@ -12,6 +12,7 @@ $digest = "site";
 $interval = DIGEST_INTERVAL_MONTHLY;
 $header_text = elgg_get_plugin_setting("custom_text_site_header", "digest");
 $footer_text = elgg_get_plugin_setting("custom_text_site_footer", "digest");
+$group = false;
 
 switch ($page[1]) {
 	case "group":
@@ -35,16 +36,16 @@ $ts_upper = time();
 
 switch ($interval) {
 	case DIGEST_INTERVAL_DAILY:
-		$ts_lower = $ts_upper - (60*60*24);
+		$ts_lower = $ts_upper - (60 * 60 * 24);
 		break;
 	case DIGEST_INTERVAL_WEEKLY:
-		$ts_lower = $ts_upper - (60*60*24*7);
+		$ts_lower = $ts_upper - (60 * 60 * 24 * 7);
 		break;
 	case DIGEST_INTERVAL_FORTNIGHTLY:
-		$ts_lower = $ts_upper - (60*60*24*14);
+		$ts_lower = $ts_upper - (60 * 60 * 24 * 14);
 		break;
 	case DIGEST_INTERVAL_MONTHLY:
-		$ts_lower = $ts_upper - (60*60*24*31);
+		$ts_lower = $ts_upper - (60 * 60 * 24 * 31);
 		break;
 	default:
 		$interval = DIGEST_INTERVAL_MONTHLY;
