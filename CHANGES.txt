@@ -3,6 +3,8 @@
 x.x:
 
 - fixed: breaking HTML in settings page (thanks Pascal Orth)
+- fixed: settings menu items not linking to correct user #11
+- updated to coding standards
 
 2.2 (2013-05-06):
 
