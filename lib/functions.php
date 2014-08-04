@@ -1312,6 +1312,10 @@ function digest_process($settings) {
 	// Make sending process safer by disabling max_execution_time (avoids breaks if set too low)
 	set_time_limit(0);
 	
+	// ElggBatch would disable the query cache automatically, but we cannot use it because
+	// we are not querying entities. Therefore the cache has to be disabled manually.
+	_elgg_services()->db->disableQueryCache();
+	
 	$interval_ts_upper = (int) elgg_extract("timestamp", $settings, time());
 	$fork_id = (int) elgg_extract("fork_id", $settings, 0);
 	
@@ -1350,8 +1354,6 @@ function digest_process($settings) {
 			// log selection time
 			$site_stats["general"]["mts_user_selection_done"] = microtime(true);
 				
-			// use a fair memory footprint
-			_elgg_invalidate_query_cache();
 			$stats_last_memory = memory_get_usage(false);
 				
 			// process users
@@ -1378,7 +1380,6 @@ function digest_process($settings) {
 	
 				// reset cache
 				$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
-				_elgg_invalidate_query_cache();
 	
 				unset($user);
 	
@@ -1441,8 +1442,6 @@ function digest_process($settings) {
 			// log selection time
 			$group_stats["general"]["mts_group_selection_done"] = microtime(true);
 	
-			// use a fair memory footprint
-			_elgg_invalidate_query_cache();
 			$stats_last_group_memory = memory_get_usage(false);
 				
 			foreach ($group_guids as $group_guid) {
@@ -1475,8 +1474,6 @@ function digest_process($settings) {
 					// stats loggin
 					$group_stats["general"]["total_time_user_selection"] += (microtime(true) - $stats_begin_user_selection);
 						
-					// use a fair memory footprint
-					_elgg_invalidate_query_cache();
 					$stats_last_memory = memory_get_usage(false);
 						
 					// process users
@@ -1506,7 +1503,6 @@ function digest_process($settings) {
 	
 						// reset cache
 						$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
-						_elgg_invalidate_query_cache();
 	
 						unset($user);
 	
@@ -1522,7 +1518,6 @@ function digest_process($settings) {
 	
 				// reset cache
 				$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
-				_elgg_invalidate_query_cache();
 	
 				unset($group);
 	
@@ -1546,6 +1541,9 @@ function digest_process($settings) {
 		// save stats logging
 		digest_save_group_statistics($group_stats, $interval_ts_upper, $fork_id);
 	}
+
+	// Re-enable the query cache
+	_elgg_services()->db->enableQueryCache();
 }
 
 /**
