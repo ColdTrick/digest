@@ -1,6 +1,6 @@
 = Version history =
 
-x.x:
+2.2.1 (2014-08-19):
 
 - fixed: breaking HTML in settings page (thanks Pascal Orth)
 - fixed: settings menu items not linking to correct user #11
