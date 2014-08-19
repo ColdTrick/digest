@@ -27,11 +27,11 @@ if (!empty($description)) {
 	echo "<table>";
 	echo "<tr>";
 	echo "<td class='digest-footer-quote-left'>";
-	echo "<img src='" . elgg_get_site_url() . "mod/digest/_graphics/quote_left.png' />";
+	echo elgg_view("output/img", array("src" => "mod/digest/_graphics/quote_left.png"));
 	echo "</td>";
 	echo "<td>" . $description . "</td>";
 	echo "<td class='digest-footer-quote-right'>";
-	echo "<img src='" . elgg_get_site_url() . "mod/digest/_graphics/quote_right.png' />";
+	echo elgg_view("output/img", array("src" => "mod/digest/_graphics/quote_right.png"));
 	echo "</td>";
 	echo "</tr>";
 	echo "</table>";

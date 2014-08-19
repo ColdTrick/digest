@@ -19,7 +19,11 @@ $river_options = array(
 
 $river_items = elgg_list_river($river_options);
 if (!empty($river_items)) {
-	$title = elgg_view("output/url", array("text" => elgg_echo("river:friends"), "href" => "activity/friends/" . $user->username));
+	$title = elgg_view("output/url", array(
+		"text" => elgg_echo("river:friends"),
+		"href" => "activity/friends/" . $user->username,
+		"is_trusted" => true
+	));
 	
 	echo elgg_view_module("digest", $title, $river_items);
 }

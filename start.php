@@ -76,7 +76,7 @@ function digest_pagesetup() {
 			"context" => "settings"
 		));
 		
-		elgg_register_menu_item('page', array(
+		elgg_register_menu_item("page", array(
 			"name" => "digest",
 			"text" => elgg_echo("digest:page_menu:theme_preview"),
 			"href" => "digest/test",

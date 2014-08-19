@@ -22,8 +22,8 @@ $digest_entity = elgg_extract("group", $vars, $site);
 
 $unsubscribe_link = digest_create_unsubscribe_link($digest_entity->getGUID(), $user);
 
-$site_url = elgg_view("output/url", array("href" => $site->url, "text" => $site->name));
-$digest_url = elgg_view("output/url", array("href" => "digest", "text" => elgg_echo("digest:layout:footer:update")));
+$site_url = elgg_view("output/url", array("href" => $site->url, "text" => $site->name, "is_trusted" => true));
+$digest_url = elgg_view("output/url", array("href" => "digest", "text" => elgg_echo("digest:layout:footer:update"), "is_trusted" => true));
 
 echo elgg_echo("digest:elements:unsubscribe:info", array($site_url));
 echo "&nbsp;" . elgg_echo("digest:elements:unsubscribe:settings", array("<a href='" . $site->url . "digest/" . $user->username . "'>", "</a>"));

@@ -18,7 +18,7 @@ $item = $vars['item'];
 // ));
 
 // river item header
-$timestamp = elgg_get_friendly_time($item->getPostedTime());
+$timestamp = elgg_view_friendly_time($item->getTimePosted());
 
 $summary = elgg_extract('summary', $vars, elgg_view('river/elements/summary', array('item' => $vars['item'])));
 if ($summary === false) {

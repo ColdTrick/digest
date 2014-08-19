@@ -16,7 +16,11 @@ $group_options = array(
 
 $newest_groups = elgg_get_entities($group_options);
 if (!empty($newest_groups)) {
-	$title = elgg_view("output/url", array("text" => elgg_echo("groups"), "href" => "groups/all"));
+	$title = elgg_view("output/url", array(
+		"text" => elgg_echo("groups"),
+		"href" => "groups/all",
+		"is_trusted" => true
+	));
 	
 	$group_items = "<table class='digest-groups'>";
 	
@@ -27,7 +31,11 @@ if (!empty($newest_groups)) {
 
 		$group_items .= "<td>";
 		$group_items .= elgg_view_entity_icon($group, "medium") . "<br />";
-		$group_items .= "<a href='" . $group_url . "'>" . $group->name . "</a>";
+		$group_items .= elgg_view("output/url", array(
+			"text" => $group->name,
+			"href" => $group->getURL(),
+			"is_trusted" => true
+		));
 		$group_items .= "</td>";
 
 		if (($index % 3) === 2) {

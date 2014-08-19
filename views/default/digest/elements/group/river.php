@@ -28,7 +28,11 @@ $sql .= " LIMIT " . $offset . "," . $limit;
 $items = get_data($sql, "elgg_row_to_elgg_river_item");
 
 if (!empty($items)) {
-	$title = elgg_view("output/url", array("text" => elgg_echo("groups:activity"), "href" => $group->getURL()));
+	$title = elgg_view("output/url", array(
+		"text" => elgg_echo("groups:activity"),
+		"href" => $group->getURL(),
+		"is_trusted" => true
+	));
 	
 	$options = array(
 		"list_class" => "elgg-list-river elgg-river",

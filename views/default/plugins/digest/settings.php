@@ -45,10 +45,15 @@ if ($group_default = $plugin->group_default) {
 
 // Interval Settings
 $settings_interval = "<table class='elgg-table-alt mbm'>";
-$settings_interval .= "<tr><th>&nbsp;</th><th class='center'>" . elgg_echo("site") . "</th><th class='center'>" . elgg_echo("group") . "</th><th>" . elgg_echo("digest:distribution") . "<span class='elgg-icon elgg-icon-digest-info mlm' title='" . htmlspecialchars(elgg_echo("digest:distribution:description"), ENT_QUOTES, "UTF-8", false) . "'></span></th></tr>";
+$settings_interval .= "<tr>";
+$settings_interval .= "<th>&nbsp;</th>";
+$settings_interval .= "<th class='center'>" . elgg_echo("site") . "</th>";
+$settings_interval .= "<th class='center'>" . elgg_echo("group") . "</th>";
+$settings_interval .= "<th>" . elgg_echo("digest:distribution") . "<span title='" . htmlspecialchars(elgg_echo("digest:distribution:description"), ENT_QUOTES, "UTF-8", false) . "'>" . elgg_view_icon("info", "mlm") .  "</span></th>";
+$settings_interval .= "</tr>";
 
 $settings_interval .= "<tr>";
-$settings_interval .= "<td>" . elgg_echo("digest:settings:production") . "<span class='elgg-icon elgg-icon-digest-info mlm' title='" . htmlspecialchars(elgg_echo("digest:settings:production:description"), ENT_QUOTES, "UTF-8", false) . "'></span></td>";
+$settings_interval .= "<td>" . elgg_echo("digest:settings:production") . "<span title='" . htmlspecialchars(elgg_echo("digest:settings:production:description"), ENT_QUOTES, "UTF-8", false) . "'>" . elgg_view_icon("info", "mlm") .  "</span></td>";
 $settings_interval .= "<td class='center'>" . elgg_view("input/dropdown", array("name" => "params[in_production]", "options_values" => $noyes_options, "value" => $plugin->in_production)) . "</td>";
 $settings_interval .= "<td class='center'>" . elgg_view("input/dropdown", array("name" => "params[group_production]", "options_values" => $noyes_options, "value" => $plugin->group_production)) . "</td>";
 $settings_interval .= "<td>&nbsp;</td>";
@@ -127,22 +132,25 @@ $multi_core = "<div class='elgg-admin-notices pbn'><p>" . elgg_echo("digest:sett
 
 $multi_core .= "<div>";
 $multi_core .= elgg_echo("digest:settings:multi_core:number");
-$multi_core .= "&nbsp;";
-$multi_core .= elgg_view("input/dropdown", array("name" => "params[multi_core]", "value" => $plugin->multi_core, "options" => array(1, 2, 4, 8)));
+$multi_core .= elgg_view("input/dropdown", array("name" => "params[multi_core]", "value" => $plugin->multi_core, "options" => array(1, 2, 4, 8), "class" => "mls"));
 $multi_core .= "</div>";
 
 // stats
 $stats = "<div>";
-$stats .= elgg_view("output/confirmlink", array("href" => "action/digest/reset_stats", "text" => elgg_echo("digest:settings:stats:reset"),"class" => "elgg-button elgg-button-action float"));
+$stats .= elgg_view("output/confirmlink", array(
+	"href" => "action/digest/reset_stats",
+	"text" => elgg_echo("digest:settings:stats:reset"),
+	"class" => "elgg-button elgg-button-action float"
+));
 $stats .= "</div>";
 
 // output to screen
 echo "<div class='elgg-admin-notices pbn'><p>" . elgg_echo("digest:settings:notice") . "</p></div>";
 
-echo elgg_view_module("inline", elgg_echo("digest:settings:interval:title") . "<span class='elgg-icon elgg-icon-digest-info mlm' title='" . htmlspecialchars(elgg_echo("digest:settings:interval:description"), ENT_QUOTES, "UTF-8", false) . "'></span>", $settings_interval);
+echo elgg_view_module("inline", elgg_echo("digest:settings:interval:title") . "<span title='" . htmlspecialchars(elgg_echo("digest:settings:interval:description"), ENT_QUOTES, "UTF-8", false) . "'>" . elgg_view_icon("info", "mlm") .  "</span>", $settings_interval);
 
-echo elgg_view_module("inline", elgg_echo("digest:settings:custom_text:title") . "<span class='elgg-icon elgg-icon-digest-info mlm' title='" . htmlspecialchars(elgg_echo("digest:settings:custom_text:description"), ENT_QUOTES, "UTF-8", false) . "'></span>", $custom_text);
+echo elgg_view_module("inline", elgg_echo("digest:settings:custom_text:title") . "<span title='" . htmlspecialchars(elgg_echo("digest:settings:custom_text:description"), ENT_QUOTES, "UTF-8", false) . "'>" . elgg_view_icon("info", "mlm") .  "</span>", $custom_text);
 
-echo elgg_view_module("inline", elgg_echo("digest:settings:multi_core:title") . "<span class='elgg-icon elgg-icon-digest-info mlm' title='" . htmlspecialchars(elgg_echo("digest:settings:multi_core:description"), ENT_QUOTES, "UTF-8", false) . "'></span>", $multi_core);
+echo elgg_view_module("inline", elgg_echo("digest:settings:multi_core:title") . "<span title='" . htmlspecialchars(elgg_echo("digest:settings:multi_core:description"), ENT_QUOTES, "UTF-8", false) . "'>" . elgg_view_icon("info", "mlm") .  "</span>", $multi_core);
 
 echo elgg_view_module("inline", elgg_echo("digest:settings:stats:title"), $stats);

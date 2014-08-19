@@ -17,7 +17,11 @@ if (!isset($digest_site_profile_body)) {
 if (isset($digest_site_profile_body[$key])) {
 	// return from memory
 	if (!empty($digest_site_profile_body[$key])) {
-		$title = elgg_view("output/url", array("text" => elgg_echo("members"), "href" => "members"));
+		$title = elgg_view("output/url", array(
+			"text" => elgg_echo("members"),
+			"href" => "members"
+		));
+		
 		echo elgg_view_module("digest", $title , $digest_site_profile_body[$key]);
 	}
 } else {
@@ -36,7 +40,11 @@ if (isset($digest_site_profile_body[$key])) {
 	
 	$newest_members = elgg_get_entities_from_relationship($member_options);
 	if (!empty($newest_members)) {
-		$title = elgg_view("output/url", array("text" => elgg_echo("members"), "href" => "members"));
+		$title = elgg_view("output/url", array(
+			"text" => elgg_echo("members"),
+			"href" => "members",
+			"is_trusted" => true
+		));
 	
 		$content = "<table class='digest-profile'>";
 	
@@ -47,8 +55,13 @@ if (isset($digest_site_profile_body[$key])) {
 			}
 	
 			$content .= "<td>";
-			$content .= elgg_view_entity_icon($mem, 'medium', array('use_hover' => false)) . "<br />";
-			$content .= "<a href='" .  $mem->getURL() . "'>" . $mem->name . "</a><br />";
+			$content .= elgg_view_entity_icon($mem, "medium", array("use_hover" => false)) . "<br />";
+			$content .= elgg_view("output/url", array(
+				"text" => $mem->name,
+				"href" => $mem->getURL(),
+				"is_trusted" => true
+			));
+			$content .= "<br />";
 			$content .= $mem->briefdescription;
 			$content .= "</td>";
 				

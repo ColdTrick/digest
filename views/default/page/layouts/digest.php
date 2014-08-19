@@ -14,7 +14,7 @@ $language = get_current_language();
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<base target="_blank" />
 		
-		<title><?php echo $vars["title"];?></title>
+		<title><?php echo $vars["title"]; ?></title>
 	</head>
 	<body>
 		<style type="text/css">
