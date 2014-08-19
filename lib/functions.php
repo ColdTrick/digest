@@ -362,7 +362,11 @@ function digest_readable_bytes($value) {
 		$sizes = array(" B", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
 		
 		if ($value != 0) {
-			$result = (round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . $sizes[$i]);
+			$result = (round($value / pow(1024, ($i = floor(log($value, 1024)))), 2) . $sizes[$i]);
+		}
+		
+		if ($neg) {
+			$result = "-" . $result;
 		}
 	}
 	
