@@ -306,8 +306,8 @@ function digest_send_mail(ElggUser $user, $subject, $html_body, $plain_link = ""
 			$html_body = $transform;
 		}
 		
-		// email settings
-		$to = html_email_handler_make_rfc822_address($user);
+		// email settings - prevent sending to any other address than the recipient personn
+		$to = html_email_handler_make_rfc822_address($user, false);
 		
 		$plaintext_message = "";
 		if (!empty($plain_link)) {
