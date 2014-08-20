@@ -8,3 +8,7 @@
 .elgg-icon-info:hover {
 	background-position: 0 -468px;
 }
+
+#digest-settings .elgg-icon-info:hover {
+	cursor: help;
+}
