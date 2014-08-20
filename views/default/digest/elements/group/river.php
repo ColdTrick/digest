@@ -25,7 +25,7 @@ $sql .= " AND " . get_access_sql_suffix("e"); // filter access
 $sql .= " ORDER BY posted DESC";
 $sql .= " LIMIT " . $offset . "," . $limit;
 
-$items = get_data($sql, "elgg_row_to_elgg_river_item");
+$items = get_data($sql, "_elgg_row_to_elgg_river_item");
 
 if (!empty($items)) {
 	$title = elgg_view("output/url", array(

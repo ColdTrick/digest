@@ -12,7 +12,7 @@ $digest = "site";
 $interval = DIGEST_INTERVAL_MONTHLY;
 $header_text = elgg_get_plugin_setting("custom_text_site_header", "digest");
 $footer_text = elgg_get_plugin_setting("custom_text_site_footer", "digest");
-$group = false;
+$group = null;
 
 switch ($page[1]) {
 	case "group":
