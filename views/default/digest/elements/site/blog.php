@@ -10,8 +10,8 @@ $ts_upper = (int) elgg_extract("ts_upper", $vars);
 // only show blogs that are published
 $dbprefix = elgg_get_config("dbprefix");
 
-$blog_status_name_id = add_metastring("status");
-$blog_published_value_id = add_metastring("published");
+$blog_status_name_id = elgg_get_metastring_id("status");
+$blog_published_value_id = elgg_get_metastring_id("published");
 
 $blog_options = array(
 	"type" => "object",

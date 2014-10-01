@@ -21,7 +21,7 @@ $sql .= " FROM " . $dbprefix . "river r";
 $sql .= " INNER JOIN " . $dbprefix . "entities AS e ON r.object_guid = e.guid"; // river event -> object
 $sql .= " WHERE (e.container_guid = $group_guid OR r.object_guid = $group_guid)"; // filter by group
 $sql .= " AND r.posted BETWEEN " . $ts_lower . " AND " . $ts_upper; // filter interval
-$sql .= " AND " . get_access_sql_suffix("e"); // filter access
+$sql .= " AND " . _elgg_get_access_where_sql("e"); // filter access
 $sql .= " ORDER BY posted DESC";
 $sql .= " LIMIT " . $offset . "," . $limit;
 
