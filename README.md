@@ -1,17 +1,9 @@
-Digest
-===========
+# Digest
+
 Send out a digest to your users
 
-Contents
------------
+## Features
 
-1. Features
-2. ToDo
-3. Plugin developers
-4. Theme developers
-
-1. Features
------------
 Sends mails with update information to your site or group members based on default or personal intervals (monthly, fortnightly, weekly or daily)
 
 - site wide digest
@@ -21,11 +13,8 @@ Sends mails with update information to your site or group members based on defau
 - extend/replace layout or content of digests with own views
 - exclude groups from delivery with a hook
 
-2. ToDo
------------
+## Plugin developers
 
-3. Plugin developers
------------
 If you wish to supply content for either the Site digest of Group digest you can easily extend the digest.
 
 ### For the Site digest
@@ -48,8 +37,8 @@ We suggest you put your content in "digest/elements/group/<your pluginname>" and
 the CSS in "css/digest/group/<your plugin>".
 This is just a suggestion, but it would make it easier for theme developers.
 
-4. Theme developers
------------
+## Theme developers
+
 If you want to adjust the Digest to look like your theme, please check to following elements
 
 ### Shell
