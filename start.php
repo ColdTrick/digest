@@ -68,13 +68,14 @@ function digest_pagesetup() {
 	
 	if (elgg_is_logged_in()) {
 		$page_owner = elgg_get_page_owner_entity();
-		
-		elgg_register_menu_item("page", array(
-			"name" => "digest",
-			"text" => elgg_echo("digest:page_menu:settings"),
-			"href" => "digest/user/" . $page_owner->username,
-			"context" => "settings"
-		));
+		if (elgg_instanceof($page_owner, "user")) {
+			elgg_register_menu_item("page", array(
+				"name" => "digest",
+				"text" => elgg_echo("digest:page_menu:settings"),
+				"href" => "digest/user/" . $page_owner->username,
+				"context" => "settings"
+			));
+		}
 		
 		elgg_register_menu_item("page", array(
 			"name" => "digest",
