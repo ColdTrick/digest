@@ -299,7 +299,7 @@ function digest_send_mail(ElggUser $user, $subject, $html_body, $plain_link = ""
 	
 	$result = false;
 	
-	if (!empty($user) && elgg_instanceof($user, "user", null, "ElggUser") && !empty($subject) && !empty($html_body)) {
+	if (!empty($user) && elgg_instanceof($user, "user", null, "ElggUser") && !empty($user->email) && !empty($subject) && !empty($html_body)) {
 		// convert css
 		$transform = html_email_handler_css_inliner($html_body);
 		if (!empty($transform)) {
