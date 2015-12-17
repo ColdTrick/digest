@@ -1,0 +1,17 @@
+{
+	"name": "coldtrick/digest",
+	"description": "Sends out a digest mail for site and group activity",
+	"type": "elgg-plugin",
+	"keywords": ["elgg", "plugin", "notification", "email"],
+	"license": "GPL-2.0",
+	"support": {
+		"source": "https://github.com/ColdTrick/digest",
+		"issues": "https://github.com/ColdTrick/digest/issues"
+	},
+	"require": {
+		"composer/installers": "^1.0.8"
+	},
+	"require-dev": {
+		"coldtrick/sniffs": "dev-master"
+	}
+}
