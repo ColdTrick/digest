@@ -37,6 +37,9 @@ function digest_site(ElggUser $user, $interval) {
 	
 	// store current user
 	$current_user = elgg_get_logged_in_user_entity();
+	if ($current_user == null) {
+		$is_impersonate_session = login($user);
+	}
 	
 	// impersonate new user
 	$SESSION["user"] = $user;
@@ -106,6 +109,10 @@ function digest_site(ElggUser $user, $interval) {
 	unset($userdata);
 	
 	// restore current user
+	if ($is_impersonate_session) {
+		logout();
+		unset($is_impersonate_session);
+	}
 	$SESSION["user"] = $current_user;
 	if (elgg_is_logged_in()) {
 		$SESSION["username"] = $current_user->username;
@@ -163,6 +170,9 @@ function digest_group(ElggGroup $group, ElggUser $user, $interval) {
 	
 	// store current user
 	$current_user = elgg_get_logged_in_user_entity();
+	if ($current_user == null) {
+		$is_impersonate_session = login($user);
+	}
 	
 	// impersonate new user
 	$SESSION["user"] = $user;
@@ -233,6 +243,10 @@ function digest_group(ElggGroup $group, ElggUser $user, $interval) {
 	unset($userdata);
 	
 	// restore current user
+	if ($is_impersonate_session) {
+		logout();
+		unset($is_impersonate_session);
+	}
 	$SESSION["user"] = $current_user;
 	if (elgg_is_logged_in()) {
 		$SESSION["username"] = $current_user->username;
