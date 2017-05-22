@@ -5,7 +5,7 @@
 */
 global $digest_site_profile_body;
 
-$interval = elgg_extract("user_interval", $vars);
+$interval = elgg_extract("interval", $vars);
 $site_guid = elgg_get_site_entity()->getGUID();
 
 $key = md5($interval . $site_guid);
