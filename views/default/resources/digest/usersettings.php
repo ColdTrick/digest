@@ -42,7 +42,7 @@ $title_text = elgg_echo('digest:usersettings:title');
 
 $body = elgg_view_layout('one_sidebar', [
 	'title' => $title_text,
-	'content' => elgg_view('digest/usersettings/form', [
+	'content' => elgg_view_form('digest/usersettings', [], [
 		'user' => $user,
 		'groups' => $groups,
 	]),

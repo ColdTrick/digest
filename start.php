@@ -29,7 +29,7 @@ function digest_init() {
 	elgg_extend_view('register/extend', 'digest/register');
 	
 	// extend groups edit screen
-	elgg_extend_view('groups/edit', 'digest/groupsettings/form', 400);
+	elgg_extend_view('groups/edit', 'digest/groupsettings', 400);
 	
 	// register plugin hooks
 	elgg_register_plugin_hook_handler('register', 'menu:page', '\ColdTrick\Digest\Menus::registerPageMenuItems');
@@ -49,8 +49,8 @@ function digest_init() {
 	elgg_register_action('digest/settings/save', dirname(__FILE__) . '/actions/settings/save.php', 'admin');
 	elgg_register_action('digest/reset_stats', dirname(__FILE__) . '/actions/reset_stats.php', 'admin');
 	
-	elgg_register_action('digest/update/usersettings', dirname(__FILE__) . '/actions/update/usersettings.php');
-	elgg_register_action('digest/update/groupsettings', dirname(__FILE__) . '/actions/update/groupsettings.php');
+	elgg_register_action('digest/usersettings', dirname(__FILE__) . '/actions/usersettings.php');
+	elgg_register_action('digest/groupsettings', dirname(__FILE__) . '/actions/groupsettings.php');
 }
 
 /**
