@@ -13,7 +13,6 @@
 *
 */
 
-// make link
 $digest_url = digest_get_online_url($vars);
 
 echo elgg_echo("digest:elements:online", array("<a href='" . $digest_url . "'>", "</a>"));
