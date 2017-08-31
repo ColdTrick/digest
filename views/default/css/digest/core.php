@@ -71,7 +71,7 @@ h4 {
 }
 
 #digest_header h1{
-	color: #FFFFFF;	
+	color: #FFFFFF;
 }
 
 #digest_container {
@@ -204,21 +204,6 @@ h4 {
 	height: 200px;
 }
 
-/* ***************************************
-	ICONS
-*************************************** */
-
-.elgg-icon {
-	background: transparent url(<?php echo elgg_get_site_url(); ?>_graphics/elgg_sprites.png) no-repeat left;
-	width: 16px;
-	height: 16px;
-	margin: 0 2px;
-}
-
-.elgg-icon-arrow-right {
-	background-position: 0 -18px;
-}
-
 /* *****************************************
 	Lists
 ****************************************** */
@@ -227,7 +212,7 @@ h4 {
 }
 
 /* *****************************************
-	Clearfix 
+	Clearfix
 ***************************************** */
 .clearfix:after,
 .elgg-inner:after,
@@ -238,11 +223,11 @@ h4 {
 	display: block;
 	height: 0;
 	clear: both;
-	visibility: hidden;	
+	visibility: hidden;
 }
 
 /* ******************************************************
-	Fluid width container that does not wrap floats 
+	Fluid width container that does not wrap floats
 ******************************************************* */
 .elgg-body {
 	display: block;

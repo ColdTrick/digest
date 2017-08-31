@@ -11,29 +11,3 @@
 * 							(as defined in DIGEST_INTERVAL_DAILY, DIGEST_INTERVAL_WEEKLY, DIGEST_INTERVAL_FORTNIGHTLY, DIGEST_INTERVAL_MONTHLY)
 *
 */
-
-$group = elgg_extract("group", $vars);
-
-if (!empty($group)) {
-	$description = $group->briefdescription;
-} else {
-	$site = elgg_get_site_entity();
-	
-	$description = $site->description;
-}
-
-if (!empty($description)) {
-	echo "<div class='digest-footer-quote'>";
-	echo "<table>";
-	echo "<tr>";
-	echo "<td class='digest-footer-quote-left'>";
-	echo elgg_view("output/img", array("src" => "mod/digest/_graphics/quote_left.png"));
-	echo "</td>";
-	echo "<td>" . $description . "</td>";
-	echo "<td class='digest-footer-quote-right'>";
-	echo elgg_view("output/img", array("src" => "mod/digest/_graphics/quote_right.png"));
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
-}
