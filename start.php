@@ -10,7 +10,6 @@ define("DIGEST_INTERVAL_WEEKLY", "weekly");
 define("DIGEST_INTERVAL_FORTNIGHTLY", "fortnightly");
 define("DIGEST_INTERVAL_MONTHLY", "monthly");
 
-require_once(dirname(__FILE__) . "/lib/events.php");
 require_once(dirname(__FILE__) . "/lib/functions.php");
 require_once(dirname(__FILE__) . "/lib/hooks.php");
 
@@ -49,7 +48,7 @@ function digest_init() {
 	elgg_register_plugin_hook_handler("register", "menu:groups:my_status", "digest_menu_groups_my_status_hook");
 	
 	// register events
-	elgg_register_event_handler("leave", "group", "digest_group_leave_event");
+	elgg_register_event_handler('leave', 'group', '\ColdTrick\Digest\Groups::removeDigestSettingOnLeave');
 	
 	// register actions
 	elgg_register_action("digest/settings/save", dirname(__FILE__) . "/actions/settings/save.php", "admin");
