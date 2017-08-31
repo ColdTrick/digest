@@ -11,7 +11,6 @@ define("DIGEST_INTERVAL_FORTNIGHTLY", "fortnightly");
 define("DIGEST_INTERVAL_MONTHLY", "monthly");
 
 require_once(dirname(__FILE__) . "/lib/functions.php");
-require_once(dirname(__FILE__) . "/lib/hooks.php");
 
 // register elgg events
 elgg_register_event_handler("init", "system", "digest_init");
@@ -38,15 +37,14 @@ function digest_init() {
 	// register plugin hooks
 	elgg_register_plugin_hook_handler('register', 'menu:page', '\ColdTrick\Digest\Menus::registerPageMenuItems');
 	elgg_register_plugin_hook_handler('register', 'menu:theme_sandbox', '\ColdTrick\Digest\Menus::registerThemeSandboxMenuItems');
+	elgg_register_plugin_hook_handler('register', 'menu:groups:my_status', '\ColdTrick\Digest\Menus::registerGroupStatusMenuItems');
 	
-	elgg_register_plugin_hook_handler("register", "user", "digest_register_user_hook");
+	elgg_register_plugin_hook_handler('register', 'user', '\ColdTrick\Digest\User::savePreferenceOnRegister');
 	
-	elgg_register_plugin_hook_handler("cron", "daily", "digest_cron_handler");
+	elgg_register_plugin_hook_handler('cron', 'daily', '\ColdTrick\Digest\Cron::sendDigests');
 	
-	elgg_register_plugin_hook_handler("public_pages", "walled_garden", "digest_walled_garden_hook");
-	
-	elgg_register_plugin_hook_handler("register", "menu:groups:my_status", "digest_menu_groups_my_status_hook");
-	
+	elgg_register_plugin_hook_handler('public_pages', 'walled_garden', '\ColdTrick\Digest\Site::extendWalledGardenPages');
+		
 	// register events
 	elgg_register_event_handler('leave', 'group', '\ColdTrick\Digest\Groups::removeDigestSettingOnLeave');
 	

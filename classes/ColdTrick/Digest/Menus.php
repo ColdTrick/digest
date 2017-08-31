@@ -68,4 +68,40 @@ class Menus {
 		
 		return $return_value;
 	}
+	
+	/**
+	 * Adds a link to the digest settings for the groups
+	 *
+	 * @param string $hook         the name of the hook
+	 * @param string $type         the type of the hook
+	 * @param array  $return_value current return value
+	 * @param array  $params       supplied params
+	 *
+	 * @return array
+	 */
+	public static function registerGroupStatusMenuItems($hook, $type, $return_value, $params) {
+		
+		if (!digest_group_enabled()) {
+			return;
+		}
+		
+		$user = elgg_get_logged_in_user_entity();
+		$group = elgg_get_page_owner_entity();
+		if (!($user instanceof \ElggUser) || !($group instanceof \ElggGroup)) {
+			return;
+		}
+		
+		if (!$group->isMember($user)) {
+			return;
+		}
+		
+		$return_value[] = \ElggMenuItem::factory([
+			'name' => 'digest',
+			'text' => elgg_echo('digest:usersettings:groups:title'),
+			'href' => "digest/user/{$user->username}",
+			'is_trusted' => true,
+		]);
+		
+		return $return_value;
+	}
 }
