@@ -13,7 +13,6 @@ define("DIGEST_INTERVAL_MONTHLY", "monthly");
 require_once(dirname(__FILE__) . "/lib/events.php");
 require_once(dirname(__FILE__) . "/lib/functions.php");
 require_once(dirname(__FILE__) . "/lib/hooks.php");
-require_once(dirname(__FILE__) . "/lib/page_handlers.php");
 
 // register elgg events
 elgg_register_event_handler("init", "system", "digest_init");
@@ -60,4 +59,33 @@ function digest_init() {
 	elgg_register_action("digest/update/groupsettings", dirname(__FILE__) . "/actions/update/groupsettings.php");
 	
 }
-	
+
+/**
+ * The digest page handler
+ *
+ * @param array $page the page elements
+ *
+ * @return bool
+ */
+function digest_page_handler($page) {
+
+	switch ($page[0]) {
+		case 'test':
+			echo elgg_view_resource('digest/test');
+			return true;
+		case 'show':
+			echo elgg_view_resource('digest/show');
+			return true;
+		case 'unsubscribe':
+			include(dirname(dirname(__FILE__)) . '/procedures/unsubscribe.php');
+			return true;
+		case 'user':
+		default:
+			if (!empty($page[1])) {
+				set_input('username', $page[1]);
+			}
+			
+			echo elgg_view_resource('digest/usersettings');
+			return true;
+	}
+}
