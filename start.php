@@ -17,7 +17,6 @@ require_once(dirname(__FILE__) . "/lib/page_handlers.php");
 
 // register elgg events
 elgg_register_event_handler("init", "system", "digest_init");
-elgg_register_event_handler("pagesetup", "system", "digest_pagesetup");
 
 /**
  * gets called when the system initializes
@@ -39,6 +38,9 @@ function digest_init() {
 	elgg_extend_view("groups/edit", "digest/groupsettings/form", 400);
 	
 	// register plugin hooks
+	elgg_register_plugin_hook_handler('register', 'menu:page', '\ColdTrick\Digest\Menus::registerPageMenuItems');
+	elgg_register_plugin_hook_handler('register', 'menu:theme_sandbox', '\ColdTrick\Digest\Menus::registerThemeSandboxMenuItems');
+	
 	elgg_register_plugin_hook_handler("register", "user", "digest_register_user_hook");
 	
 	elgg_register_plugin_hook_handler("cron", "daily", "digest_cron_handler");
@@ -57,34 +59,5 @@ function digest_init() {
 	elgg_register_action("digest/update/usersettings", dirname(__FILE__) . "/actions/update/usersettings.php");
 	elgg_register_action("digest/update/groupsettings", dirname(__FILE__) . "/actions/update/groupsettings.php");
 	
-}
-
-/**
- * gets called just before the first output is generated
- *
- * @return void
- */
-function digest_pagesetup() {
-	
-	if (elgg_is_logged_in()) {
-		$page_owner = elgg_get_page_owner_entity();
-		if (elgg_instanceof($page_owner, "user")) {
-			elgg_register_menu_item("page", array(
-				"name" => "digest",
-				"text" => elgg_echo("digest:page_menu:settings"),
-				"href" => "digest/user/" . $page_owner->username,
-				"context" => "settings"
-			));
-		}
-		
-		elgg_register_menu_item("page", array(
-			"name" => "digest",
-			"text" => elgg_echo("digest:page_menu:theme_preview"),
-			"href" => "digest/test",
-			"context" => "theme_preview"
-		));
-		
-		elgg_register_admin_menu_item("administer", "digest", "statistics");
-	}
 }
 	
