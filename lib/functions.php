@@ -970,17 +970,6 @@ function digest_get_group_users($group_guid, $interval_settings, $include_never_
 }
 
 /**
- * Custom sql callback to convert rows to guids
- *
- * @param stdObj $row the row to convert
- *
- * @return int
- */
-function digest_row_to_guid($row) {
-	return (int) $row->guid;
-}
-
-/**
  * Custom sql callback to convert rows to arrays
  *
  * @param stdObj $row the row to convert
@@ -1426,7 +1415,9 @@ function digest_process($settings) {
 		$options = array(
 			"type" => "group",
 			"limit" => false,
-			"callback" => "digest_row_to_guid"
+			"callback" => function($row) {
+				return (int) $row->guid;
+			},
 		);
 		
 		if ($limit = (int) elgg_extract("group_limit", $settings, 0)) {
