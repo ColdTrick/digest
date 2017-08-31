@@ -1,13 +1,13 @@
 <?php
 
-$plugin = $vars["entity"];
+$plugin = elgg_extract('entity', $vars);
 
-$noyes_options = array(
+$noyes_options = [
 	"no" => elgg_echo("option:no"),
-	"yes" => elgg_echo("option:yes")
-);
+	"yes" => elgg_echo("option:yes"),
+];
 	
-$distribution_options_week = array(
+$distribution_options_week = [
 	0 => elgg_echo("digest:day:sunday"),
 	1 => elgg_echo("digest:day:monday"),
 	2 => elgg_echo("digest:day:tuesday"),
@@ -16,18 +16,18 @@ $distribution_options_week = array(
 	5 => elgg_echo("digest:day:friday"),
 	6 => elgg_echo("digest:day:saturday"),
 	"distributed" => elgg_echo("digest:distribution:distributed"),
-);
+];
 
 $distribution_options_month = array_combine(range(1, 28), range(1, 28)); // both ranges are needed to keep keys and values same value. 28 is max to prevent complex issues with last day of month
 $distribution_options_month["distributed"] = elgg_echo("digest:distribution:distributed");
 
-$site_default_checked = array(
+$site_default_checked = [
 	DIGEST_INTERVAL_NONE => "",
 	DIGEST_INTERVAL_DAILY => "",
 	DIGEST_INTERVAL_WEEKLY => "",
 	DIGEST_INTERVAL_FORTNIGHTLY => "",
-	DIGEST_INTERVAL_MONTHLY => ""
-);
+	DIGEST_INTERVAL_MONTHLY => "",
+];
 
 $group_default_checked = $site_default_checked;
 
@@ -54,8 +54,8 @@ $settings_interval .= "</tr>";
 
 $settings_interval .= "<tr>";
 $settings_interval .= "<td>" . elgg_echo("digest:settings:production") . "<span title='" . htmlspecialchars(elgg_echo("digest:settings:production:description"), ENT_QUOTES, "UTF-8", false) . "'>" . elgg_view_icon("info", "mlm") .  "</span></td>";
-$settings_interval .= "<td class='center'>" . elgg_view("input/dropdown", array("name" => "params[in_production]", "options_values" => $noyes_options, "value" => $plugin->in_production)) . "</td>";
-$settings_interval .= "<td class='center'>" . elgg_view("input/dropdown", array("name" => "params[group_production]", "options_values" => $noyes_options, "value" => $plugin->group_production)) . "</td>";
+$settings_interval .= "<td class='center'>" . elgg_view("input/select", array("name" => "params[in_production]", "options_values" => $noyes_options, "value" => $plugin->in_production)) . "</td>";
+$settings_interval .= "<td class='center'>" . elgg_view("input/select", array("name" => "params[group_production]", "options_values" => $noyes_options, "value" => $plugin->group_production)) . "</td>";
 $settings_interval .= "<td>&nbsp;</td>";
 $settings_interval .= "</tr>";
 
@@ -81,76 +81,91 @@ $settings_interval .= "<tr>";
 $settings_interval .= "<td><span class='plm'>" . elgg_echo("digest:interval:weekly") . "</span></td>";
 $settings_interval .= "<td class='center'><input type='radio' name='params[site_default]' value='" . DIGEST_INTERVAL_WEEKLY . "' " . $site_default_checked[DIGEST_INTERVAL_WEEKLY] . " title='" . elgg_echo("digest:interval:weekly") . "'/></td>";
 $settings_interval .= "<td class='center'><input type='radio' name='params[group_default]' value='" . DIGEST_INTERVAL_WEEKLY . "' " . $group_default_checked[DIGEST_INTERVAL_WEEKLY] . " title='" . elgg_echo("digest:interval:weekly") . "'/></td>";
-$settings_interval .= "<td>" . elgg_view("input/dropdown", array("name" => "params[weekly_distribution]", "options_values" => $distribution_options_week, "value" => $plugin->weekly_distribution)) . "</td>";
+$settings_interval .= "<td>" . elgg_view("input/select", array("name" => "params[weekly_distribution]", "options_values" => $distribution_options_week, "value" => $plugin->weekly_distribution)) . "</td>";
 $settings_interval .= "</tr>";
 
 $settings_interval .= "<tr>";
 $settings_interval .= "<td><span class='plm'>" .  elgg_echo("digest:interval:fortnightly") . "</span></td>";
 $settings_interval .= "<td class='center'><input type='radio' name='params[site_default]' value='" . DIGEST_INTERVAL_FORTNIGHTLY . "' " . $site_default_checked[DIGEST_INTERVAL_FORTNIGHTLY] . " title='" . elgg_echo("digest:interval:fortnightly") . "'/></td>";
 $settings_interval .= "<td class='center'><input type='radio' name='params[group_default]' value='" . DIGEST_INTERVAL_FORTNIGHTLY . "' " . $group_default_checked[DIGEST_INTERVAL_FORTNIGHTLY] . " title='" . elgg_echo("digest:interval:fortnightly") . "'/></td>";
-$settings_interval .= "<td>" . elgg_view("input/dropdown", array("name" => "params[fortnightly_distribution]", "options_values" => $distribution_options_week, "value" => $plugin->fortnightly_distribution)) . "</td>";
+$settings_interval .= "<td>" . elgg_view("input/select", array("name" => "params[fortnightly_distribution]", "options_values" => $distribution_options_week, "value" => $plugin->fortnightly_distribution)) . "</td>";
 $settings_interval .= "</tr>";
 
 $settings_interval .= "<tr>";
 $settings_interval .= "<td><span class='plm'>" .  elgg_echo("digest:interval:monthly") . "</span></td>";
 $settings_interval .= "<td class='center'><input type='radio' name='params[site_default]' value='" . DIGEST_INTERVAL_MONTHLY . "' " . $site_default_checked[DIGEST_INTERVAL_MONTHLY] . " title='" . elgg_echo("digest:interval:monthly") . "'/></td>";
 $settings_interval .= "<td class='center'><input type='radio' name='params[group_default]' value='" . DIGEST_INTERVAL_MONTHLY . "' " . $group_default_checked[DIGEST_INTERVAL_MONTHLY] . " title='" . elgg_echo("digest:interval:monthly") . "'/></td>";
-$settings_interval .= "<td>" . elgg_view("input/dropdown", array("name" => "params[monthly_distribution]", "options_values" => $distribution_options_month, "value" => $plugin->monthly_distribution)) . "</td>";
+$settings_interval .= "<td>" . elgg_view("input/select", array("name" => "params[monthly_distribution]", "options_values" => $distribution_options_month, "value" => $plugin->monthly_distribution)) . "</td>";
 $settings_interval .= "</tr>";
 
 $settings_interval .= "</table>";
 
 // Should we include user who never logged in
-$settings_interval .= "<div>";
-$settings_interval .= elgg_echo("digest:settings:never:include");
-$settings_interval .= "&nbsp;" . elgg_view("input/dropdown", array("name" => "params[include_never_logged_in]", "options_values" => $noyes_options, "value" => $plugin->include_never_logged_in));
-$settings_interval .= "</div>";
+
+$settings_interval .= elgg_view_field([
+	'#type' => 'select',
+	'#label' => elgg_echo('digest:settings:never:include'),
+	'name' => 'params[include_never_logged_in]',
+	'options_values' => $noyes_options,
+	'value' => $plugin->include_never_logged_in,
+]);
 
 // add custom header and footer to every digest
-$custom_text = "<div class='mtm'>";
-$custom_text .= "<label>" . elgg_echo("digest:settings:custom_text:site:header") . "</label>";
-$custom_text .= "<div>" . elgg_view("input/longtext", array("name" => "params[custom_text_site_header]", "value" => $plugin->custom_text_site_header)) . "</div>";
-$custom_text .= "</div>";
-	
-$custom_text .= "<div class='mtm'>";
-$custom_text .= "<label>" . elgg_echo("digest:settings:custom_text:site:footer") . "</label>";
-$custom_text .= "<div>" . elgg_view("input/longtext", array("name" => "params[custom_text_site_footer]", "value" => $plugin->custom_text_site_footer)) . "</div>";
-$custom_text .= "</div>";
+$text_sections = [
+	'custom_text_site_header' => elgg_echo('digest:settings:custom_text:site:header'),
+	'custom_text_site_footer' => elgg_echo('digest:settings:custom_text:site:footer'),
+	'custom_text_group_header' => elgg_echo('digest:settings:custom_text:group:header'),
+	'custom_text_group_footer' => elgg_echo('digest:settings:custom_text:group:footer'),
+];
 
-$custom_text .= "<div class='mtm'>";
-$custom_text .= "<label>" . elgg_echo("digest:settings:custom_text:group:header") . "</label>";
-$custom_text .= "<div>" . elgg_view("input/longtext", array("name" => "params[custom_text_group_header]", "value" => $plugin->custom_text_group_header)) . "</div>";
-$custom_text .= "</div>";
-	
-$custom_text .= "<div class='mtm'>";
-$custom_text .= "<label>" . elgg_echo("digest:settings:custom_text:group:footer") . "</label>";
-$custom_text .= "<div>" . elgg_view("input/longtext", array("name" => "params[custom_text_group_footer]", "value" => $plugin->custom_text_group_footer)) . "</div>";
-$custom_text .= "</div>";
+$custom_text = '';
+foreach ($text_sections as $section_name => $section_label) {
+	$custom_text .= elgg_view_field([
+		'#type' => 'longtext',
+		'#label' => $section_label,
+		'name' => "params[{$section_name}]",
+		'value' => $plugin->{$section_name},
+	]);
+}
 
 // multi-core support
 $multi_core = "<div class='elgg-admin-notices pbn'><p>" . elgg_echo("digest:settings:multi_core:warning") . "</p></div>";
 
-$multi_core .= "<div>";
-$multi_core .= elgg_echo("digest:settings:multi_core:number");
-$multi_core .= elgg_view("input/dropdown", array("name" => "params[multi_core]", "value" => $plugin->multi_core, "options" => array(1, 2, 4, 8), "class" => "mls"));
-$multi_core .= "</div>";
+$multi_core .= elgg_view_field([
+	'#type' => 'select',
+	'#label' => elgg_echo('digest:settings:multi_core:number'),
+	'name' => 'params[multi_core]',
+	'value' => $plugin->multi_core,
+	'options' => [1, 2, 4, 8],
+]);
 
 // stats
-$stats = "<div>";
-$stats .= elgg_view("output/confirmlink", array(
-	"href" => "action/digest/reset_stats",
-	"text" => elgg_echo("digest:settings:stats:reset"),
-	"class" => "elgg-button elgg-button-action float"
-));
-$stats .= "</div>";
+$stats = elgg_view('output/url', [
+	'href' => 'action/digest/reset_stats',
+	'text' => elgg_echo('digest:settings:stats:reset'),
+	'class' => 'elgg-button elgg-button-action',
+	'confirm' => true,
+]);
 
 // output to screen
-echo "<div class='elgg-admin-notices pbn'><p>" . elgg_echo("digest:settings:notice") . "</p></div>";
+echo "<div class='elgg-admin-notices pbn'><p>" . elgg_echo('digest:settings:notice') . "</p></div>";
 
-echo elgg_view_module("inline", elgg_echo("digest:settings:interval:title") . "<span title='" . htmlspecialchars(elgg_echo("digest:settings:interval:description"), ENT_QUOTES, "UTF-8", false) . "'>" . elgg_view_icon("info", "mlm") .  "</span>", $settings_interval);
+$interval_info = elgg_view_icon('info', [
+	'class' => 'mlm',
+	'title' => elgg_echo('digest:settings:interval:description'),
+]);
+echo elgg_view_module('inline', elgg_echo('digest:settings:interval:title') . $interval_info, $settings_interval);
 
-echo elgg_view_module("inline", elgg_echo("digest:settings:custom_text:title") . "<span title='" . htmlspecialchars(elgg_echo("digest:settings:custom_text:description"), ENT_QUOTES, "UTF-8", false) . "'>" . elgg_view_icon("info", "mlm") .  "</span>", $custom_text);
+$custom_text_info = elgg_view_icon('info', [
+	'class' => 'mlm',
+	'title' => elgg_echo('digest:settings:custom_text:description'),
+]);
+echo elgg_view_module('inline', elgg_echo('digest:settings:custom_text:title') . $custom_text_info, $custom_text);
 
-echo elgg_view_module("inline", elgg_echo("digest:settings:multi_core:title") . "<span title='" . htmlspecialchars(elgg_echo("digest:settings:multi_core:description"), ENT_QUOTES, "UTF-8", false) . "'>" . elgg_view_icon("info", "mlm") .  "</span>", $multi_core);
+$multi_core_info = elgg_view_icon('info', [
+	'class' => 'mlm',
+	'title' => elgg_echo('digest:settings:multi_core:description'),
+]);
+echo elgg_view_module('inline', elgg_echo('digest:settings:multi_core:title') . $multi_core_info, $multi_core);
 
-echo elgg_view_module("inline", elgg_echo("digest:settings:stats:title"), $stats);
+echo elgg_view_module('inline', elgg_echo('digest:settings:stats:title'), $stats);

@@ -74,11 +74,7 @@ function digest_page_handler($page) {
 			return true;
 		case 'user':
 		default:
-			if (!empty($page[1])) {
-				set_input('username', $page[1]);
-			}
-			
-			echo elgg_view_resource('digest/usersettings');
+			echo elgg_view_resource('digest/usersettings', ['username' => elgg_extract(1, $page)]);
 			return true;
 	}
 }
