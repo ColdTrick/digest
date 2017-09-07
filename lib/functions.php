@@ -24,7 +24,7 @@ function digest_site(ElggUser $user, $interval) {
 	
 	$result = false;
 	
-	if (empty($user) || !elgg_instanceof($user, "user", null, "ElggUser")) {
+	if (!($user instanceof ElggUser)) {
 		return $result;
 	}
 	
@@ -139,7 +139,7 @@ function digest_group(ElggGroup $group, ElggUser $user, $interval) {
 	}
 	
 	// do we have a group and user
-	if (empty($group) || !elgg_instanceof($group, "group", null, "ElggGroup") || empty($user) || !elgg_instanceof($user, "user", null, "ElggUser")) {
+	if (!($group instanceof ElggGroup) || !($user instanceof ElggUser)) {
 		return $result;
 	}
 	
@@ -283,7 +283,7 @@ function digest_send_mail(ElggUser $user, $subject, $html_body, $plain_link = ""
 	$result = false;
 	
 	// validate input
-	if (empty($user) || !elgg_instanceof($user, "user", null, "ElggUser") || empty($subject) || empty($html_body)) {
+	if (!($user instanceof ElggUser) || empty($subject) || empty($html_body)) {
 		return $result;
 	}
 	
@@ -408,12 +408,13 @@ function digest_readable_time($microtime) {
 function digest_group_enabled() {
 	static $result;
 	
-	if (!isset($result)) {
-		$result = false;
-		
-		if (elgg_get_plugin_setting("group_production", "digest") == "yes") {
-			$result = true;
-		}
+	if (isset($result)) {
+		return $result;
+	}
+	
+	$result = false;
+	if (elgg_get_plugin_setting('group_production', 'digest') === 'yes') {
+		$result = true;
 	}
 	
 	return $result;
@@ -427,12 +428,13 @@ function digest_group_enabled() {
 function digest_site_enabled() {
 	static $result;
 
-	if (!isset($result)) {
-		$result = false;
-			
-		if (elgg_get_plugin_setting("in_production", "digest") == "yes") {
-			$result = true;
-		}
+	if (isset($result)) {
+		return $result;
+	}
+	
+	$result = false;
+	if (elgg_get_plugin_setting('in_production', 'digest') === 'yes') {
+		$result = true;
 	}
 
 	return $result;
@@ -447,21 +449,24 @@ function digest_site_enabled() {
  * @return bool|string false | unsubscribe link
  */
 function digest_create_unsubscribe_link($guid, ElggUser $user) {
-	global $CONFIG;
-	
-	$result = false;
 	
 	$guid = sanitise_int($guid, false);
 	
-	if (!empty($guid) && !empty($user) && elgg_instanceof($user, "user", null, "ElggUser")) {
-		$site_secret = get_site_secret();
-		
-		$code = md5($guid . $site_secret . $user->getGUID() . $user->time_created);
-		
-		$result = elgg_get_site_url() . "digest/unsubscribe?guid=" . $guid . "&user_guid=" . $user->getGUID() . "&code=" . $code;
+	if (empty($guid) || !($user instanceof ElggUser)) {
+		return false;
 	}
 	
-	return $result;
+	$site_secret = get_site_secret();
+	
+	$code = md5($guid . $site_secret . $user->getGUID() . $user->time_created);
+	
+	$url = elgg_http_add_url_query_elements('digest/unsubscribe', [
+		'guid' => $guid,
+		'user_guid'  => $user->getGUID(),
+		'code' => $code,
+	]);
+	
+	return elgg_normalize_url($url);
 }
 
 /**
@@ -478,17 +483,15 @@ function digest_validate_unsubscribe_code($guid, ElggUser $user, $code) {
 	
 	$guid = sanitise_int($guid, false);
 	
-	if (!empty($guid) && !empty($user) && elgg_instanceof($user, "user", null, "ElggUser") && !empty($code)) {
-		$site_secret = get_site_secret();
-		
-		$valid_code = md5($guid . $site_secret . $user->getGUID() . $user->time_created);
-		
-		if ($code === $valid_code) {
-			$result = true;
-		}
+	if (empty($guid) || !($user instanceof ElggUser) || empty($code)) {
+		return false;
 	}
 	
-	return $result;
+	$site_secret = get_site_secret();
+	
+	$valid_code = md5($guid . $site_secret . $user->getGUID() . $user->time_created);
+	
+	return ($code === $valid_code);
 }
 
 /**
@@ -588,13 +591,15 @@ function digest_prepare_run($refresh = false) {
 function digest_get_default_site_interval() {
 	static $result;
 	
-	if (!isset($result)) {
-		$result = DIGEST_INTERVAL_NONE;
-		
-		$setting = elgg_get_plugin_setting("site_default", "digest");
-		if (!empty($setting)) {
-			$result = $setting;
-		}
+	if (isset($result)) {
+		return $result;
+	}
+	
+	$result = DIGEST_INTERVAL_NONE;
+	
+	$setting = elgg_get_plugin_setting('site_default', 'digest');
+	if (!empty($setting)) {
+		$result = $setting;
 	}
 	
 	return $result;
@@ -608,13 +613,15 @@ function digest_get_default_site_interval() {
 function digest_get_default_group_interval() {
 	static $result;
 	
-	if (!isset($result)) {
-		$result = DIGEST_INTERVAL_NONE;
-		
-		$setting = elgg_get_plugin_setting("group_default", "digest");
-		if (!empty($setting)) {
-			$result = $setting;
-		}
+	if (isset($result)) {
+		return $result;
+	}
+	
+	$result = DIGEST_INTERVAL_NONE;
+	
+	$setting = elgg_get_plugin_setting('group_default', 'digest');
+	if (!empty($setting)) {
+		$result = $setting;
 	}
 	
 	return $result;
@@ -627,23 +634,22 @@ function digest_get_default_group_interval() {
  *
  * @return string|bool
  */
-function digest_get_online_url($params = array()) {
-	$result = false;
+function digest_get_online_url($params = []) {
 	
 	if (empty($params) || !is_array($params)) {
-		return $result;
+		return false;
 	}
 	
-	$base_url = elgg_get_site_url() . "digest/show";
+	$base_url = elgg_get_site_url() . 'digest/show';
 	
-	$url_params = array(
-		"ts_lower" => $params["ts_lower"],
-		"ts_upper" => $params["ts_upper"],
-		"interval" => $params["interval"]
-	);
+	$url_params = [
+		'ts_lower' => $params['ts_lower'],
+		'ts_upper' => $params['ts_upper'],
+		'interval' => $params['interval'],
+	];
 	
-	if (!empty($params["group"])) {
-		$url_params["group_guid"] = $params["group"]->getGUID();
+	if (elgg_extract('group', $params) instanceof ElggGroup) {
+		$url_params['group_guid'] = $params['group']->getGUID();
 	}
 	
 	return elgg_http_add_url_query_elements($base_url, $url_params);
@@ -1239,12 +1245,14 @@ function digest_compress_statistics($stats) {
 function digest_generate_commandline_secret() {
 	static $result;
 	
-	if (!isset($result)) {
-		$site_secret = get_site_secret();
-		$digest_plugin = elgg_get_plugin_from_id("digest");
-		
-		$result = md5($digest_plugin->getGUID() . $site_secret . $digest_plugin->time_created);
+	if (isset($result)) {
+		return $result;
 	}
+	
+	$site_secret = get_site_secret();
+	$digest_plugin = elgg_get_plugin_from_id('digest');
+	
+	$result = md5($digest_plugin->getGUID() . $site_secret . $digest_plugin->time_created);
 	
 	return $result;
 }
@@ -1257,18 +1265,14 @@ function digest_generate_commandline_secret() {
  * @return bool
  */
 function digest_validate_commandline_secret($secret) {
-	$result = false;
 	
-	if (!empty($secret)) {
-		$correct_secret = digest_generate_commandline_secret();
-		if (!empty($correct_secret)) {
-			if ($secret === $correct_secret) {
-				$result = true;
-			}
-		}
+	if (empty($secret)) {
+		return false;
 	}
 	
-	return $result;
+	$correct_secret = digest_generate_commandline_secret();
+	
+	return ($secret === $correct_secret);
 }
 
 /**
