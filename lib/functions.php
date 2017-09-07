@@ -479,7 +479,6 @@ function digest_create_unsubscribe_link($guid, ElggUser $user) {
  * @return bool
  */
 function digest_validate_unsubscribe_code($guid, ElggUser $user, $code) {
-	$result = false;
 	
 	$guid = sanitise_int($guid, false);
 	
