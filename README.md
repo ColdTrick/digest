@@ -1,5 +1,10 @@
 # Digest
 
+[![Build Status](https://scrutinizer-ci.com/g/ColdTrick/digest/badges/build.png?b=master)](https://scrutinizer-ci.com/g/ColdTrick/digest/build-status/master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ColdTrick/digest/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ColdTrick/digest/?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/coldtrick/digest/v/stable.svg)](https://packagist.org/packages/coldtrick/digest)
+[![License](https://poser.pugx.org/coldtrick/digest/license.svg)](https://packagist.org/packages/coldtrick/digest)
+
 Send out a digest to your users
 
 ## Features
