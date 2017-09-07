@@ -16,7 +16,6 @@ global $interval_ts_lower;
  * @return bool|int true (mail sent successfull) || false (some error) || -1 (no content)
  */
 function digest_site(ElggUser $user, $interval) {
-	global $SESSION;
 	global $interval_ts_upper;
 	global $interval_ts_lower;
 	
@@ -39,11 +38,8 @@ function digest_site(ElggUser $user, $interval) {
 	$current_user = elgg_get_logged_in_user_entity();
 	
 	// impersonate new user
-	$SESSION["user"] = $user;
-	$SESSION["username"] = $user->username;
-	$SESSION["name"] = $user->name;
-	$SESSION["guid"] = $user->getGUID();
-	$SESSION["id"] = $user->getGUID();
+	$session = elgg_get_session();
+	$session->setLoggedInUser($user);
 	
 	// prepare some vars for the different views
 	$vars = array(
@@ -106,17 +102,10 @@ function digest_site(ElggUser $user, $interval) {
 	unset($userdata);
 	
 	// restore current user
-	$SESSION["user"] = $current_user;
-	if (elgg_is_logged_in()) {
-		$SESSION["username"] = $current_user->username;
-		$SESSION["name"] = $current_user->name;
-		$SESSION["guid"] = $current_user->getGUID();
-		$SESSION["id"] = $current_user->getGUID();
+	if (!empty($current_user)) {
+		$session->setLoggedInUser($current_user);
 	} else {
-		unset($SESSION["username"]);
-		unset($SESSION["name"]);
-		unset($SESSION["guid"]);
-		unset($SESSION["id"]);
+		$session->invalidate();
 	}
 	
 	// to save memory
@@ -135,7 +124,6 @@ function digest_site(ElggUser $user, $interval) {
  * @return bool|int true (mail sent successfull) || false (some error) || -1 (no content)
  */
 function digest_group(ElggGroup $group, ElggUser $user, $interval) {
-	global $SESSION;
 	global $interval_ts_upper;
 	global $interval_ts_lower;
 	global $is_admin;
@@ -165,11 +153,8 @@ function digest_group(ElggGroup $group, ElggUser $user, $interval) {
 	$current_user = elgg_get_logged_in_user_entity();
 	
 	// impersonate new user
-	$SESSION["user"] = $user;
-	$SESSION["username"] = $user->username;
-	$SESSION["name"] = $user->name;
-	$SESSION["guid"] = $user->getGUID();
-	$SESSION["id"] = $user->getGUID();
+	$session = elgg_get_session();
+	$session->setLoggedInUser($user);
 	
 	// prepare some vars for the different views
 	$vars = array(
@@ -233,17 +218,10 @@ function digest_group(ElggGroup $group, ElggUser $user, $interval) {
 	unset($userdata);
 	
 	// restore current user
-	$SESSION["user"] = $current_user;
-	if (elgg_is_logged_in()) {
-		$SESSION["username"] = $current_user->username;
-		$SESSION["name"] = $current_user->name;
-		$SESSION["guid"] = $current_user->getGUID();
-		$SESSION["id"] = $current_user->getGUID();
+	if (!empty($current_user)) {
+		$session->setLoggedInUser($current_user);
 	} else {
-		unset($SESSION["username"]);
-		unset($SESSION["name"]);
-		unset($SESSION["guid"]);
-		unset($SESSION["id"]);
+		$session->invalidate();
 	}
 	
 	// save memory
