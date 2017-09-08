@@ -19,7 +19,7 @@ class Router {
 			case 'test':
 				
 				$vars['digest'] = elgg_extract(1, $page, 'site');
-				$vars['interval'] = elgg_extract(2, DIGEST_INTERVAL_MONTHLY);
+				$vars['interval'] = elgg_extract(2, $page, DIGEST_INTERVAL_MONTHLY);
 				$vars['group_guid'] = (int) elgg_extract(3, $page);
 				
 				echo elgg_view_resource('digest/test', $vars);
