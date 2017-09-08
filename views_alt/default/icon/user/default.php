@@ -17,7 +17,7 @@
 
 $user = elgg_extract('entity', $vars, elgg_get_logged_in_user_entity());
 $size = elgg_extract('size', $vars, 'medium');
-$icon_sizes = elgg_get_config('icon_sizes');
+$icon_sizes = elgg_get_icon_sizes('user');
 if (!array_key_exists($size, $icon_sizes)) {
 	$size = 'medium';
 }

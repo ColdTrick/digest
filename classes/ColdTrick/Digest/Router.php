@@ -17,7 +17,12 @@ class Router {
 		
 		switch ($page[0]) {
 			case 'test':
-				echo elgg_view_resource('digest/test');
+				
+				$vars['digest'] = elgg_extract(1, $page, 'site');
+				$vars['interval'] = elgg_extract(2, DIGEST_INTERVAL_MONTHLY);
+				$vars['group_guid'] = (int) elgg_extract(3, $page);
+				
+				echo elgg_view_resource('digest/test', $vars);
 				return true;
 			case 'show':
 				echo elgg_view_resource('digest/show');
@@ -26,7 +31,6 @@ class Router {
 				echo elgg_view_resource('digest/unsubscribe');
 				return true;
 			case 'user':
-			default:
 				$vars['username'] = elgg_extract(1, $page);
 				
 				echo elgg_view_resource('digest/usersettings', $vars);
