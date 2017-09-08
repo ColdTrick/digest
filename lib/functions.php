@@ -1248,10 +1248,14 @@ function digest_generate_commandline_secret() {
 		return $result;
 	}
 	
-	$site_secret = get_site_secret();
 	$digest_plugin = elgg_get_plugin_from_id('digest');
 	
-	$result = md5($digest_plugin->getGUID() . $site_secret . $digest_plugin->time_created);
+	$hmac = elgg_build_hmac([
+		$digest_plugin->guid,
+		$digest_plugin->time_created,
+	]);
+	
+	$result = $hmac->getToken();
 	
 	return $result;
 }

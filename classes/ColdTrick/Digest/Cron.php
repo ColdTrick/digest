@@ -17,9 +17,8 @@ class Cron {
 	public static function sendDigests($hook, $type, $return_value, $params) {
 		global $interval_ts_upper;
 		
-		if (empty($params) || !is_array($params)) {
-			return;
-		}
+		echo 'Starting Digest processing' . PHP_EOL;
+		elgg_log('Starting Digest processing', 'NOTICE');
 		
 		$interval_ts_upper = (int) elgg_extract('time', $params, time());
 		
@@ -34,72 +33,89 @@ class Cron {
 		
 		// is multicore support enabled
 		$cores = (int) elgg_get_plugin_setting('multi_core', 'digest');
-		if ($cores > 1) {
-			// add some settings for the commandline
-			$digest_settings['memory_limit'] = ini_get('memory_limit');
-			$digest_settings['host'] = $_SERVER['HTTP_HOST'];
-			$digest_settings['secret'] = digest_generate_commandline_secret();
-			if (isset($_SERVER['HTTPS'])) {
-				$digest_settings['https'] = $_SERVER['HTTPS'];
-			}
+		if ($cores <= 1) {
+			echo '- Using single processing' . PHP_EOL;
+			elgg_log('- Using single processing', 'NOTICE');
 			
-			// shoul we include users who have never logged in
-			$include_never_logged_in = false;
-			if (elgg_get_plugin_setting('include_never_logged_in', 'digest') == 'yes') {
-				$include_never_logged_in = true;
-			}
-			
-			// multi core is enabled now try to find out how many users/groups to send per core
-			$site_users_count = 0;
-			$site_users_interval = 0;
-			$group_count = 0;
-			$group_interval = 0;
-			
-			// site digest settings
-			if (digest_site_enabled()) {
-				$site_intervals = [
-					DIGEST_INTERVAL_DEFAULT => digest_get_default_site_interval(),
-					DIGEST_INTERVAL_WEEKLY => digest_get_default_distribution(DIGEST_INTERVAL_WEEKLY),
-					DIGEST_INTERVAL_FORTNIGHTLY => digest_get_default_distribution(DIGEST_INTERVAL_FORTNIGHTLY),
-					DIGEST_INTERVAL_MONTHLY => digest_get_default_distribution(DIGEST_INTERVAL_MONTHLY),
-					'include_never_logged_in' => $include_never_logged_in,
-				];
-				
-				$site_users = digest_get_site_users($site_intervals);
-				$site_users_count = count($site_users);
-				
-				$site_users_interval = (int) ceil($site_users_count / $cores);
-			}
-			
-			// group digest settings
-			if (digest_group_enabled()) {
-				$group_count = elgg_get_entities([
-					'type' => 'group',
-					'count' => true,
-				]);
-				
-				$group_interval = (int) ceil($group_count / $cores);
-			}
-			
-			// start processes
-			for ($i = 0; $i < $cores; $i++) {
-				$digest_settings['fork_id'] = $i;
-				
-				if ($site_users_count > 0) {
-					$digest_settings['site_offset'] = $site_users_interval * $i;
-					$digest_settings['site_limit'] = $site_users_interval;
-				}
-				
-				if ($group_count > 0) {
-					$digest_settings['group_offset'] = $group_interval * $i;
-					$digest_settings['group_limit'] = $group_interval;
-				}
-				
-				digest_start_commandline($digest_settings);
-			}
-		} else {
 			// procces the digest
 			digest_process($digest_settings);
+			
+			echo 'Done with Digest processing' . PHP_EOL;
+			elgg_log('Done with Digest processing', 'NOTICE');
+			
+			return;
 		}
+		
+		echo '- Using multicore processing' . PHP_EOL;
+		elgg_log('- Using multicore processing', 'NOTICE');
+			
+		// add some settings for the commandline
+		$digest_settings['memory_limit'] = ini_get('memory_limit');
+		$digest_settings['host'] = $_SERVER['HTTP_HOST'];
+		$digest_settings['secret'] = digest_generate_commandline_secret();
+		if (isset($_SERVER['HTTPS'])) {
+			$digest_settings['https'] = $_SERVER['HTTPS'];
+		}
+		
+		// shoul we include users who have never logged in
+		$include_never_logged_in = false;
+		if (elgg_get_plugin_setting('include_never_logged_in', 'digest') == 'yes') {
+			$include_never_logged_in = true;
+		}
+		
+		// multi core is enabled now try to find out how many users/groups to send per core
+		$site_users_count = 0;
+		$site_users_interval = 0;
+		$group_count = 0;
+		$group_interval = 0;
+		
+		// site digest settings
+		if (digest_site_enabled()) {
+			$site_intervals = [
+				DIGEST_INTERVAL_DEFAULT => digest_get_default_site_interval(),
+				DIGEST_INTERVAL_WEEKLY => digest_get_default_distribution(DIGEST_INTERVAL_WEEKLY),
+				DIGEST_INTERVAL_FORTNIGHTLY => digest_get_default_distribution(DIGEST_INTERVAL_FORTNIGHTLY),
+				DIGEST_INTERVAL_MONTHLY => digest_get_default_distribution(DIGEST_INTERVAL_MONTHLY),
+				'include_never_logged_in' => $include_never_logged_in,
+			];
+			
+			$site_users = digest_get_site_users($site_intervals);
+			$site_users_count = count($site_users);
+			
+			$site_users_interval = (int) ceil($site_users_count / $cores);
+		}
+		
+		// group digest settings
+		if (digest_group_enabled()) {
+			$group_count = elgg_get_entities([
+				'type' => 'group',
+				'count' => true,
+			]);
+			
+			$group_interval = (int) ceil($group_count / $cores);
+		}
+		
+		// start processes
+		for ($i = 0; $i < $cores; $i++) {
+			$digest_settings['fork_id'] = $i;
+			
+			if ($site_users_count > 0) {
+				$digest_settings['site_offset'] = $site_users_interval * $i;
+				$digest_settings['site_limit'] = $site_users_interval;
+			}
+			
+			if ($group_count > 0) {
+				$digest_settings['group_offset'] = $group_interval * $i;
+				$digest_settings['group_limit'] = $group_interval;
+			}
+			
+			echo "- Starting forkid: {$i}" . PHP_EOL;
+			elgg_log("- Starting forkid: {$i}", 'NOTICE');
+			
+			digest_start_commandline($digest_settings);
+		}
+		
+		echo 'Done with Digest forking' . PHP_EOL;
+		elgg_log('Done with Digest forking', 'NOTICE');
 	}
 }
