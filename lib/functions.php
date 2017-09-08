@@ -42,53 +42,57 @@ function digest_site(ElggUser $user, $interval) {
 	$session->setLoggedInUser($user);
 	
 	// prepare some vars for the different views
-	$vars = array(
-		"user" => $user,
-		"ts_lower" => $interval_ts_lower,
-		"ts_upper" => $interval_ts_upper,
-		"interval" => $interval
-	);
+	$vars = [
+		'user' => $user,
+		'ts_lower' => $interval_ts_lower,
+		'ts_upper' => $interval_ts_upper,
+		'interval' => $interval,
+	];
 	
 	// get data for user
-	$userdata = elgg_view("digest/elements/site", $vars);
+	$userdata = elgg_view('digest/elements/site', $vars);
 	
 	if (!empty($userdata)) {
 		// check if there are custom header/footer texts
 		if (!isset($custom_text_header)) {
-			$custom_text_header = "";
+			$custom_text_header = '';
 			
-			$text = elgg_get_plugin_setting("custom_text_site_header", "digest");
+			$text = elgg_get_plugin_setting('custom_text_site_header', 'digest');
 			if (!empty($text)) {
-				$custom_text_header = elgg_view_module("digest", "", "<div class='elgg-output'>" . $text . "</div>");
+				$custom_text_header = elgg_view_module('digest', '', elgg_format_element('div', ['class' => 'elgg-output'], $text));
 			}
 		}
 		
 		if (!isset($custom_text_footer)) {
-			$custom_text_footer = "";
+			$custom_text_footer = '';
 			
-			$text = elgg_get_plugin_setting("custom_text_site_footer", "digest");
+			$text = elgg_get_plugin_setting('custom_text_site_footer', 'digest');
 			if (!empty($text)) {
-				$custom_text_footer = elgg_view_module("digest", "", "<div class='elgg-output'>" . $text . "</div>");
+				$custom_text_footer = elgg_view_module('digest', '', elgg_format_element('div', ['class' => 'elgg-output'], $text));
 			}
 		}
 		
 		// there is content so send it to the user
-		$params = array(
-			"title" => elgg_get_site_entity()->name,
-			"content" => $custom_text_header . $userdata . $custom_text_footer,
-			"footer" => elgg_view("digest/elements/footer", $vars),
-			"digest_header" => elgg_view("digest/elements/header", $vars),
-			"digest_online" => elgg_view("digest/elements/online", $vars),
-			"digest_unsubscribe" => elgg_view("digest/elements/unsubscribe", $vars)
-		);
+		$params = [
+			'title' => elgg_get_site_entity()->name,
+			'content' => $custom_text_header . $userdata . $custom_text_footer,
+			'footer' => elgg_view('digest/elements/footer', $vars),
+			'digest_header' => elgg_view('digest/elements/header', $vars),
+			'digest_online' => elgg_view('digest/elements/online', $vars),
+			'digest_unsubscribe' => elgg_view('digest/elements/unsubscribe', $vars),
+		];
 		
 		// link to online view
 		$digest_online_url = digest_get_online_url($vars);
 		
 		// message_subject
-		$message_subject = elgg_echo("digest:message:title:site", array(elgg_get_site_entity()->name, elgg_echo("digest:interval:" . $interval)));
+		$message_subject = elgg_echo('digest:message:title:site', [
+			elgg_get_site_entity()->name,
+			elgg_echo("digest:interval:{$interval}"),
+		]);
+		
 		// message body
-		$message_body = elgg_view_layout("digest", $params);
+		$message_body = elgg_view_layout('digest', $params);
 		
 		// send message
 		// if succesfull mail return true
@@ -157,54 +161,59 @@ function digest_group(ElggGroup $group, ElggUser $user, $interval) {
 	$session->setLoggedInUser($user);
 	
 	// prepare some vars for the different views
-	$vars = array(
-		"user" => $user,
-		"group" => $group,
-		"ts_lower" => $interval_ts_lower,
-		"ts_upper" => $interval_ts_upper,
-		"interval" => $interval
-	);
+	$vars = [
+		'user' => $user,
+		'group' => $group,
+		'ts_lower' => $interval_ts_lower,
+		'ts_upper' => $interval_ts_upper,
+		'interval' => $interval,
+	];
 	
 	// get data for user
-	$userdata = elgg_view("digest/elements/group", $vars);
+	$userdata = elgg_view('digest/elements/group', $vars);
 	
 	if (!empty($userdata)) {
 		// check if there are custom header/footer texts
 		if (!isset($custom_text_header)) {
-			$custom_text_header = "";
+			$custom_text_header = '';
 			
-			$text = elgg_get_plugin_setting("custom_text_group_header", "digest");
+			$text = elgg_get_plugin_setting('custom_text_group_header', 'digest');
 			if (!empty($text)) {
-				$custom_text_header = elgg_view_module("digest", "", "<div class='elgg-output'>" . $text . "</div>");
+				$custom_text_header = elgg_view_module('digest', '', elgg_format_element('div', ['class' => 'elgg-output'], $text));
 			}
 		}
 		
 		if (!isset($custom_text_footer)) {
-			$custom_text_footer = "";
+			$custom_text_footer = '';
 			
-			$text = elgg_get_plugin_setting("custom_text_group_footer", "digest");
+			$text = elgg_get_plugin_setting('custom_text_group_footer', 'digest');
 			if (!empty($text)) {
-				$custom_text_footer = elgg_view_module("digest", "", "<div class='elgg-output'>" . $text . "</div>");
+				$custom_text_footer = elgg_view_module('digest', '', elgg_format_element('div', ['class' => 'elgg-output'], $text));
 			}
 		}
 		
 		// there is content so send it to the user
-		$params = array(
-			"title" => elgg_get_site_entity()->name,
-			"content" => $custom_text_header . $userdata . $custom_text_footer,
-			"footer" => elgg_view("digest/elements/footer", $vars),
-			"digest_header" => elgg_view("digest/elements/header", $vars),
-			"digest_online" => elgg_view("digest/elements/online", $vars),
-			"digest_unsubscribe" => elgg_view("digest/elements/unsubscribe", $vars)
-		);
+		$params = [
+			'title' => elgg_get_site_entity()->name,
+			'content' => $custom_text_header . $userdata . $custom_text_footer,
+			'footer' => elgg_view('digest/elements/footer', $vars),
+			'digest_header' => elgg_view('digest/elements/header', $vars),
+			'digest_online' => elgg_view('digest/elements/online', $vars),
+			'digest_unsubscribe' => elgg_view('digest/elements/unsubscribe', $vars),
+		];
 		
 		// link to online view
 		$digest_online_url = digest_get_online_url($vars);
 		
 		// message_subject
-		$message_subject = elgg_echo("digest:message:title:group", array(elgg_get_site_entity()->name, $group->name, elgg_echo("digest:interval:" . $interval)));
+		$message_subject = elgg_echo('digest:message:title:group', [
+			elgg_get_site_entity()->name,
+			$group->name,
+			elgg_echo("digest:interval:{$interval}"),
+		]);
+		
 		// message body
-		$message_body = elgg_view_layout("digest", $params);
+		$message_body = elgg_view_layout('digest', $params);
 
 		// send message
 		// if succesfull mail return true
@@ -244,26 +253,28 @@ function digest_set_interval_timestamps($interval) {
 	global $interval_ts_upper;
 	global $interval_ts_lower;
 	
-	if ($running_interval != $interval) {
-		$running_interval = $interval;
-		
-		switch ($interval) {
-			case DIGEST_INTERVAL_DAILY:
-				$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24);
-				break;
-			case DIGEST_INTERVAL_WEEKLY:
-				$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24 * 7);
-				break;
-			case DIGEST_INTERVAL_FORTNIGHTLY:
-				$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24 * 14);
-				break;
-			case DIGEST_INTERVAL_MONTHLY:
-				$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24 * 31);
-				break;
-			default:
-				throw new InvalidParameterException(elgg_echo("digest:interval:error") . ": " . $interval);
-				break;
-		}
+	if ($running_interval === $interval) {
+		return;
+	}
+	
+	$running_interval = $interval;
+	
+	switch ($interval) {
+		case DIGEST_INTERVAL_DAILY:
+			$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24);
+			break;
+		case DIGEST_INTERVAL_WEEKLY:
+			$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24 * 7);
+			break;
+		case DIGEST_INTERVAL_FORTNIGHTLY:
+			$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24 * 14);
+			break;
+		case DIGEST_INTERVAL_MONTHLY:
+			$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24 * 31);
+			break;
+		default:
+			throw new InvalidParameterException(elgg_echo('digest:interval:error') . ': ' . $interval);
+			break;
 	}
 }
 
@@ -280,11 +291,9 @@ function digest_set_interval_timestamps($interval) {
 function digest_send_mail(ElggUser $user, $subject, $html_body, $plain_link = "") {
 	global $digest_mail_send;
 	
-	$result = false;
-	
 	// validate input
 	if (!($user instanceof ElggUser) || empty($subject) || empty($html_body)) {
-		return $result;
+		return false;
 	}
 	
 	// convert css
@@ -296,19 +305,19 @@ function digest_send_mail(ElggUser $user, $subject, $html_body, $plain_link = ""
 	// email settings - prevent sending to any other address than the recipient personn
 	$to = html_email_handler_make_rfc822_address($user, false);
 	
-	$plaintext_message = "";
+	$plaintext_message = '';
 	if (!empty($plain_link)) {
 		// make a plaintext message for non HTML users
-		$plaintext_message = elgg_echo("digest:mail:plaintext:description", array($plain_link));
+		$plaintext_message = elgg_echo('digest:mail:plaintext:description', [$plain_link]);
 	}
 	
 	// send out the mail
-	$options = array(
-		"to" => $to,
-		"subject" => $subject,
-		"html_message" => $html_body,
-		"plaintext_message" => $plaintext_message
-	);
+	$options = [
+		'to' => $to,
+		'subject' => $subject,
+		'html_message' => $html_body,
+		'plaintext_message' => $plaintext_message,
+	];
 	
 	if (html_email_handler_send_email($options)) {
 		if (empty($digest_mail_send)) {
@@ -317,10 +326,10 @@ function digest_send_mail(ElggUser $user, $subject, $html_body, $plain_link = ""
 			$digest_mail_send++;
 		}
 		
-		$result = true;
+		return true;
 	}
 	
-	return $result;
+	return false;
 }
 
 /**
@@ -331,42 +340,42 @@ function digest_send_mail(ElggUser $user, $subject, $html_body, $plain_link = ""
  * @return bool|string false | human readable time value
  */
 function digest_readable_time($microtime) {
-	$time_array = array(
-		"hours" => 0,
-		"minutes" => 0,
-		"seconds" => 0,
-		"microseconds" => 0
-	);
+	$time_array = [
+		'hours' => 0,
+		'minutes' => 0,
+		'seconds' => 0,
+		'microseconds' => 0,
+	];
 	
 	$ts = (int) $microtime;
-	$time_array["microseconds"] = $microtime - $ts;
+	$time_array['microseconds'] = $microtime - $ts;
 	
-	$time_array["seconds"] = ($ts % 60);
-	$ts = $ts - $time_array["seconds"];
+	$time_array['seconds'] = ($ts % 60);
+	$ts = $ts - $time_array['seconds'];
 	
-	$time_array["minutes"] = (($ts % 3600) / 60);
-	$time_array["hours"] = (($ts - ($time_array["minutes"] * 60)) / 3600);
+	$time_array['minutes'] = (($ts % 3600) / 60);
+	$time_array['hours'] = (($ts - ($time_array['minutes'] * 60)) / 3600);
 	
 	// build result
-	$result = "";
-	if ($time_array["hours"]) {
-		$result = $time_array["hours"] . " " . elgg_echo("digest:readable:time:hours");
+	$result = '';
+	if ($time_array['hours']) {
+		$result = $time_array['hours'] . ' ' . elgg_echo('digest:readable:time:hours');
 	}
 	
-	if ($time_array["minutes"]) {
-		$result .= " " . $time_array["minutes"] . " "  . elgg_echo("digest:readable:time:minutes");
+	if ($time_array['minutes']) {
+		$result .= ' ' . $time_array['minutes'] . ' '  . elgg_echo('digest:readable:time:minutes');
 	} elseif (!empty($result)) {
-		$result .= " 00 M";
+		$result .= ' 00 M';
 	}
 	
-	if ($time_array["seconds"]) {
-		$result .= " " . $time_array["seconds"] . " "  . elgg_echo("digest:readable:time:seconds");
+	if ($time_array['seconds']) {
+		$result .= ' ' . $time_array['seconds'] . ' '  . elgg_echo('digest:readable:time:seconds');
 	} elseif (!empty($result)) {
-		$result .= " 00 sec";
+		$result .= ' 00 sec';
 	}
 	
-	if ($time_array["microseconds"]) {
-		$result .= " " . round($time_array["microseconds"] * 1000) . " " . elgg_echo("digest:readable:time:mseconds");
+	if ($time_array['microseconds']) {
+		$result .= ' ' . round($time_array['microseconds'] * 1000) . ' ' . elgg_echo('digest:readable:time:mseconds');
 	}
 	
 	return trim($result);
