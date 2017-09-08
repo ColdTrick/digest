@@ -482,75 +482,51 @@ function digest_validate_unsubscribe_code($guid, ElggUser $user, $code) {
  * @return void
  */
 function digest_prepare_run($refresh = false) {
-	global $CONFIG;
-	
 	static $run_once;
 	
 	if (isset($run_once) && ($refresh !== true)) {
 		return;
 	}
 	
+	// only let this happen once
+	$run_once = true;
+	
 	// add views and css to digest handling
 	digest_message_css();
 	
 	// let other plugins know they need to add their views/css
-	elgg_trigger_event("prepare", "digest");
+	elgg_trigger_event('prepare', 'digest');
 	
-	// undo river_comments extensions
-	elgg_unregister_event_handler("pagesetup", "system", "river_comments_setup");
-	
-	// undo more extensions
+	// undo extensions
 	// trigger pagesetup
 	elgg_view_title("dummy");
 	
-	// check for more extensions
-	if (isset($CONFIG->views->extensions)) {
-		foreach ($CONFIG->views->extensions as $view => $extensions) {
+	// remove river extensions
+	$views_service = _elgg_services()->views;
+	
+	$inspector_data = $views_service->getInspectorData();
+	if (!empty($inspector_data['extensions'])) {
+		foreach ($inspector_data['extensions'] as $view => $extensions) {
+			if (stristr($view, 'river/') === false) {
+				continue;
+			}
 			
-			if (stristr($view, "river/")) {
-				unset($CONFIG->views->extensions[$view]);
+			foreach ($extensions as $prio => $extension) {
+				$views_service->unextendView($view, $extension);
 			}
 		}
 	}
 	
 	// undo registrations on menu hooks
-	$hooks = _elgg_services()->hooks->getAllHandlers();
-	if (!empty($hooks) && isset($hooks["register"])) {
-		if (isset($hooks["register"]["menu:river"])) {
-			foreach ($hooks["register"]["menu:river"] as $prio => $callback) {
-				elgg_unregister_plugin_hook_handler("register", "menu:river", $callback);
-			}
-		}
-		
-		if (isset($hooks["register"]["menu:entity"])) {
-			foreach ($hooks["register"]["menu:river"] as $prio => $callback) {
-				elgg_unregister_plugin_hook_handler("register", "menu:entity", $callback);
-			}
-		}
-	}
-		
-	if (isset($hooks["prepare"])) {
-		if (isset($hooks["prepare"]["menu:river"])) {
-			foreach ($hooks["prepare"]["menu:river"] as $prio => $callback) {
-				elgg_unregister_plugin_hook_handler("prepare", "menu:river", $callback);
-			}
-		}
-		
-		if (isset($hooks["prepare"]["menu:entity"])) {
-			foreach ($hooks["prepare"]["menu:entity"] as $prio => $callback) {
-				elgg_unregister_plugin_hook_handler("prepare", "menu:entity", $callback);
-			}
-		}
-	}
+	elgg_clear_plugin_hook_handlers('register', 'menu:river');
+	elgg_clear_plugin_hook_handlers('prepare', 'menu:river');
+	
+	elgg_clear_plugin_hook_handlers('register', 'menu:entity');
+	elgg_clear_plugin_hook_handlers('prepare', 'menu:entity');
 	
 	// register hooks
 	elgg_register_plugin_hook_handler('view_vars', 'icon/user/default', '\ColdTrick\Digest\Views::preventUserHoverMenu');
-	
-	// set alternate view location for some views
-	elgg_set_view_location("river/elements/body", dirname(dirname(__FILE__)) . "/views_alt/", "default");
-	
-	// only let this happen once
-	$run_once = true;
+	elgg_register_plugin_hook_handler('view_vars', 'river/elements/body', '\ColdTrick\Digest\Views::preventRiverResponses');
 }
 
 /**
