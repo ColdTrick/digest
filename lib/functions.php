@@ -516,12 +516,6 @@ function digest_prepare_run($refresh = false) {
 	// undo registrations on menu hooks
 	$hooks = _elgg_services()->hooks->getAllHandlers();
 	if (!empty($hooks) && isset($hooks["register"])) {
-		if (isset($hooks["register"]["menu:user_hover"])) {
-			foreach ($hooks["register"]["menu:user_hover"] as $prio => $callback) {
-				elgg_unregister_plugin_hook_handler("register", "menu:user_hover", $callback);
-			}
-		}
-	
 		if (isset($hooks["register"]["menu:river"])) {
 			foreach ($hooks["register"]["menu:river"] as $prio => $callback) {
 				elgg_unregister_plugin_hook_handler("register", "menu:river", $callback);
@@ -536,12 +530,6 @@ function digest_prepare_run($refresh = false) {
 	}
 		
 	if (isset($hooks["prepare"])) {
-		if (isset($hooks["prepare"]["menu:user_hover"])) {
-			foreach ($hooks["prepare"]["menu:user_hover"] as $prio => $callback) {
-				elgg_unregister_plugin_hook_handler("prepare", "menu:user_hover", $callback);
-			}
-		}
-	
 		if (isset($hooks["prepare"]["menu:river"])) {
 			foreach ($hooks["prepare"]["menu:river"] as $prio => $callback) {
 				elgg_unregister_plugin_hook_handler("prepare", "menu:river", $callback);
@@ -555,8 +543,10 @@ function digest_prepare_run($refresh = false) {
 		}
 	}
 	
+	// register hooks
+	elgg_register_plugin_hook_handler('view_vars', 'icon/user/default', '\ColdTrick\Digest\Views::preventUserHoverMenu');
+	
 	// set alternate view location for some views
-	elgg_set_view_location("icon/user/default", dirname(dirname(__FILE__)) . "/views_alt/", "default");
 	elgg_set_view_location("river/elements/body", dirname(dirname(__FILE__)) . "/views_alt/", "default");
 	
 	// only let this happen once
