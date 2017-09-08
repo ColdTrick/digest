@@ -23,7 +23,7 @@ elgg_register_event_handler('init', 'system', 'digest_init');
 function digest_init() {
 		
 	// register page handler for nice url's
-	elgg_register_page_handler('digest', 'digest_page_handler');
+	elgg_register_page_handler('digest', '\ColdTrick\Digest\Router::digest');
 	
 	// extend register with subscribe option
 	elgg_extend_view('register/extend', 'digest/register');
@@ -51,30 +51,4 @@ function digest_init() {
 	
 	elgg_register_action('digest/usersettings', dirname(__FILE__) . '/actions/usersettings.php');
 	elgg_register_action('digest/groupsettings', dirname(__FILE__) . '/actions/groupsettings.php');
-}
-
-/**
- * The digest page handler
- *
- * @param array $page the page elements
- *
- * @return bool
- */
-function digest_page_handler($page) {
-
-	switch ($page[0]) {
-		case 'test':
-			echo elgg_view_resource('digest/test');
-			return true;
-		case 'show':
-			echo elgg_view_resource('digest/show');
-			return true;
-		case 'unsubscribe':
-			include(dirname(dirname(__FILE__)) . '/procedures/unsubscribe.php');
-			return true;
-		case 'user':
-		default:
-			echo elgg_view_resource('digest/usersettings', ['username' => elgg_extract(1, $page)]);
-			return true;
-	}
 }
