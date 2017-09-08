@@ -324,34 +324,6 @@ function digest_send_mail(ElggUser $user, $subject, $html_body, $plain_link = ""
 }
 
 /**
- * convert a byte value into something more readable
- *
- * @param int $value bytes to make readable
- *
- * @return bool|string  false | human readable byte value
- */
-function digest_readable_bytes($value) {
-	$result = false;
-	
-	if (!empty($value)) {
-		$neg = ($value < 0);
-		$value = abs($value);
-		
-		$sizes = array(" B", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB");
-		
-		if ($value != 0) {
-			$result = (round($value / pow(1024, ($i = floor(log($value, 1024)))), 2) . $sizes[$i]);
-		}
-		
-		if ($neg) {
-			$result = "-" . $result;
-		}
-	}
-	
-	return $result;
-}
-
-/**
  * Convert a time in microseconds to something readable
  *
  * @param int $microtime time value

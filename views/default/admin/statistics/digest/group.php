@@ -84,17 +84,17 @@ $gen_table .= "</tr>";
 	
 $gen_table .= "<tr>";
 $gen_table .= "<td>" . elgg_echo("digest:admin:stats:general:peak_memory_start") . "</td>";
-$gen_table .= "<td>" . digest_readable_bytes(elgg_extract("peak_memory_start", $general, 0)) . "</td>";
+$gen_table .= "<td>" . elgg_format_bytes(elgg_extract("peak_memory_start", $general, 0)) . "</td>";
 $gen_table .= "</tr>";
-	
+
 $gen_table .= "<tr>";
 $gen_table .= "<td>" . elgg_echo("digest:admin:stats:general:peak_memory_end") . "</td>";
-$gen_table .= "<td>" . digest_readable_bytes(elgg_extract("peak_memory_end", $general, 0)) . "</td>";
+$gen_table .= "<td>" . elgg_format_bytes(elgg_extract("peak_memory_end", $general, 0)) . "</td>";
 $gen_table .= "</tr>";
 
 $gen_table .= "<tr>";
 $gen_table .= "<td>" . elgg_echo("digest:admin:stats:total_memory") . "</td>";
-$gen_table .= "<td>" . digest_readable_bytes(elgg_extract("total_memory", $general, 0)) . "</td>";
+$gen_table .= "<td>" . elgg_format_bytes(elgg_extract("total_memory", $general, 0)) . "</td>";
 $gen_table .= "</tr>";
 	
 $gen_table .= "</table>";
@@ -179,10 +179,10 @@ $interval_table .= "</tr>";
 // memory used
 $interval_table .= "<tr>";
 $interval_table .= "<td>" . elgg_echo("digest:admin:stats:total_memory") . "</td>";
-$interval_table .= "<td>" . digest_readable_bytes($group_stats[DIGEST_INTERVAL_DAILY]["total_memory"]) . "</td>";
-$interval_table .= "<td>" . digest_readable_bytes($group_stats[DIGEST_INTERVAL_WEEKLY]["total_memory"]) . "</td>";
-$interval_table .= "<td>" . digest_readable_bytes($group_stats[DIGEST_INTERVAL_FORTNIGHTLY]["total_memory"]) . "</td>";
-$interval_table .= "<td>" . digest_readable_bytes($group_stats[DIGEST_INTERVAL_MONTHLY]["total_memory"]) . "</td>";
+$interval_table .= "<td>" . elgg_format_bytes($group_stats[DIGEST_INTERVAL_DAILY]["total_memory"]) . "</td>";
+$interval_table .= "<td>" . elgg_format_bytes($group_stats[DIGEST_INTERVAL_WEEKLY]["total_memory"]) . "</td>";
+$interval_table .= "<td>" . elgg_format_bytes($group_stats[DIGEST_INTERVAL_FORTNIGHTLY]["total_memory"]) . "</td>";
+$interval_table .= "<td>" . elgg_format_bytes($group_stats[DIGEST_INTERVAL_MONTHLY]["total_memory"]) . "</td>";
 $interval_table .= "</tr>";
 
 $interval_table .= "</table>";
