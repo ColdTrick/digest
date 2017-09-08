@@ -1286,7 +1286,6 @@ function digest_validate_commandline_secret($secret) {
  * @return void
  */
 function digest_process($settings) {
-	global $ENTITY_CACHE;
 	global $interval_ts_upper;
 	
 	// Make sending process safer by disabling max_execution_time (avoids breaks if set too low)
@@ -1305,9 +1304,6 @@ function digest_process($settings) {
 		$never_logged_in = true;
 	}
 		
-	// backup some cache
-	$entity_cache_backup = $ENTITY_CACHE;
-	
 	// should the site digest be sent
 	if (digest_site_enabled()) {
 		// prepare stats logging
@@ -1357,9 +1353,6 @@ function digest_process($settings) {
 	
 				// stats logging
 				$site_stats[$user_setting["user_interval"]]["total_time"] += (microtime(true) - $stats_mts_before);
-	
-				// reset cache
-				$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
 	
 				unset($user);
 	
@@ -1483,9 +1476,6 @@ function digest_process($settings) {
 						// stats logging
 						$group_stats[$user_setting["user_interval"]]["total_time"] += (microtime(true) - $stats_mts_before);
 	
-						// reset cache
-						$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
-	
 						unset($user);
 	
 						// stats logging of memory leak
@@ -1497,9 +1487,6 @@ function digest_process($settings) {
 					// stats logging
 					$group_stats["general"]["total_time_user_selection"] += (microtime(true) - $stats_begin_user_selection);
 				}
-	
-				// reset cache
-				$GLOBALS["ENTITY_CACHE"] = $entity_cache_backup;
 	
 				unset($group);
 	
