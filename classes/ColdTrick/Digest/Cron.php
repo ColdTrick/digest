@@ -32,7 +32,7 @@ class Cron {
 		digest_rebase_stats($interval_ts_upper);
 		
 		// is multicore support enabled
-		$cores = (int) elgg_get_plugin_setting('multi_core', 'digest');
+		$cores = digest_get_number_of_cores();
 		if ($cores <= 1) {
 			echo '- Using single processing' . PHP_EOL;
 			elgg_log('- Using single processing', 'NOTICE');

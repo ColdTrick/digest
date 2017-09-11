@@ -1564,3 +1564,39 @@ function digest_rebase_stats($timestamp) {
 		}
 	}
 }
+
+/**
+ * Is multi-core execution supported (eg. is exec allowed)
+ *
+ * @return bool
+ */
+function digest_multi_core_supported() {
+	
+	$disabled_functions = ini_get('disable_functions');
+	if (empty($disabled_functions)) {
+		$disabled_functions = [];
+	} else {
+		$disabled_functions = explode(',', $disabled_functions);
+	}
+	
+	return is_callable('exec') && !in_array('exec', $disabled_functions);
+}
+
+/**
+ * Get the number of configured cores
+ *
+ * @return int
+ */
+function digest_get_number_of_cores() {
+	
+	if (!digest_multi_core_supported()) {
+		return 1;
+	}
+	
+	$cores = (int) elgg_get_plugin_setting('multi_core', 'digest');
+	if ($cores <= 1) {
+		return 1;
+	}
+	
+	return $cores;
+}

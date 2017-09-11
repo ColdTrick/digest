@@ -101,7 +101,6 @@ $settings_interval .= "</tr>";
 $settings_interval .= "</table>";
 
 // Should we include user who never logged in
-
 $settings_interval .= elgg_view_field([
 	'#type' => 'select',
 	'#label' => elgg_echo('digest:settings:never:include'),
@@ -109,6 +108,14 @@ $settings_interval .= elgg_view_field([
 	'options_values' => $noyes_options,
 	'value' => $plugin->include_never_logged_in,
 ]);
+
+echo "<div class='elgg-admin-notices pbn'><p>" . elgg_echo('digest:settings:notice') . "</p></div>";
+
+$interval_info = elgg_view_icon('info', [
+	'class' => 'mlm',
+	'title' => elgg_echo('digest:settings:interval:description'),
+]);
+echo elgg_view_module('inline', elgg_echo('digest:settings:interval:title') . $interval_info, $settings_interval);
 
 // add custom header and footer to every digest
 $text_sections = [
@@ -128,16 +135,30 @@ foreach ($text_sections as $section_name => $section_label) {
 	]);
 }
 
-// multi-core support
-$multi_core = "<div class='elgg-admin-notices pbn'><p>" . elgg_echo("digest:settings:multi_core:warning") . "</p></div>";
-
-$multi_core .= elgg_view_field([
-	'#type' => 'select',
-	'#label' => elgg_echo('digest:settings:multi_core:number'),
-	'name' => 'params[multi_core]',
-	'value' => $plugin->multi_core,
-	'options' => [1, 2, 4, 8],
+$custom_text_info = elgg_view_icon('info', [
+	'class' => 'mlm',
+	'title' => elgg_echo('digest:settings:custom_text:description'),
 ]);
+echo elgg_view_module('inline', elgg_echo('digest:settings:custom_text:title') . $custom_text_info, $custom_text);
+
+// multi-core support
+if (digest_multi_core_supported()) {
+	$multi_core = "<div class='elgg-admin-notices pbn'><p>" . elgg_echo("digest:settings:multi_core:warning") . "</p></div>";
+	
+	$multi_core .= elgg_view_field([
+		'#type' => 'select',
+		'#label' => elgg_echo('digest:settings:multi_core:number'),
+		'name' => 'params[multi_core]',
+		'value' => $plugin->multi_core,
+		'options' => [1, 2, 4, 8],
+	]);
+	
+	$multi_core_info = elgg_view_icon('info', [
+		'class' => 'mlm',
+		'title' => elgg_echo('digest:settings:multi_core:description'),
+	]);
+	echo elgg_view_module('inline', elgg_echo('digest:settings:multi_core:title') . $multi_core_info, $multi_core);
+}
 
 // stats
 $stats = elgg_view('output/url', [
@@ -146,26 +167,5 @@ $stats = elgg_view('output/url', [
 	'class' => 'elgg-button elgg-button-action',
 	'confirm' => true,
 ]);
-
-// output to screen
-echo "<div class='elgg-admin-notices pbn'><p>" . elgg_echo('digest:settings:notice') . "</p></div>";
-
-$interval_info = elgg_view_icon('info', [
-	'class' => 'mlm',
-	'title' => elgg_echo('digest:settings:interval:description'),
-]);
-echo elgg_view_module('inline', elgg_echo('digest:settings:interval:title') . $interval_info, $settings_interval);
-
-$custom_text_info = elgg_view_icon('info', [
-	'class' => 'mlm',
-	'title' => elgg_echo('digest:settings:custom_text:description'),
-]);
-echo elgg_view_module('inline', elgg_echo('digest:settings:custom_text:title') . $custom_text_info, $custom_text);
-
-$multi_core_info = elgg_view_icon('info', [
-	'class' => 'mlm',
-	'title' => elgg_echo('digest:settings:multi_core:description'),
-]);
-echo elgg_view_module('inline', elgg_echo('digest:settings:multi_core:title') . $multi_core_info, $multi_core);
 
 echo elgg_view_module('inline', elgg_echo('digest:settings:stats:title'), $stats);
