@@ -490,10 +490,7 @@ function digest_prepare_run($refresh = false) {
 	
 	// only let this happen once
 	$run_once = true;
-	
-	// add views and css to digest handling
-	digest_message_css();
-	
+		
 	// let other plugins know they need to add their views/css
 	elgg_trigger_event('prepare', 'digest');
 	
@@ -599,36 +596,6 @@ function digest_get_online_url($params = []) {
 	}
 	
 	return elgg_http_add_url_query_elements($base_url, $url_params);
-}
-
-/**
- * Extend the digest content with to correct views and css
- *
- * @return void
- */
-function digest_message_css() {
-
-	elgg_extend_view("css/digest/core", "css/digest/river");
-	elgg_extend_view("digest/elements/site", "digest/elements/site/river");
-	elgg_extend_view("digest/elements/group", "digest/elements/group/river");
-
-	if (elgg_is_active_plugin("blog")) {
-		elgg_extend_view("css/digest/core", "css/digest/blog");
-			
-		elgg_extend_view("digest/elements/site", "digest/elements/site/blog");
-	}
-
-	if (elgg_is_active_plugin("groups")) {
-		elgg_extend_view("css/digest/core", "css/digest/groups");
-			
-		elgg_extend_view("digest/elements/site", "digest/elements/site/groups");
-	}
-
-	if (elgg_is_active_plugin("profile")) {
-		elgg_extend_view("css/digest/core", "css/digest/profile");
-			
-		elgg_extend_view("digest/elements/site", "digest/elements/site/profile");
-	}
 }
 
 /**

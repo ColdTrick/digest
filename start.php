@@ -31,6 +31,26 @@ function digest_init() {
 	// extend groups edit screen
 	elgg_extend_view('groups/edit', 'digest/groupsettings', 400);
 	
+	// digest elements
+	elgg_extend_view('css/digest/core', 'css/digest/river');
+	elgg_extend_view('digest/elements/site', 'digest/elements/site/river');
+	elgg_extend_view('digest/elements/group', 'digest/elements/group/river');
+
+	if (elgg_is_active_plugin('blog')) {
+		elgg_extend_view('css/digest/core', 'css/digest/blog');
+		elgg_extend_view('digest/elements/site', 'digest/elements/site/blog');
+	}
+
+	if (elgg_is_active_plugin('groups')) {
+		elgg_extend_view('css/digest/core', 'css/digest/groups');
+		elgg_extend_view('digest/elements/site', 'digest/elements/site/groups');
+	}
+
+	if (elgg_is_active_plugin('profile')) {
+		elgg_extend_view('css/digest/core', 'css/digest/profile');
+		elgg_extend_view('digest/elements/site', 'digest/elements/site/profile');
+	}
+	
 	// register plugin hooks
 	elgg_register_plugin_hook_handler('register', 'menu:page', '\ColdTrick\Digest\Menus::registerPageMenuItems');
 	elgg_register_plugin_hook_handler('register', 'menu:theme_sandbox', '\ColdTrick\Digest\Menus::registerThemeSandboxMenuItems');
