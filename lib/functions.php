@@ -1546,6 +1546,8 @@ function digest_multi_core_supported() {
 		$disabled_functions = explode(',', $disabled_functions);
 	}
 	
+	$disabled_functions = array_map('trim', $disabled_functions);
+	
 	return is_callable('exec') && !in_array('exec', $disabled_functions);
 }
 
