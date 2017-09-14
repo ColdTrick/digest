@@ -30,5 +30,5 @@ $site_url = elgg_view('output/url', [
 
 echo elgg_echo('digest:elements:unsubscribe:info', [$site_url]);
 
-echo "&nbsp;" . elgg_echo("digest:elements:unsubscribe:settings", ["<a href='" . $site->url . "digest/" . $user->username . "'>", "</a>"]);
+echo "&nbsp;" . elgg_echo("digest:elements:unsubscribe:settings", ["<a href='" . $site->url . "digest/user/" . $user->username . "'>", "</a>"]);
 echo "&nbsp;" . elgg_echo("digest:elements:unsubscribe:unsubscribe", ["<a href='" . $unsubscribe_link . "'>", "</a>"]);
