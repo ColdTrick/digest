@@ -35,16 +35,16 @@ switch ($page[1]) {
 $ts_upper = time();
 
 switch ($interval) {
-	case DIGEST_INTERVAL_DAILY:
+	case constant(DIGEST_INTERVAL_DAILY):
 		$ts_lower = $ts_upper - (60 * 60 * 24);
 		break;
-	case DIGEST_INTERVAL_WEEKLY:
+	case constant(DIGEST_INTERVAL_WEEKLY):
 		$ts_lower = $ts_upper - (60 * 60 * 24 * 7);
 		break;
-	case DIGEST_INTERVAL_FORTNIGHTLY:
+	case constant(DIGEST_INTERVAL_FORTNIGHTLY):
 		$ts_lower = $ts_upper - (60 * 60 * 24 * 14);
 		break;
-	case DIGEST_INTERVAL_MONTHLY:
+	case constant(DIGEST_INTERVAL_MONTHLY):
 		$ts_lower = $ts_upper - (60 * 60 * 24 * 31);
 		break;
 	default:
