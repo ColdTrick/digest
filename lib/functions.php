@@ -260,16 +260,16 @@ function digest_set_interval_timestamps($interval) {
 	$running_interval = $interval;
 	
 	switch ($interval) {
-		case DIGEST_INTERVAL_DAILY:
+		case constant(DIGEST_INTERVAL_DAILY):
 			$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24);
 			break;
-		case DIGEST_INTERVAL_WEEKLY:
+		case constant(DIGEST_INTERVAL_WEEKLY):
 			$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24 * 7);
 			break;
-		case DIGEST_INTERVAL_FORTNIGHTLY:
+		case constant(DIGEST_INTERVAL_FORTNIGHTLY):
 			$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24 * 14);
 			break;
-		case DIGEST_INTERVAL_MONTHLY:
+		case constant(DIGEST_INTERVAL_MONTHLY):
 			$interval_ts_lower = $interval_ts_upper - (60 * 60 * 24 * 31);
 			break;
 		default:
@@ -731,22 +731,22 @@ function digest_get_site_users($settings) {
 			$query .= ")";
 			
 			switch ($settings[DIGEST_INTERVAL_DEFAULT]) {
-				case DIGEST_INTERVAL_DAILY:
+				case constant(DIGEST_INTERVAL_DAILY):
 					// no further limit
 					break;
-				case DIGEST_INTERVAL_WEEKLY:
+				case constant(DIGEST_INTERVAL_WEEKLY):
 					if ($settings[DIGEST_INTERVAL_WEEKLY] === "distributed") {
 						// delivery is distributed, this means user_guid % 7 = day of the week
 						$query .= " AND (ue2.guid % 7) = " . $dotw;
 					}
 					break;
-				case DIGEST_INTERVAL_FORTNIGHTLY:
+				case constant(DIGEST_INTERVAL_FORTNIGHTLY):
 					if ($settings[DIGEST_INTERVAL_FORTNIGHTLY] === "distributed") {
 						// delivery is distributed, this means user_guid % 14 = day of the week
 						$query .= " AND (ue2.guid % 14) = " . $dotfn;
 					}
 					break;
-				case DIGEST_INTERVAL_MONTHLY:
+				case constant(DIGEST_INTERVAL_MONTHLY):
 					if ($settings[DIGEST_INTERVAL_MONTHLY] === "distributed") {
 						// delivery is distributed, this means (user_guid % 28) + 1 = day of the month
 						$query .= " AND ((ue2.guid % 28) + 1) = " . $dotm;
