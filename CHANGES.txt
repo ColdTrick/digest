@@ -1,9 +1,33 @@
 Version history
 ===============
 
-3.0:
+3.0 (2019-04-05):
 
-- changes for Elgg 1.9
+- added: composer support
+- added: Finnish translations
+- added: French translation
+- changed: menu items are now registered in menu hooks
+- changed: moved hooks into class function
+- changed: moved pages to resource views
+- changed: moved registration of digest css and elements to init
+- changed: replaced alternate view with view_var hook
+- changed: user and group settings forms now use elgg_view_form
+- changed: disable query cache completely instead of invalidating it repeatedly.
+- fixed: don't default to site email when sending digests (empty emails case)
+- fixed: breaking HTML in settings page (thanks Pascal Orth)
+- fixed: correct use of session
+- fixed: digest user settings url pointing to the incorrect page
+- fixed: readable bytes
+- fixed: routing error on test page
+- fixed: settings menu items not linking to correct user #11
+- fixed: using wrong name for parameter
+- fixed: call to undefined functions on objects
+- fixed: digest sending broken by faulty arguments for _elgg_get_access_where_sql()
+- removed: altering global ENTITY_CACHE state
+- removed: custom css
+- removed: digest_readable_bytes function
+- removed: no longer provide a default digest footer content
+- removed: no longer provide row to guid function
 
 2.2.1 (2014-08-19):
 
