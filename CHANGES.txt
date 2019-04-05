@@ -1,6 +1,10 @@
 Version history
 ===============
 
+3.0.1 (2019-04-05):
+
+- several small chores/fixes
+
 3.0 (2019-04-05):
 
 - added: composer support
