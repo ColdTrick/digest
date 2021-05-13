@@ -3,7 +3,7 @@
  * Show a single digest
  */
 
-gatekeeper();
+elgg_gatekeeper();
 
 $ts_lower = (int) get_input("ts_lower");
 $ts_upper = (int) get_input("ts_upper");
@@ -30,7 +30,7 @@ $vars = array(
 // check if we need to display a group
 if (!empty($group_guid)) {
 	$group = get_entity($group_guid);
-	if (!empty($group) && elgg_instanceof($group, "group", null, "ElggGroup")) {
+	if (!empty($group) && ($group instanceof ElggGroup)) {
 		$vars["group"] = $group;
 		
 		$content = elgg_view("digest/elements/group", $vars);
@@ -43,14 +43,14 @@ if (!isset($vars["group"])) {
 }
 
 if (!empty($content)) {
-	$params = array(
+	$params = [
 		"title" => elgg_get_site_entity()->name,
 		"content" => $content,
 		"footer" => elgg_view("digest/elements/footer", $vars),
 		"digest_header" => elgg_view("digest/elements/header", $vars),
 		"digest_online" => elgg_view("digest/elements/online", $vars),
 		"digest_unsubscribe" => elgg_view("digest/elements/unsubscribe", $vars)
-	);
+	];
 	
 	echo elgg_view_layout("digest", $params);
 } else {

@@ -2,7 +2,7 @@
 /**
  * display the user's digest settings
  */
-gatekeeper();
+elgg_gatekeeper();
 
 $username = elgg_extract('username', $vars);
 
@@ -24,16 +24,13 @@ elgg_set_page_owner_guid($user->getGUID());
 
 $groups = false;
 if (digest_group_enabled()) {
+	$dbprefix = get_config('dbprefix');
 	// get groups user is a member of
-	$groups = elgg_get_entities_from_relationship([
+	$groups = elgg_get_entities([
 		'type' => 'group',
 		'relationship' => 'member',
 		'relationship_guid' => $user->guid,
 		'limit' => false,
-		'joins' => [
-			'JOIN ' . get_config('dbprefix') . 'groups_entity ge ON e.guid = ge.guid',
-		],
-		'order_by' => 'ge.name ASC',
 	]);
 }
 
@@ -53,4 +50,4 @@ echo elgg_view_page($title_text, $body);
 
 // reset context
 elgg_pop_context();
-	
+

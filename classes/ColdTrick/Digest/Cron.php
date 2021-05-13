@@ -7,20 +7,17 @@ class Cron {
 	/**
 	 * Listen to the cron and check if we need to sent out digests
 	 *
-	 * @param string $hook         the name of the hook
-	 * @param string $type         the type of the hook
-	 * @param array  $return_value current return value
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook         the name of the hook
 	 *
 	 * @return void
 	 */
-	public static function sendDigests($hook, $type, $return_value, $params) {
+	public static function sendDigests(\Elgg\Hook $hook) {
 		global $interval_ts_upper;
 		
 		echo 'Starting Digest processing' . PHP_EOL;
 		elgg_log('Starting Digest processing', 'NOTICE');
 		
-		$interval_ts_upper = (int) elgg_extract('time', $params, time());
+		$interval_ts_upper = (int) $hook->getParam('time', time());
 		
 		// prepare some settings
 		$digest_settings = [
