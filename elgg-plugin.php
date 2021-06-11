@@ -1,5 +1,8 @@
 <?php
+
 use ColdTrick\Digest\Bootstrap;
+use Elgg\Router\Middleware\AdminGatekeeper;
+use Elgg\Router\Middleware\Gatekeeper;
 
 define('DIGEST_INTERVAL_NONE', 'none');
 define('DIGEST_INTERVAL_DEFAULT', 'default');
@@ -9,47 +12,48 @@ define('DIGEST_INTERVAL_FORTNIGHTLY', 'fortnightly');
 define('DIGEST_INTERVAL_MONTHLY', 'monthly');
 
 // Required libs & custom functions
-require_once(__DIR__ . '/lib/digest/functions.php');
-
+require_once(__DIR__ . '/lib/functions.php');
 
 return [
-	// Bootstrap must implement \Elgg\PluginBootstrapInterface
 	'bootstrap' => Bootstrap::class,
-	
-	// Entities: register entity types for search
-	'entities' => [
-	],
-	
-	// Actions
 	'actions' => [
 		'digest/settings/save' => ['access' => 'admin'],
 		'digest/reset_stats' => ['access' => 'admin'],
 		'digest/usersettings' => [],
 		'digest/groupsettings' => [],
 	],
-	
-	// Routes
 	'routes' => [
 		'default:digest' => [
 			'path' => '/digest/test/{digest?}/{interval?}/{group_guid?}',
-			//'controller' => '\ColdTrick\Digest\Router::digest',
 			'resource' => 'digest/test',
+			'middleware' => [
+				AdminGatekeeper::class,
+			],
+			'defaults' => [
+				'digest' => 'site',
+				'interval' => DIGEST_INTERVAL_MONTHLY,
+			],
 		],
 		'digest:show' => [
 			'path' => '/digest/show',
 			'resource' => 'digest/show',
+			'middleware' => [
+				Gatekeeper::class,
+			],
 		],
 		'digest:unsubscribe' => [
 			'path' => '/digest/unsubscribe',
 			'resource' => 'digest/unsubscribe',
+			'walled' => false,
 		],
 		'digest:user' => [
 			'path' => '/digest/user/{username?}',
 			'resource' => 'digest/usersettings',
+			'middleware' => [
+				Gatekeeper::class,
+			],
 		],
 	],
-	
-	
 	'hooks' => [
 		'register' => [
 			'daily' => [
@@ -73,14 +77,7 @@ return [
 				'\ColdTrick\Digest\Cron::sendDigests' => [],
 			],
 		],
-		'public_pages' => [
-			'walled_garden' => [
-				'\ColdTrick\Digest\Site::extendWalledGardenPages' => [],
-			],
-		],
 	],
-	
-	
 	'events' => [
 		'leave' => [
 			'group' => [
@@ -88,10 +85,5 @@ return [
 			],
 		],
 	],
-	
-	
-	// Widgets
-	'widgets' => [],
-	
 ];
 

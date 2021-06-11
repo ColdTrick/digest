@@ -3,8 +3,6 @@
  * show a test page for the digest, this can also be used to test the styling
  */
 
-elgg_admin_gatekeeper();
-
 // remove some view extensions
 digest_prepare_run();
 

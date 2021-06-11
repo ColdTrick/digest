@@ -7,7 +7,7 @@ class Cron {
 	/**
 	 * Listen to the cron and check if we need to sent out digests
 	 *
-	 * @param \Elgg\Hook $hook         the name of the hook
+	 * @param \Elgg\Hook $hook 'cron', 'daily'
 	 *
 	 * @return void
 	 */

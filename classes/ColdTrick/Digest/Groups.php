@@ -7,9 +7,7 @@ class Groups {
 	/**
 	 * Cleanup digest settings when a user leaves a group
 	 *
-	 * @param string      $event  the name of the event
-	 * @param string      $type   the type of the event
-	 * @param \ElggObject $object Object being acted on
+	 * @param \Elgg\Event $event 'leave', 'group'
 	 *
 	 * @return void
 	 */

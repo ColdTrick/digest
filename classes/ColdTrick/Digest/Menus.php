@@ -7,7 +7,7 @@ class Menus {
 	/**
 	 * Adds items to the page menu
 	 *
-	 * @param string $hook         the name of the hook
+	 * @param \Elgg\Hook $hook 'register', 'menu:page'
 	 *
 	 * @return array
 	 */
@@ -28,16 +28,6 @@ class Menus {
 				'section' => 'notifications',
 			]);
 		}
-		
-		if (elgg_is_admin_logged_in() && elgg_in_context('admin')) {
-			$return[] = \ElggMenuItem::factory([
-				'name' => 'statistics:digest',
-				'text' => elgg_echo('admin:statistics:digest'),
-				'href' => 'admin/statistics/digest',
-				'section' => 'administer',
-				'parent_name' => 'statistics',
-			]);
-		}
 				
 		return $return;
 	}
@@ -45,7 +35,7 @@ class Menus {
 	/**
 	 * Adds items to the theme sandbox menu
 	 *
-	 * @param string $hook         the name of the hook
+	 * @param \Elgg\Hook $hook 'register', 'menu:theme_sandbox'
 	 *
 	 * @return array
 	 */
@@ -68,10 +58,7 @@ class Menus {
 	/**
 	 * Adds a link to the digest settings for the groups
 	 *
-	 * @param string $hook         the name of the hook
-	 * @param string $type         the type of the hook
-	 * @param array  $return_value current return value
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'register', 'menu:groups:my_status',
 	 *
 	 * @return array
 	 */
@@ -84,7 +71,7 @@ class Menus {
 		
 		$user = elgg_get_logged_in_user_entity();
 		$group = elgg_get_page_owner_entity();
-		if (!($user instanceof ElggUser) || !($group instanceof ElggGroup)) {
+		if (!$user instanceof \ElggUser || !$group instanceof \ElggGroup) {
 			return;
 		}
 		

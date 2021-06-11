@@ -2,14 +2,15 @@
 /**
  * display the user's digest settings
  */
-elgg_gatekeeper();
+
+use Elgg\EntityPermissionsException;
 
 $username = elgg_extract('username', $vars);
 
 $user = $username ? get_user_by_username($username) : elgg_get_logged_in_user_entity();
 
 if (empty($user) || !$user->canEdit()) {
-	return elgg_error_response(elgg_echo('digest:usersettings:error:user'));
+	throw new EntityPermissionsException(elgg_echo('digest:usersettings:error:user'));
 }
 
 // set correct context
@@ -24,7 +25,6 @@ elgg_set_page_owner_guid($user->getGUID());
 
 $groups = false;
 if (digest_group_enabled()) {
-	$dbprefix = get_config('dbprefix');
 	// get groups user is a member of
 	$groups = elgg_get_entities([
 		'type' => 'group',
@@ -50,4 +50,3 @@ echo elgg_view_page($title_text, $body);
 
 // reset context
 elgg_pop_context();
-

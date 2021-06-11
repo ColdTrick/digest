@@ -8,13 +8,6 @@ class Bootstrap extends DefaultPluginBootstrap {
 	
 	/**
 	 * {@inheritDoc}
-	 * @see \Elgg\DefaultPluginBootstrap::boot()
-	 */
-	public function boot() {
-	}
-	
-	/**
-	 * {@inheritDoc}
 	 * @see \Elgg\DefaultPluginBootstrap::init()
 	 */
 	public function init() {
@@ -28,6 +21,8 @@ class Bootstrap extends DefaultPluginBootstrap {
 		elgg_extend_view('css/digest/core', 'css/digest/river');
 		elgg_extend_view('digest/elements/site', 'digest/elements/site/river');
 		elgg_extend_view('digest/elements/group', 'digest/elements/group/river');
+		
+		elgg_extend_view('admin/statistics', 'admin/statistics/digest');
 		
 		if (elgg_is_active_plugin('blog')) {
 			elgg_extend_view('css/digest/core', 'css/digest/blog');
@@ -44,8 +39,4 @@ class Bootstrap extends DefaultPluginBootstrap {
 			elgg_extend_view('digest/elements/site', 'digest/elements/site/profile');
 		}
 	}
-	
-	public function activate() {
-	}
-	
 }

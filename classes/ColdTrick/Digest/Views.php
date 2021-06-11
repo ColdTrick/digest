@@ -7,10 +7,7 @@ class Views {
 	/**
 	 * Change the view vars for the user icon, to prevent the user_hover menu
 	 *
-	 * @param string $hook         the name of the hook
-	 * @param string $type         the type of the hook
-	 * @param array  $return_value current return value
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'view_vars', 'icon/user/default'
 	 *
 	 * @return array
 	 */
@@ -23,10 +20,7 @@ class Views {
 	/**
 	 * Change the view vars for the river body, to prevent responses
 	 *
-	 * @param string $hook         the name of the hook
-	 * @param string $type         the type of the hook
-	 * @param array  $return_value current return value
-	 * @param array  $params       supplied params
+	 * @param \Elgg\Hook $hook 'view_vars', 'river/elements/body'
 	 *
 	 * @return array
 	 */

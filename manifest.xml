@@ -8,24 +8,19 @@
 	<website>http://www.coldtrick.com/</website>
 	<repository>https://github.com/ColdTrick/digest</repository>
 	<bugtracker>https://github.com/ColdTrick/digest/issues</bugtracker>
-	<copyright>(C) ColdTrick IT Solutions 2010 - 2017</copyright>
+	<copyright>(C) ColdTrick IT Solutions 2010 - 2021</copyright>
 	<license>GNU General Public License version 2</license>
  	
  	<requires>
 		<type>elgg_release</type>
-		<version>2.3</version>
+		<version>3.3</version>
 	</requires>
 	
 	<requires>
 		<type>plugin</type>
 		<name>html_email_handler</name>
-		<version>3.0</version>
+		<version>5.0</version>
 	</requires>
-	
-	<conflicts>
-		<type>plugin</type>
-		<name>crontrigger</name>
-	</conflicts>
 	
 	<category>ColdTrick</category>
 </plugin_manifest>
