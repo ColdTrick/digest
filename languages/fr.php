@@ -1,5 +1,5 @@
 <?php
-$language = array (
+return [
   'digest:distribution' => 'Distribution',
   'digest:distribution:distributed' => 'Distribué',
   'digest:distribution:description' => 'Sélectionnez un jour d\'envoi ou un jour du mois spécifique. Si vous choisissez de distribuer l\'envoi, le jour d\'envoi sera généré pour chaque utilisateur, ce qui va échelonner les envois sur l\'intervale. Les utilisateurs n\'auront pas la possibilité de définir leur jour d\'envoi.',
@@ -106,5 +106,5 @@ $language = array (
   'digest:mail:plaintext:description' => 'Votre messagerie doit accepter les mails au format HTML pour visualiser les Revues. 
 
 Vous pouvez également visualiser cette revue en utilisant le lien suivant : %s.',
-);
-add_translation("fr", $language);
+];
+

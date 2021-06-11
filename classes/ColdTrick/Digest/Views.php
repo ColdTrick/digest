@@ -14,11 +14,10 @@ class Views {
 	 *
 	 * @return array
 	 */
-	public static function preventUserHoverMenu($hook, $type, $return_value, $params) {
-		
-		$return_value['use_hover'] = false;
-		
-		return $return_value;
+	public static function preventUserHoverMenu(\Elgg\Hook $hook) {
+		$return = $hook->getValue();
+		$return['use_hover'] = false;
+		return $return;
 	}
 	
 	/**
@@ -31,10 +30,9 @@ class Views {
 	 *
 	 * @return array
 	 */
-	public static function preventRiverResponses($hook, $type, $return_value, $params) {
-		
-		$return_value['responses'] = ' ';
-		
-		return $return_value;
+	public static function preventRiverResponses(\Elgg\Hook $hook) {
+		$return = $hook->getValue();
+		$return['responses'] = ' ';
+		return $return;
 	}
 }

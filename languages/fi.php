@@ -1,6 +1,6 @@
 <?php 
 
-return array(
+return [
 	'digest' => "Uutiskirje",
 	
 	// digest intervals
@@ -157,4 +157,5 @@ Voit lukea uutiskirjeen myös selaimella osoitteessa: %s.",
 
 	// command line script
 	'digest:cli:error:secret' => "Koodi on virheellinen, joten uutiskirjettä ei voida lähettää",
-);
+];
+

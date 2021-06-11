@@ -3,6 +3,8 @@
 * Shows the newest members in the Digest
 *
 */
+use Elgg\Database\Clauses\OrderByClause;
+
 global $digest_site_profile_body;
 
 $interval = elgg_extract('interval', $vars);
@@ -32,16 +34,16 @@ if (isset($digest_site_profile_body[$key])) {
 $ts_lower = (int) elgg_extract('ts_lower', $vars);
 $ts_upper = (int) elgg_extract('ts_upper', $vars);
 
-$newest_members = elgg_get_entities_from_relationship([
+$newest_members = elgg_get_entities([
 	'type' => 'user',
 	'limit' => 6,
 	'relationship' => 'member_of_site',
 	'relationship_guid' => elgg_get_site_entity()->guid,
 	'inverse_relationship' => true,
-	'order_by' => 'r.time_created DESC',
-	'wheres' => [
-		'(r.time_created BETWEEN ' . $ts_lower . ' AND ' . $ts_upper . ')',
-	],
+	//'order_by' => 'r.time_created DESC',
+	'order_by' => new OrderByClause('r.time_created', 'DESC'),
+	'created_after' => $ts_lower,
+	'created_before' => $ts_upper,
 ]);
 
 if (empty($newest_members)) {

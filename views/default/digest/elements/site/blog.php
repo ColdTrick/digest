@@ -15,13 +15,18 @@ $blogs = elgg_get_entities([
 	'limit' => 5,
 	'created_time_lower' => $ts_lower,
 	'created_time_upper' => $ts_upper,
+	// @TODO Using literal MySQL statements in 'wheres' options parameter is deprecated. 
+	// Instead use a closure that receives an instanceof of QueryBuilder and returns a composite DBAL expression
+	/*
 	'joins' => [
 		'JOIN ' . $dbprefix . 'metadata bm ON e.guid = bm.entity_guid'
 	],
 	'wheres' => [
-		'bm.name_id = ' . elgg_get_metastring_id('status'),
-		'bm.value_id = ' . elgg_get_metastring_id('published'),
+		'bm.name = \'status\'',
+		'bm.value = \'published\'',
 	],
+	*/
+	'metadata_name_value_pairs' => ['name' => 'status', 'value' => 'published'],
 ]);
 
 if (empty($blogs)) {

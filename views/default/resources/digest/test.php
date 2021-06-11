@@ -51,7 +51,7 @@ switch ($interval) {
 		break;
 	default:
 		$interval = DIGEST_INTERVAL_MONTHLY;
-		$ts_lower = 1;
+		$ts_lower = $ts_upper - (60 * 60 * 24 * 31);
 }
 
 $user = elgg_get_logged_in_user_entity();

@@ -26,4 +26,4 @@ if ($user->setPrivateSetting("digest_{$guid}", DIGEST_INTERVAL_NONE)) {
 }
 
 forward();
-	
+

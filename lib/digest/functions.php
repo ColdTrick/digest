@@ -437,7 +437,7 @@ function digest_create_unsubscribe_link($guid, ElggUser $user) {
 		return false;
 	}
 	
-	$site_secret = get_site_secret();
+	$site_secret = _elgg_services()->siteSecret->get();
 	
 	$code = md5($guid . $site_secret . $user->getGUID() . $user->time_created);
 	
@@ -467,7 +467,7 @@ function digest_validate_unsubscribe_code($guid, ElggUser $user, $code) {
 		return false;
 	}
 	
-	$site_secret = get_site_secret();
+	$site_secret = _elgg_services()->siteSecret->get();
 	
 	$valid_code = md5($guid . $site_secret . $user->getGUID() . $user->time_created);
 	

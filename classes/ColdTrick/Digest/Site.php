@@ -14,9 +14,10 @@ class Site {
 	 *
 	 * @return array
 	 */
-	public static function extendWalledGardenPages($hook, $type, $return_value, $params) {
-		$return_value[] = 'digest/unsubscribe';
+	public static function extendWalledGardenPages(\Elgg\Hook $hook) {
+		$return = $hook->getValue();
+		$return[] = 'digest/unsubscribe';
 	
-		return $return_value;
+		return $return;
 	}
 }

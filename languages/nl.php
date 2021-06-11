@@ -1,5 +1,5 @@
 <?php
-$language = array (
+return [
   'digest:settings:stats:title' => 'Statistiek instellingen',
   'digest:settings:stats:reset' => 'Wis alle opgeslagen statistieken',
   'digest:action:reset_stats:success' => 'De statistieken zijn gewist',
@@ -106,5 +106,5 @@ $language = array (
   'digest:mail:plaintext:description' => 'Je email client ondersteunt geen HTML mails. 
 		
 		Om de site updates toch te kunnen lezen kun je de volgende link gebruiken: %s.',
-);
-add_translation("nl", $language);
+];
+

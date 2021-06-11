@@ -1,6 +1,6 @@
 <?php 
 
-return array(
+return [
 	'digest' => "Digest",
 	
 	// digest intervals
@@ -157,4 +157,5 @@ You can also view the digest online using the following link: %s.",
 	
 	// command line script
 	'digest:cli:error:secret' => "The provided secret is invalid, the digest can't run",
-);
+];
+
